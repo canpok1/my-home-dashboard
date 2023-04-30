@@ -10,6 +10,7 @@
     </v-app-bar>
 
     <v-main>
+        <ElectricityCostViewer></ElectricityCostViewer>
     </v-main>
 </template>
 
