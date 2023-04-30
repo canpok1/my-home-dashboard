@@ -2,13 +2,13 @@
     <div>
         <h1>Welcome page</h1>
         count: {{ count }}
-        <span @click="addCount">[+]</span>
+        <v-btn color="primary" @click="addCount">+</v-btn>
     </div>
 </template>
 
 <script setup lang="ts">
 const count = ref(0);
-function addCount() {
+function addCount(): void {
     count.value++;
 }
 </script>
