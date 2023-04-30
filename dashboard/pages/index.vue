@@ -1,14 +1,18 @@
 <template>
-    <div>
-        <h1>Welcome page</h1>
-        count: {{ count }}
-        <v-btn color="primary" @click="addCount">+</v-btn>
-    </div>
+    <v-navigation-drawer v-model="drawer">
+        <!--  -->
+    </v-navigation-drawer>
+
+    <v-app-bar>
+        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+
+        <v-toolbar-title>MyHomeDashboard</v-toolbar-title>
+    </v-app-bar>
+
+    <v-main>
+    </v-main>
 </template>
 
 <script setup lang="ts">
-const count = ref(0);
-function addCount(): void {
-    count.value++;
-}
+const drawer = ref(true)
 </script>
