@@ -4,3 +4,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_dev
+  db:
+    image: "mariadb:10.11"
+    restart: "always"
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_USER: "${DB_USER}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - "db-store:/var/lib/mysql"
+    ports:
+      - "13306:3306"
+volumes:
+  db-store:
