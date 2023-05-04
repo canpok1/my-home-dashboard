@@ -9,11 +9,11 @@ on:
 env:
   WORK_DIR: dashboard
 
-jobs:
-  defaults:
-    run:
-      working-directory: ${{ WORK_DIR }}
+defaults:
+  run:
+    working-directory: ${{ WORK_DIR }}
 
+jobs:
   test:
     runs-on: ubuntu-latest
 
