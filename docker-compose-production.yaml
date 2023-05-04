@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  dashboard:
+    image: ghcr.io/canpok1/my-home-dashboard/dashboard:latest
+    ports:
+      - "80:80"
