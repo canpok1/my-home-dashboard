@@ -6,27 +6,45 @@ on:
   pull_request:
     branches: ["main"]
 
+env:
+  WORK_DIR: dashboard
+
 jobs:
-  build:
+  defaults:
+    run:
+      working-directory: ${{ WORK_DIR }}
+
+  test:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: dashboard
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x
           cache: "npm"
-          cache-dependency-path: "dashboard/package-lock.json"
+          cache-dependency-path: "${{ WORK_DIR }}/package-lock.json"
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run lint
+
+  build_and_push_to_ghcr:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./${{ WORK_DIR }}
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/${{ WORK_DIR }}:latest
