@@ -1,4 +1,12 @@
 version: "3.9"
 services:
   dev:
-    build: "./dashboard"
+    build:
+      context: .
+      dockerfile: Dockerfile_dev
+  dashboard:
+    build:
+      context: dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"

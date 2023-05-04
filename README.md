@@ -9,3 +9,20 @@
 cd dashboard
 npm install
 ```
+
+## サービス起動
+
+### 本番用
+
+```
+docker compose up -d dashboard
+# http://localhost:80 でアクセス可能
+```
+
+### 開発用
+
+```
+cd dashboard
+npm run dev
+# http://localhost:3000 でアクセス可能
+```
