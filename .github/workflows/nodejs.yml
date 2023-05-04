@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ WORK_DIR }}
+        working-directory: ${{ env.WORK_DIR }}
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 18.x
           cache: "npm"
-          cache-dependency-path: "${{ WORK_DIR }}/package-lock.json"
+          cache-dependency-path: "${{ env.WORK_DIR }}/package-lock.json"
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run lint
@@ -41,7 +41,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./${{ WORK_DIR }}
+          context: ./${{ env.WORK_DIR }}
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/${{ WORK_DIR }}:latest
+            ghcr.io/${{ github.repository }}/${{ env.WORK_DIR }}:latest
