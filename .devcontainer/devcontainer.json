@@ -19,9 +19,9 @@
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
   // Uncomment the next line if you want start specific services in your Docker Compose config.
-  // "runServices": [],
+  "runServices": ["db"],
   // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
-  // "shutdownAction": "none",
+  "shutdownAction": "stopCompose",
   // Uncomment the next line to run commands after the container is created.
   // "postCreateCommand": "cat /etc/os-release",
   // Configure tool-specific properties.
@@ -33,14 +33,18 @@
         },
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.tabSize": 2
+        "editor.tabSize": 2,
+        "[makefile]": {
+          "editor.insertSpaces": false
+        }
       },
       "extensions": [
         "Vue.volar",
         "Vue.vscode-typescript-vue-plugin",
         "eamodio.gitlens",
         "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "formulahendry.vscode-mysql"
       ]
     }
   }

@@ -1,9 +1,10 @@
 {
-    "recommendations": [
-        "eamodio.gitlens",
-        "dbaeumer.vscode-eslint",
-        "vue.vscode-typescript-vue-plugin",
-        "vue.volar",
-        "esbenp.prettier-vscode"
-    ]
+  "recommendations": [
+    "eamodio.gitlens",
+    "dbaeumer.vscode-eslint",
+    "vue.vscode-typescript-vue-plugin",
+    "vue.volar",
+    "esbenp.prettier-vscode",
+    "formulahendry.vscode-mysql"
+  ]
 }

@@ -2,11 +2,10 @@ version: "3.9"
 services:
   dev:
     build:
-      context: .
-      dockerfile: Dockerfile_dev
+      context: ./dev
+      dockerfile: Dockerfile
   db:
     image: "mariadb:10.11"
-    restart: "always"
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
       MYSQL_DATABASE: "${DB_NAME}"
@@ -15,6 +14,14 @@ services:
     volumes:
       - "db-store:/var/lib/mysql"
     ports:
-      - "13306:3306"
+      - "${DB_PORT_ON_LOCAL}:${DB_PORT_ON_DOCKER_NETWORK}"
+  migration:
+    build:
+      context: ./migration
+      dockerfile: Dockerfile
+    volumes:
+      - type: bind
+        source: "./migration/ddl"
+        target: "${DDL_DIR_ON_CONTAINER}"
 volumes:
   db-store:
