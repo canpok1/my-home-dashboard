@@ -15,3 +15,7 @@ jobs:
         run: docker compose -f docker-compose-development.yaml up -d db
       - name: test migration
         run: make migrate-up
+      - name: lint for database
+        run: make tbls-lint
+      - name: check diff between db and document
+        run: make tbls-diff
