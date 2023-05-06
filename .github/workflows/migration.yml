@@ -1,0 +1,17 @@
+name: CI for migration
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: run db
+        run: docker compose -f docker-compose-development.yaml up -d db
+      - name: test migration
+        run: make migrate-up
