@@ -24,6 +24,10 @@ migrate-up-one:
 migrate-down-one:
 	@${MIGRATE_COMMAND} down 1
 
+.PHONY: migrate-force-v
+migrate-force-v:
+	@${MIGRATE_COMMAND} force ${v}
+
 .PHONY: migrate-create
 migrate-create:
 	@${MIGRATE_COMMAND} create -ext sql -dir "${DDL_DIR_ON_CONTAINER}" -seq ${name}
