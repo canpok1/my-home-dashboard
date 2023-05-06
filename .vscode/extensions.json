@@ -5,6 +5,7 @@
     "vue.vscode-typescript-vue-plugin",
     "vue.volar",
     "esbenp.prettier-vscode",
-    "formulahendry.vscode-mysql"
+    "formulahendry.vscode-mysql",
+    "bierner.markdown-mermaid"
   ]
 }

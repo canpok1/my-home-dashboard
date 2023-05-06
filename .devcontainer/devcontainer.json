@@ -39,13 +39,14 @@
         }
       },
       "extensions": [
-        "Vue.volar",
-        "Vue.vscode-typescript-vue-plugin",
-        "eamodio.gitlens",
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "formulahendry.vscode-mysql"
-      ]
+		"Vue.volar",
+		"Vue.vscode-typescript-vue-plugin",
+		"eamodio.gitlens",
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode",
+		"formulahendry.vscode-mysql",
+		"bierner.markdown-mermaid"
+	]
     }
   }
   // Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
