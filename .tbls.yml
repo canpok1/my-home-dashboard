@@ -1,6 +1,6 @@
 lint:
   requireTableComment:
-    enabled: false
+    enabled: true
   requireColumnComment:
     enabled: true
   requireColumns:

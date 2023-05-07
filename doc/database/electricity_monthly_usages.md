@@ -2,6 +2,8 @@
 
 ## Description
 
+月間電気使用状況
+
 <details>
 <summary><strong>Table Definition</strong></summary>
 
@@ -15,7 +17,7 @@ CREATE TABLE `electricity_monthly_usages` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp() COMMENT '作成日時',
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新日時',
   PRIMARY KEY (`usage_year`,`usage_month`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='月間電気使用状況'
 ```
 
 </details>

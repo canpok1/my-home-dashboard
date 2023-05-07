@@ -4,7 +4,7 @@
 
 | Name | Columns | Comment | Type |
 | ---- | ------- | ------- | ---- |
-| [electricity_monthly_usages](electricity_monthly_usages.md) | 7 |  | BASE TABLE |
+| [electricity_monthly_usages](electricity_monthly_usages.md) | 7 | 月間電気使用状況 | BASE TABLE |
 
 ## Relations
 
