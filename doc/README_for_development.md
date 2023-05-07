@@ -90,8 +90,14 @@ flowchart TB
    ```
    make name={name} migrate-create
    ```
-3. [ddl フォルダ](./migration/ddl/)に生成されたテンプレートに DDL を記載しコミットする
+3. [ddl フォルダ](./migration/ddl/)に生成されたテンプレートに DDL を記載する
+
    - バージョンアップ用とバージョンダウン用の 2 種類のファイルが生成されるため、それぞれに記載すること
+
+4. make コマンドを使用してテーブル定義書を更新する
+   ```
+   make tbls-doc
+   ```
 
 ## 開発環境の削除
 
