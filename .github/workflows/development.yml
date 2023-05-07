@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI for development
 
 on:
   push:
@@ -7,14 +7,14 @@ on:
     branches: ["main"]
 
 env:
-  WORK_DIR: dashboard
+  CODE_DIR: dashboard
 
 jobs:
-  test:
+  code_test:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ env.WORK_DIR }}
+        working-directory: ${{ env.CODE_DIR }}
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -22,14 +22,27 @@ jobs:
         with:
           node-version: 18.x
           cache: "npm"
-          cache-dependency-path: "${{ env.WORK_DIR }}/package-lock.json"
+          cache-dependency-path: "${{ env.CODE_DIR }}/package-lock.json"
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run lint
 
+  db_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: run db
+        run: docker compose -f docker-compose-development.yaml up -d db
+      - name: test migration
+        run: make migrate-up
+      - name: lint for database
+        run: make tbls-lint
+      - name: check diff between db and document
+        run: make tbls-diff
+
   build_and_push_to_ghcr:
     runs-on: ubuntu-latest
-    needs: test
+    needs: [code_test, db_test]
     permissions:
       packages: write
       contents: read
@@ -44,7 +57,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./${{ env.WORK_DIR }}
+          context: ./${{ env.CODE_DIR }}
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/${{ env.WORK_DIR }}:latest
+            ghcr.io/${{ github.repository }}/${{ env.CODE_DIR }}:latest
