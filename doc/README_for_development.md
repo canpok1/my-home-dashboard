@@ -23,7 +23,7 @@ flowchart TB
       db[(database)]
     end
 
-    subgraph migration-container
+    subgraph migrate-container
       migrate([migrate])
       ddl-copy([DDL])
     end
@@ -32,7 +32,7 @@ flowchart TB
   code -. マウント ..-> code-copy
   vscode -- 起動 ---> dev-container
   vscode -- 起動 ---> db-container
-  vscode -- 起動 --> migration-container
+  vscode -- 起動 --> migrate-container
   vscode -- 連携 ---- vscode-server
   vscode-server -- 編集 --> code-copy
   code-copy -- "npm run dev" --> dev-server
@@ -68,7 +68,7 @@ flowchart TB
 各種 DB ツールで操作可能。
 接続情報は[.env](.env)を参照。
 
-スキーマ操作は以下の手順を参考に migration コンテナ経由で行うこと。
+スキーマ操作は以下の手順を参考に migrate コンテナ経由で行うこと。
 
 1. docker コマンドを使用可能なターミナル上で [makefile](./makefile) の配置ディレクトリを開く
 2. make コマンドを使用して DB 操作を行う
@@ -90,7 +90,7 @@ flowchart TB
    ```
    make name={name} migrate-create
    ```
-3. [ddl フォルダ](./migration/ddl/)に生成されたテンプレートに DDL を記載する
+3. [ddl フォルダ](./migrate/ddl/)に生成されたテンプレートに DDL を記載する
 
    - バージョンアップ用とバージョンダウン用の 2 種類のファイルが生成されるため、それぞれに記載すること
 

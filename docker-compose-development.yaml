@@ -20,13 +20,13 @@ services:
       start_period: "10s"
       interval: "10s"
       retries: 30
-  migration:
+  migrate:
     build:
-      context: ./migration
+      context: ./migrate
       dockerfile: Dockerfile
     volumes:
       - type: bind
-        source: "./migration/ddl"
+        source: "./migrate/ddl"
         target: "${DDL_DIR_ON_CONTAINER}"
   tbls:
     image: ghcr.io/k1low/tbls:latest
