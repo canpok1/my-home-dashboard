@@ -5,6 +5,7 @@
 
 - [開発環境について](doc/README_for_development.md)
 - [本番環境について](doc/README_for_production.md)
+- [スキーマ定義](doc/database/README.md)
 
 ## 構成図
 
