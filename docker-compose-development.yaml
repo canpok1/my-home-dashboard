@@ -4,6 +4,8 @@ services:
     build:
       context: ./dev
       dockerfile: Dockerfile
+    environment:
+      DB_URL_FOR_PRISMA: "mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST_ON_DOCKER_NETWORK}:${DB_PORT_ON_DOCKER_NETWORK}/${DB_NAME}"
   db:
     image: "mariadb:10.11"
     environment:
