@@ -3,10 +3,10 @@ WORKDIR /src
 
 COPY ./package*.json ./
 COPY ./dashboard/package*.json ./dashboard/
-COPY ./dashboard/prisma ./dashboard/
+COPY ./dashboard/prisma/ ./dashboard/prisma/
 RUN npm ci
 
-COPY ./dashboard ./dashboard
+COPY ./dashboard/ ./dashboard/
 RUN npm run -w dashboard build
 
 FROM node:18-slim
