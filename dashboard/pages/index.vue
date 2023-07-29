@@ -27,6 +27,6 @@ const drawer = ref(true)
 const url = '/api/electricity'
 console.log('GET[%s]', url)
 const { data, error } = await useAsyncData(() => $fetch(url))
-console.log('data: %o', data.value)
-console.log('error: %o', error.value)
+console.log('data: %s', data.value)
+console.log('error: %s', error.value)
 </script>
