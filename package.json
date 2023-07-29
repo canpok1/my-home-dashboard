@@ -1,0 +1,23 @@
+{
+  "name": "my-home-dashboard",
+  "version": "1.0.0",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "npm run clean --workspaces && rm -rf node_modules"
+  },
+  "private": true,
+  "workspaces": [
+    "dashboard"
+  ],
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "eslint": "^8.46.0",
+    "npm-run-all": "^4.1.5"
+  }
+}
