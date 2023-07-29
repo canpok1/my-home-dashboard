@@ -11,15 +11,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
+
+      - uses: actions/cache/restore@v3
+        id: cache
+        with:
+          path: |
+            node_modules
+            dashboard/node_modules
+          key: ${{ hashFiles('**/package-lock.json') }}
+
       - run: npm ci
+
       - run: npm run typecheck
+
       - run: npm run lint
+
+      - uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: |
+            node_modules
+            dashboard/node_modules
+          key: ${{ steps.cache.outputs.cache-primary-key }}
 
   db_test:
     runs-on: ubuntu-latest
