@@ -66,11 +66,11 @@ flowchart TB
 ### DB 操作
 
 各種 DB ツールで操作可能。
-接続情報は[.env](.env)を参照。
+接続情報は[db.env](../.devcontainer/db.env)を参照。
 
-スキーマ操作は以下の手順を参考に migrate コンテナ経由で行うこと。
+スキーマ操作は以下の手順を参考に dev コンテナ内で行うこと。
 
-1. docker コマンドを使用可能なターミナル上で [makefile](./makefile) の配置ディレクトリを開く
+1. ターミナル上で [makefile](../db/makefile) の配置ディレクトリを開く
 2. make コマンドを使用して DB 操作を行う
    ```
    # スキーマの最新化
@@ -85,18 +85,18 @@ flowchart TB
 
 ### DDL の追加
 
-1. docker コマンドを使用可能なターミナル上で [makefile](./makefile) の配置ディレクトリを開く
+1. ターミナル上で [makefile](../db/makefile) の配置ディレクトリを開く
 2. make コマンドを使用して DDL のテンプレートを生成（ `{name}` は DDL の名称に置き換えること）
    ```
    make name={name} migrate-create
    ```
-3. [ddl フォルダ](./migrate/ddl/)に生成されたテンプレートに DDL を記載する
+3. [ddl フォルダ](../db/ddl/)に生成されたテンプレートに DDL を記載する
 
    - バージョンアップ用とバージョンダウン用の 2 種類のファイルが生成されるため、それぞれに記載すること
 
 4. make コマンドを使用してテーブル定義書を更新する
    ```
-   make tbls-doc
+   make doc
    ```
 
 ## 開発環境の削除

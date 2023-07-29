@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-dev
-    environment:
-      DB_URL_FOR_PRISMA: "mysql://service:password@db:3306/my-home"
+    env_file:
+      - db.env
 
     volumes:
       # Update this to wherever you want VS Code to mount the folder of your project
@@ -24,9 +24,8 @@ services:
     image: "mariadb:10.11"
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-      MYSQL_DATABASE: "my-home"
-      MYSQL_USER: "service"
-      MYSQL_PASSWORD: "password"
+    env_file:
+      - "db.env"
     volumes:
       - "db-store:/var/lib/mysql"
     ports:

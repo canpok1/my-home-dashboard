@@ -29,16 +29,46 @@ jobs:
 
   db_test:
     runs-on: ubuntu-latest
+    container:
+      image: golang:1.20
+    env:
+      MYSQL_DATABASE: my-home
+      MYSQL_USER: service
+      MYSQL_PASSWORD: password
+      MYSQL_HOST_ON_DOCKER_NETWORK: db
+      MYSQL_PORT_ON_DOCKER_NETWORK: 3306
+    service:
+      db:
+        image: mariadb:10.11
+        env:
+          MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+          MYSQL_DATABASE: my-home
+          MYSQL_USER: service
+          MYSQL_PASSWORD: password
+        options: >
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 10s
+          --health-retries 5
+        ports:
+          - 3306:3306
     steps:
       - uses: actions/checkout@v3
-      - name: run db
-        run: docker compose -f docker-compose-development.yaml up -d db
-      - name: test migration
+      - name: install migrate command
+        run: go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+      - name: install tbls command
+        run: go install github.com/k1LoW/tbls@latest
+      - name: test migrate up
+        working-directory: ./db
         run: make migrate-up
       - name: lint for database
-        run: make tbls-lint
+        working-directory: ./db
+        run: make lint
       - name: check diff between db and document
-        run: make tbls-diff
+        run: make diff
+      - name: test migrate down all
+        working-directory: ./db
+        run: make migrate options="down -all"
 
   build_and_push_to_ghcr:
     runs-on: ubuntu-latest
