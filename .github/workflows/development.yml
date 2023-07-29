@@ -45,7 +45,7 @@ jobs:
           MYSQL_DATABASE: my-home
           MYSQL_USER: service
           MYSQL_PASSWORD: password
-        options: >
+        options: >-
           --health-cmd "mysqladmin ping"
           --health-interval 10s
           --health-timeout 10s
