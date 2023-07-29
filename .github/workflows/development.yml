@@ -37,7 +37,7 @@ jobs:
       MYSQL_PASSWORD: password
       MYSQL_HOST_ON_DOCKER_NETWORK: db
       MYSQL_PORT_ON_DOCKER_NETWORK: 3306
-    service:
+    services:
       db:
         image: mariadb:10.11
         env:
