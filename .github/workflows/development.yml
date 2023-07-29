@@ -23,13 +23,11 @@ jobs:
 
   db_test:
     runs-on: ubuntu-latest
-    container:
-      image: golang:1.20
     env:
       MYSQL_DATABASE: my-home
       MYSQL_USER: service
       MYSQL_PASSWORD: password
-      MYSQL_HOST_ON_DOCKER_NETWORK: db
+      MYSQL_HOST_ON_DOCKER_NETWORK: localhost
       MYSQL_PORT_ON_DOCKER_NETWORK: 3306
     services:
       db:
@@ -48,22 +46,67 @@ jobs:
           - 3306:3306
     steps:
       - uses: actions/checkout@v3
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: "1.20"
+          check-latest: true
+
+      - name: Get Go Version
+        id: get-go-version
+        run: echo "version=$(go env GOVERSION)" >> $GITHUB_OUTPUT
+
+      - name: Get Go Path
+        id: get-go-path
+        run: echo "path=$(go env GOPATH)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache/restore@v3
+        id: cache
+        with:
+          path: |
+            ${{ steps.get-go-path.outputs.path }}/bin/migrate
+            ${{ steps.get-go-path.outputs.path }}/bin/tbls
+          key: ${{ steps.get-go-version.outputs.version }}-migrate-tbls
+
       - name: install migrate command
-        run: go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+        id: install-migrate
+        run: |
+          if ! which migrate; then
+            go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+          fi
+          echo "path=$(which migrate)" >> $GITHUB_OUTPUT
+
       - name: install tbls command
-        run: go install github.com/k1LoW/tbls@latest
+        id: install-tbls
+        run: |
+          if ! which tbls; then
+            go install github.com/k1LoW/tbls@latest
+          fi
+          echo "path=$(which tbls)" >> $GITHUB_OUTPUT
+
       - name: test migrate up
         working-directory: ./db
         run: make migrate-up
+
       - name: lint for database
         working-directory: ./db
         run: make lint
+
       - name: check diff between db and document
         working-directory: ./db
         run: make diff
+
       - name: test migrate down all
         working-directory: ./db
         run: make migrate options="down -all"
+
+      - uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: |
+            ${{ steps.install-migrate.outputs.path }}
+            ${{ steps.install-tbls.outputs.path }}
+          key: ${{ steps.cache.outputs.cache-primary-key }}
 
   build_and_push_to_ghcr:
     runs-on: ubuntu-latest
