@@ -6,7 +6,7 @@ extends:
   - plugin:vue/vue3-recommended
   - eslint:recommended
   - plugin:@typescript-eslint/recommended
-  - '@nuxtjs/eslint-config-typescript"'
+  - '@nuxtjs/eslint-config-typescript'
   - '@vue/prettier'
 overrides: []
 parser: vue-eslint-parser

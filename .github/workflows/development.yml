@@ -65,6 +65,7 @@ jobs:
         working-directory: ./db
         run: make lint
       - name: check diff between db and document
+        working-directory: ./db
         run: make diff
       - name: test migrate down all
         working-directory: ./db
