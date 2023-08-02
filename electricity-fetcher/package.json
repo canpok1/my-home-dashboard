@@ -1,0 +1,25 @@
+{
+  "name": "electricity-fetcher",
+  "version": "1.0.0",
+  "description": "",
+  "main": "App.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/App.ts",
+    "clean": "rm -rf node_modules && rm -rf output",
+    "lint": "echo \"Warn: no lint specified\"",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"Warn: no test specified\"",
+    "install:chromium": "npx -y playwright install --with-deps chromium"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "playwright-core": "^1.36.2"
+  }
+}

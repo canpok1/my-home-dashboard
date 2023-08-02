@@ -136,7 +136,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        app: [dashboard]
+        app: [dashboard, electricity-fetcher]
     steps:
       - uses: actions/checkout@v3
       - name: Log in to GitHub Container Registry
