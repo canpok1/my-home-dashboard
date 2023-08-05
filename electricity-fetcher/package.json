@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/App.ts",
-    "clean": "rm -rf node_modules && rm -rf output && rm -rf tmp",
+    "clean": "rm -rf output && rm -rf tmp && rm -f tsconfig.tsbuildinfo",
     "lint": "echo \"Warn: no lint specified\"",
     "typecheck": "tsc --noEmit",
     "test": "echo \"Warn: no test specified\"",

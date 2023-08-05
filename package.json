@@ -8,7 +8,7 @@
     "lint": "npm run lint --workspaces",
     "typecheck": "npm run typecheck --workspaces",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "npm run clean --workspaces && rm -rf node_modules",
+    "clean": "npm run clean --workspaces",
     "update-prisma-cli": "prisma db pull && prisma generate"
   },
   "private": true,

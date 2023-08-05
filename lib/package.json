@@ -6,7 +6,7 @@
   "devDependencies": {},
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf node_modules && rm -rf output",
+    "clean": "rm -rf output && rm -f tsconfig.tsbuildinfo",
     "lint": "echo \"Warn: no lint specified\"",
     "typecheck": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"

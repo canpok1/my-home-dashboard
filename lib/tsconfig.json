@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "output",
-    "declaration": true
+    "declaration": true,
+    "composite": true
   }
 }
