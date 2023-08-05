@@ -23,6 +23,7 @@ COPY --from=builder /src/lib/package*.json ./lib/
 COPY --from=builder /src/lib/output ./lib/output/
 COPY --from=builder /src/electricity-fetcher/package*.json ./electricity-fetcher/
 COPY --from=builder /src/electricity-fetcher/output ./electricity-fetcher/output/
+COPY --from=builder /src/prisma/ ./prisma/
 
 RUN apt-get update && apt-get install -y \
   fonts-ipafont-gothic \
