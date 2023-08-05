@@ -31,12 +31,12 @@ import { ref } from 'vue'
 const drawer = ref(true)
 
 const url = '/api/electricity'
-const { data, err } = await useAsyncData(() => $fetch(url))
-if (err) {
-  console.log(err)
+const { data, error } = await useAsyncData(() => $fetch(url))
+if (error) {
+  console.log(error)
 }
 
-const labels = data.value.map((v) => `${v.usage_year}/${v.usage_month}`)
-const usages = data.value.map((v) => `${v.usage_yen}`)
-const kwhs = data.value.map((v) => `${v.usage_kwh}`)
+const labels = data.value?.map((v) => `${v.usage_year}/${v.usage_month}`)
+const usages = data.value?.map((v) => `${v.usage_yen}`)
+const kwhs = data.value?.map((v) => `${v.usage_kwh}`)
 </script>
