@@ -25,9 +25,12 @@ jobs:
           path: |
             node_modules
             dashboard/node_modules
+            electricity-fetcher/node_modules
           key: ${{ hashFiles('**/package-lock.json') }}
 
       - run: npm ci
+
+      - run: npm run -w lib build
 
       - run: npm run typecheck
 
