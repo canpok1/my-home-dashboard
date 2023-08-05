@@ -21,7 +21,6 @@
     "@types/node": "^18",
     "chart.js": "^4.3.0",
     "nuxt": "^3.4.3",
-    "prisma": "^4.13.0",
     "sass": "^1.62.1",
     "vite-plugin-vuetify": "^1.0.2",
     "vue-tsc": "^1.6.1",

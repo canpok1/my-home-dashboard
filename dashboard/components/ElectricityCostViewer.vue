@@ -11,6 +11,12 @@ import { ref, onMounted } from 'vue'
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 
+const props = defineProps<{
+  labels: string[]
+  usages: number[]
+  kwhs: number[]
+}>()
+
 onMounted(() => {
   createCharts()
 })
@@ -19,17 +25,46 @@ function createCharts() {
   if (canvasRef.value === null) return
   const canvas = canvasRef.value.getContext('2d')
   if (canvas === null) return
-  console.log(canvasRef.value?.getContext('2d'))
+
   const c = new Chart(canvas, {
-    type: 'line',
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      labels: props.labels,
       datasets: [
         {
-          label: 'ダミーデータ',
-          data: [12, 19, 3, 5, 2, 3],
+          type: 'line',
+          label: '料金',
+          data: props.usages,
+          yAxisID: 'left',
+        },
+        {
+          type: 'bar',
+          label: '使用量',
+          data: props.kwhs,
+          yAxisID: 'right',
         },
       ],
+    },
+    options: {
+      scales: {
+        left: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: '料金(円)',
+          },
+        },
+        right: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          title: {
+            display: true,
+            text: '使用量(kWh)',
+          },
+        },
+      },
     },
   })
   console.log(c)
