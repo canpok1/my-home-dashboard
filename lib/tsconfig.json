@@ -2,7 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "output"
-  },
-  "references": [{ "path": "../lib" }]
+    "outDir": "output",
+    "declaration": true
+  }
 }

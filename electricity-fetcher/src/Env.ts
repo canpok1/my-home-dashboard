@@ -1,5 +1,4 @@
-import { SecretString } from "./Secret";
-
+import { SecretString } from "lib";
 export class Env {
   readonly loginUrl: string;
   readonly user: string;
