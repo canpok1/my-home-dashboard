@@ -15,6 +15,11 @@ services:
       start_period: "10s"
       interval: "10s"
       retries: 30
+  migrate:
+    image: ghcr.io/canpok1/my-home-dashboard/migrate:latest
+    env_file:
+      - ".env"
+    command: ["migrate-up"]
   dashboard:
     image: ghcr.io/canpok1/my-home-dashboard/dashboard:latest
     ports:

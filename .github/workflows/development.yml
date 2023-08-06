@@ -108,19 +108,19 @@ jobs:
           echo "path=$(which tbls)" >> $GITHUB_OUTPUT
 
       - name: test migrate up
-        working-directory: ./db
+        working-directory: ./migrate
         run: make migrate-up
 
       - name: lint for database
-        working-directory: ./db
+        working-directory: ./migrate
         run: make lint
 
       - name: check diff between db and document
-        working-directory: ./db
+        working-directory: ./migrate
         run: make diff
 
       - name: test migrate down all
-        working-directory: ./db
+        working-directory: ./migrate
         run: make migrate options="down -all"
 
       - uses: actions/cache/save@v3
@@ -139,7 +139,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        app: [dashboard, electricity-fetcher]
+        app: [dashboard, electricity-fetcher, migrate]
     steps:
       - uses: actions/checkout@v3
       - name: Log in to GitHub Container Registry
