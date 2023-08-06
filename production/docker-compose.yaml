@@ -23,7 +23,7 @@ services:
   dashboard:
     image: ghcr.io/canpok1/my-home-dashboard/dashboard:latest
     ports:
-      - "80:80"
+      - "10080:80"
     env_file:
       - ".env"
   electricity-fetcher:
