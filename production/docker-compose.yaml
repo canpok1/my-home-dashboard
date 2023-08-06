@@ -15,20 +15,25 @@ services:
       start_period: "10s"
       interval: "10s"
       retries: 30
+
   migrate:
     image: ghcr.io/canpok1/my-home-dashboard/migrate:latest
     env_file:
       - ".env"
     command: ["migrate-up"]
+
   dashboard:
     image: ghcr.io/canpok1/my-home-dashboard/dashboard:latest
+    # build:
+    #   context: "../"
+    #   dockerfile: "dashboard/Dockerfile"
     ports:
-      - "10080:80"
+      - "13000:3000"
     env_file:
       - ".env"
+
   electricity-fetcher:
     image: ghcr.io/canpok1/my-home-dashboard/electricity-fetcher:latest
-    # ローカルでビルドしたイメージの動作確認用
     # build:
     #   context: "../"
     #   dockerfile: "electricity-fetcher/Dockerfile"
