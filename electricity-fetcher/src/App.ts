@@ -12,7 +12,7 @@ const env = new Env(process.env);
 
   const browser = await chromium.launch({
     headless: true,
-    args: ["--single-process"],
+    args: ["--single-process", "--disable-features=dbus"],
   });
 
   try {
