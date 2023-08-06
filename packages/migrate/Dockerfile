@@ -1,6 +1,6 @@
 FROM migrate/migrate:latest
 
-COPY ./migrate/ /workspace/
+COPY ./packages/migrate/ /workspace/
 RUN apk add make
 
 WORKDIR /workspace

@@ -13,9 +13,9 @@
   },
   "private": true,
   "workspaces": [
-    "dashboard",
-    "electricity-fetcher",
-    "lib"
+    "packages/dashboard",
+    "packages/electricity-fetcher",
+    "packages/lib"
   ],
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.0.0",

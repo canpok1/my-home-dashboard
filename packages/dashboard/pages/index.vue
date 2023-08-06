@@ -34,9 +34,15 @@ const url = '/api/electricity'
 const { data, error } = await useAsyncData(() => $fetch(url))
 if (error) {
   console.log(error)
+} else {
+  console.log(data)
 }
 
-const labels = data.value?.map((v) => `${v.usage_year}/${v.usage_month}`)
-const usages = data.value?.map((v) => `${v.usage_yen}`)
-const kwhs = data.value?.map((v) => `${v.usage_kwh}`)
+// const labels = data.value?.map((v) => `${v.usage_year}/${v.usage_month}`)
+// const usages = data.value?.map((v) => Number(`${v.usage_yen}`))
+// const kwhs = data.value?.map((v) => Number(`${v.usage_kwh}`))
+
+const labels: string[] = []
+const usages: number[] = []
+const kwhs: number[] = []
 </script>

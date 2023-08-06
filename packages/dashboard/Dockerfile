@@ -2,16 +2,16 @@ FROM node:18 AS builder
 WORKDIR /src
 
 COPY ./package*.json ./
-COPY ./dashboard/package*.json ./dashboard/
-COPY ./dashboard/prisma/ ./dashboard/prisma/
+COPY ./packages/dashboard/package*.json ./packages/dashboard/
+COPY ./packages/dashboard/prisma/ ./packages/dashboard/prisma/
 RUN npm ci
 
-COPY ./dashboard/ ./dashboard/
+COPY ./packages/dashboard/ ./packages/dashboard/
 RUN npm run -w dashboard build
 
 FROM node:18-slim
 WORKDIR /service
-COPY --from=builder /src/dashboard/.output .
+COPY --from=builder /src/packages/dashboard/.output .
 
 RUN apt-get update && apt-get install -y \
     openssl \

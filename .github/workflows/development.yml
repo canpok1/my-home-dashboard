@@ -23,9 +23,7 @@ jobs:
         id: cache
         with:
           path: |
-            node_modules
-            dashboard/node_modules
-            electricity-fetcher/node_modules
+            **/node_modules
           key: ${{ hashFiles('**/package-lock.json') }}
 
       - run: npm ci
@@ -40,8 +38,7 @@ jobs:
         if: always()
         with:
           path: |
-            node_modules
-            dashboard/node_modules
+            **/node_modules
           key: ${{ steps.cache.outputs.cache-primary-key }}
 
   db_test:
@@ -108,19 +105,19 @@ jobs:
           echo "path=$(which tbls)" >> $GITHUB_OUTPUT
 
       - name: test migrate up
-        working-directory: ./migrate
+        working-directory: ./packages/migrate
         run: make migrate-up
 
       - name: lint for database
-        working-directory: ./migrate
+        working-directory: ./packages/migrate
         run: make lint
 
       - name: check diff between db and document
-        working-directory: ./migrate
+        working-directory: ./packages/migrate
         run: make diff
 
       - name: test migrate down all
-        working-directory: ./migrate
+        working-directory: ./packages/migrate
         run: make migrate options="down -all"
 
       - uses: actions/cache/save@v3
@@ -152,7 +149,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ${{ matrix.app }}/Dockerfile
+          file: packages/${{ matrix.app }}/Dockerfile
           push: true
           tags: |
             ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest

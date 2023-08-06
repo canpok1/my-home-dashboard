@@ -24,9 +24,6 @@ services:
 
   dashboard:
     image: ghcr.io/canpok1/my-home-dashboard/dashboard:latest
-    # build:
-    #   context: "../"
-    #   dockerfile: "dashboard/Dockerfile"
     ports:
       - "13000:3000"
     env_file:
@@ -34,9 +31,6 @@ services:
 
   electricity-fetcher:
     image: ghcr.io/canpok1/my-home-dashboard/electricity-fetcher:latest
-    # build:
-    #   context: "../"
-    #   dockerfile: "electricity-fetcher/Dockerfile"
     env_file:
       - ".env"
 
