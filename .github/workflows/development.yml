@@ -128,7 +128,7 @@ jobs:
             ${{ steps.install-tbls.outputs.path }}
           key: ${{ steps.cache.outputs.cache-primary-key }}
 
-  build_and_push_to_ghcr:
+  build:
     runs-on: ubuntu-latest
     needs: [code_test, db_test]
     permissions:
