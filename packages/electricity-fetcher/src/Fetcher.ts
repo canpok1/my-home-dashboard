@@ -14,9 +14,15 @@ export class Fetcher {
 
   async fetch(browser: Browser) {
     const page = await browser.newPage();
-    page.on("request", (req) =>
-      console.log(`[browser] request: ${req.method()} ${req.url()}`)
-    );
+    page.on("response", (res) => {
+      if (!res.ok()) {
+        console.log(
+          `[browser] ${res.status()} error: ${res
+            .request()
+            .method()} ${res.url()}`
+        );
+      }
+    });
     page.on("console", (msg) =>
       console.log("[browser] console: " + msg.text())
     );
