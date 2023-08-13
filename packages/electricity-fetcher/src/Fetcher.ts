@@ -14,6 +14,12 @@ export class Fetcher {
 
   async fetch(browser: Browser) {
     const page = await browser.newPage();
+    page.on("request", (req) =>
+      console.log(`[browser] request: ${req.method()} ${req.url()}`)
+    );
+    page.on("console", (msg) =>
+      console.log("[browser] console: " + msg.text())
+    );
     await page.setDefaultNavigationTimeout(this.env.navigationTimeoutMs);
 
     // ログインページに移動
