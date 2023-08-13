@@ -14,6 +14,12 @@ export class Fetcher {
 
   async fetch(browser: Browser) {
     const page = await browser.newPage();
+    page.on("requestfailed", (req) => {
+      console.log(
+        `[browser] request failed: ${req.failure()
+          ?.errorText}, ${req.method()} ${req.url()}`
+      );
+    });
     page.on("response", (res) => {
       if (!res.ok()) {
         console.log(
