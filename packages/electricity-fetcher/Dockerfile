@@ -14,7 +14,7 @@ RUN npm run -w lib build
 RUN npm run -w electricity-fetcher build
  
 
-FROM mcr.microsoft.com/playwright:v1.36.0-jammy
+FROM mcr.microsoft.com/playwright:v1.37.0-jammy
 WORKDIR /service
 ENV TZ=Asia/Tokyo
 
