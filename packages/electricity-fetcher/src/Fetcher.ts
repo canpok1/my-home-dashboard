@@ -15,17 +15,27 @@ export class Fetcher {
   async fetch(browser: Browser) {
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(this.env.navigationTimeoutMs);
+
+    // ログインページに移動
     await page.goto(this.env.loginUrl);
+    await page.screenshot({
+      path: this.makeScreenshotPath("01-login-page.png"),
+      fullPage: true,
+    });
 
     // ログイン
     await page.locator("#k_id").fill(this.env.user);
     await page.locator("#k_pw").fill(this.env.password.value());
     await page.screenshot({
-      path: this.makeScreenshotPath("login-page.png"),
+      path: this.makeScreenshotPath("02-login-page-with-id-pw.png"),
       fullPage: true,
     });
     await page.locator("#loginFormDtl").locator(".headLoginbtn").click();
     await page.locator(".loginName").waitFor();
+    await page.screenshot({
+      path: this.makeScreenshotPath("03-top-page.png"),
+      fullPage: true,
+    });
 
     // 電気料金の一覧ページに移動
     await page
@@ -42,7 +52,7 @@ export class Fetcher {
     );
     await tables.waitFor();
     await page.screenshot({
-      path: this.makeScreenshotPath("list.png"),
+      path: this.makeScreenshotPath("04-usages-list.png"),
       fullPage: true,
     });
 
