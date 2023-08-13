@@ -14,6 +14,7 @@ export class Fetcher {
 
   async fetch(browser: Browser) {
     const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(this.env.navigationTimeoutMs);
     await page.goto(this.env.loginUrl);
 
     // ログイン
