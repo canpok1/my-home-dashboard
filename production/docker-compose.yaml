@@ -29,8 +29,8 @@ services:
     env_file:
       - ".env"
 
-  electricity-fetcher:
-    image: ghcr.io/canpok1/my-home-dashboard/electricity-fetcher:latest
+  fetcher:
+    image: ghcr.io/canpok1/my-home-dashboard/fetcher:latest
     env_file:
       - ".env"
 

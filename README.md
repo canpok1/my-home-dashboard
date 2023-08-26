@@ -23,10 +23,7 @@ flowchart TB
       db[(database)]
     end
     subgraph container3
-      electricity-fetcher
-    end
-    subgraph container4
-      gas-fetcher
+      fetcher
     end
   end
 
@@ -35,6 +32,7 @@ flowchart TB
 
   dashboard -- 一覧画面 --> browser
   db -- 各種料金情報 --> dashboard
-  electricity -- 電気料金情報 --> electricity-fetcher -- 電気料金情報 --> db
-  gas -- ガス料金情報 --> gas-fetcher -- ガス料金情報 --> db
+  electricity -- 電気料金情報 --> fetcher
+  gas -- ガス料金情報 --> fetcher
+  fetcher -- ガス/電気料金情報 --> db
 ```
