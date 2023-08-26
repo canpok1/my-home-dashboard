@@ -7,31 +7,79 @@
 
 <script setup lang="ts">
 import { Chart } from 'chart.js/auto'
-import { ref, onMounted } from 'vue'
 
-const canvasRef = ref<HTMLCanvasElement | null>(null)
+const canvasRef = ref<HTMLCanvasElement>()
+const { data, error } = await useFetch('/api/gas')
+if (error.value) {
+  console.log(error.value)
+}
 
-onMounted(() => {
-  createCharts()
-})
+let chart: Chart<'line' | 'bar', number[], string> | null = null
+const setupChart = () => {
+  if (!canvasRef) {
+    console.log('skip setup chart, canvasRef is nothing')
+    return
+  }
+  const canvas = canvasRef.value!.getContext('2d')
+  if (!canvasRef) {
+    console.log('skip setup chart, canvas is nothing')
+    return
+  }
+  if (!data.value) {
+    console.log('skip setup chart, data is nothing')
+    return
+  }
 
-function createCharts() {
-  if (canvasRef.value === null) return
-  const canvas = canvasRef.value.getContext('2d')
-  if (canvas === null) return
-  console.log(canvasRef.value?.getContext('2d'))
-  const c = new Chart(canvas, {
-    type: 'line',
+  const labels = data.value.labels
+  const yens = data.value.yens
+  const amounts = data.value.amounts
+
+  if (chart) {
+    chart.destroy()
+  }
+
+  chart = new Chart(canvas!, {
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      labels,
       datasets: [
         {
-          label: 'ダミーデータ',
-          data: [12, 19, 3, 5, 2, 3],
+          type: 'line',
+          label: '料金',
+          data: yens,
+          yAxisID: 'left',
+        },
+        {
+          type: 'bar',
+          label: '使用量',
+          data: amounts,
+          yAxisID: 'right',
         },
       ],
     },
+    options: {
+      scales: {
+        left: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: '料金(円)',
+          },
+        },
+        right: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          title: {
+            display: true,
+            text: '使用量(m^3)',
+          },
+        },
+      },
+    },
   })
-  console.log(c)
 }
+
+onMounted(setupChart)
 </script>
