@@ -1,4 +1,5 @@
 import { SecretString } from "../../lib/output/Index";
+
 export class Env {
   readonly loginUrl: string;
   readonly user: string;
@@ -6,14 +7,14 @@ export class Env {
   readonly timeoutMs: number;
   readonly cron: string;
 
-  constructor(env: NodeJS.ProcessEnv) {
-    this.loginUrl = this.getStringValue(env, "ELECTRICITY_LOGIN_URL");
-    this.user = this.getStringValue(env, "ELECTRICITY_USER");
+  constructor(env: NodeJS.ProcessEnv, prefix: string) {
+    this.loginUrl = this.getStringValue(env, prefix + "_LOGIN_URL");
+    this.user = this.getStringValue(env, prefix + "_USER");
     this.password = new SecretString(
-      this.getStringValue(env, "ELECTRICITY_PASSWORD")
+      this.getStringValue(env, prefix + "_PASSWORD")
     );
-    this.timeoutMs = this.getNumberValue(env, "ELECTRICITY_TIMEOUT_MS");
-    this.cron = this.getStringValue(env, "ELECTRICITY_CRON", false);
+    this.timeoutMs = this.getNumberValue(env, prefix + "_TIMEOUT_MS");
+    this.cron = this.getStringValue(env, prefix + "_CRON", false);
   }
 
   getStringValue(

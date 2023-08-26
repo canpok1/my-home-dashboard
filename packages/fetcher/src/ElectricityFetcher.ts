@@ -3,7 +3,7 @@ import { Browser } from "playwright-core";
 import { Env } from "./Env";
 import path from "path";
 
-export class Fetcher {
+export class ElectricityFetcher {
   readonly env: Env;
   readonly screenshotDir: string;
 
@@ -13,79 +13,81 @@ export class Fetcher {
   }
 
   async fetch(browser: Browser) {
-    console.log("fetch start");
+    console.log("[Electricity] fetch start");
     try {
       const page = await browser.newPage();
       page.on("requestfailed", (req) => {
         console.log(
-          `[browser] request failed: ${req.failure()
+          `[Electricity][browser] request failed: ${req.failure()
             ?.errorText}, ${req.method()} ${req.url()}`
         );
       });
       page.on("response", (res) => {
         if (!res.ok()) {
           console.log(
-            `[browser] ${res.status()} error: ${res
+            `[Electricity][browser] ${res.status()} error: ${res
               .request()
               .method()} ${res.url()}`
           );
         }
       });
       page.on("console", (msg) =>
-        console.log("[browser] console: " + msg.text())
+        console.log("[Electricity][browser] console: " + msg.text())
       );
       await page.setDefaultTimeout(this.env.timeoutMs);
 
       // ログインページに移動
-      console.log("[action] goto login page");
+      console.log("[Electricity][action] goto login page");
       await page.goto(this.env.loginUrl);
       await page.screenshot({
-        path: this.makeScreenshotPath("01-login-page.png"),
+        path: this.makeScreenshotPath("electricity-01-login-page.png"),
         fullPage: true,
       });
 
       // ログイン
-      console.log("[action] input id and password");
+      console.log("[Electricity][action] input id and password");
       await page.locator("#k_id").fill(this.env.user);
       await page.locator("#k_pw").fill(this.env.password.value());
       await page.screenshot({
-        path: this.makeScreenshotPath("02-login-page-with-id-pw.png"),
+        path: this.makeScreenshotPath(
+          "electricity-02-login-page-with-id-pw.png"
+        ),
         fullPage: true,
       });
 
-      console.log("[action] click login button");
+      console.log("[Electricity][action] click login button");
       await page.locator("#loginFormDtl").locator(".headLoginbtn").click();
 
-      console.log("[action] wait for loading top page");
+      console.log("[Electricity][action] wait for loading top page");
       await page.locator(".loginName").waitFor();
       await page.screenshot({
-        path: this.makeScreenshotPath("03-top-page.png"),
+        path: this.makeScreenshotPath("electricity-03-top-page.png"),
         fullPage: true,
       });
 
       // 電気料金の一覧ページに移動
-      console.log("[action] click detail link");
+      console.log("[Electricity][action] click detail link");
       await page
         .locator(
           "#headerRyoukin > table.header_ryoukin_tbl.desktop_only > tbody > tr > td:nth-child(4) > a"
         )
         .click();
 
-      console.log("[action] click menu_month button");
+      console.log("[Electricity][action] click menu_month button");
       await page.locator("#menu_month").click();
 
       // 電気料金を取得
-      console.log("[action] wait for loading tables");
+      console.log("[Electricity][action] wait for loading tables");
       const tables = await page.locator(
         "#wrapper > div > div > table.desktop_only.table01.mt-1.monthJisekiTbl.conditionBackgroud"
       );
       await tables.waitFor();
       await page.screenshot({
-        path: this.makeScreenshotPath("04-usages-list.png"),
+        path: this.makeScreenshotPath("electricity-04-usages-list.png"),
         fullPage: true,
       });
 
-      console.log("[action] fetch tables");
+      console.log("[Electricity][action] fetch tables");
       const rows = await tables.locator("tbody > tr");
 
       const usages = [];
@@ -105,7 +107,7 @@ export class Fetcher {
       }
 
       // 電気料金を保存
-      console.log("[action] save tables to db");
+      console.log("[Electricity][action] save tables to db");
       const prisma = new PrismaClient();
       for (const usage of usages) {
         await prisma.electricity_monthly_usages.upsert({
@@ -131,7 +133,7 @@ export class Fetcher {
         const records = await prisma.electricity_monthly_usages.findMany();
       }
     } finally {
-      console.log("fetch end");
+      console.log("[Electricity] fetch end");
     }
   }
 
