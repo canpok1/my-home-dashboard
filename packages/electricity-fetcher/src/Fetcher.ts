@@ -32,7 +32,7 @@ export class Fetcher {
     page.on("console", (msg) =>
       console.log("[browser] console: " + msg.text())
     );
-    await page.setDefaultNavigationTimeout(this.env.navigationTimeoutMs);
+    await page.setDefaultTimeout(this.env.timeoutMs);
 
     // ログインページに移動
     console.log("[action] goto login page");

@@ -3,7 +3,7 @@ export class Env {
   readonly loginUrl: string;
   readonly user: string;
   readonly password: SecretString;
-  readonly navigationTimeoutMs: number;
+  readonly timeoutMs: number;
 
   constructor(env: NodeJS.ProcessEnv) {
     this.loginUrl = this.getStringValue(env, "ELECTRICITY_LOGIN_URL");
@@ -11,10 +11,7 @@ export class Env {
     this.password = new SecretString(
       this.getStringValue(env, "ELECTRICITY_PASSWORD")
     );
-    this.navigationTimeoutMs = this.getNumberValue(
-      env,
-      "ELECTRICITY_NAVIGATION_TIMEOUT_MS"
-    );
+    this.timeoutMs = this.getNumberValue(env, "ELECTRICITY_TIMEOUT_MS");
   }
 
   getStringValue(env: NodeJS.ProcessEnv, key: string): string {
