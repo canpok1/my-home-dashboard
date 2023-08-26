@@ -2,8 +2,8 @@ FROM node:18 AS builder
 WORKDIR /src
 
 COPY ./package*.json ./
+COPY ./prisma/ ./prisma/
 COPY ./packages/dashboard/package*.json ./packages/dashboard/
-COPY ./packages/dashboard/prisma/ ./packages/dashboard/prisma/
 RUN npm ci
 
 COPY ./packages/dashboard/ ./packages/dashboard/
