@@ -35,6 +35,7 @@ export class Fetcher {
     await page.setDefaultNavigationTimeout(this.env.navigationTimeoutMs);
 
     // ログインページに移動
+    console.log("[action] goto login page");
     await page.goto(this.env.loginUrl);
     await page.screenshot({
       path: this.makeScreenshotPath("01-login-page.png"),
@@ -42,13 +43,18 @@ export class Fetcher {
     });
 
     // ログイン
+    console.log("[action] input id and password");
     await page.locator("#k_id").fill(this.env.user);
     await page.locator("#k_pw").fill(this.env.password.value());
     await page.screenshot({
       path: this.makeScreenshotPath("02-login-page-with-id-pw.png"),
       fullPage: true,
     });
+
+    console.log("[action] click login button");
     await page.locator("#loginFormDtl").locator(".headLoginbtn").click();
+
+    console.log("[action] wait for loading top page");
     await page.locator(".loginName").waitFor();
     await page.screenshot({
       path: this.makeScreenshotPath("03-top-page.png"),
@@ -56,15 +62,18 @@ export class Fetcher {
     });
 
     // 電気料金の一覧ページに移動
+    console.log("[action] click detail link");
     await page
       .locator(
         "#headerRyoukin > table.header_ryoukin_tbl.desktop_only > tbody > tr > td:nth-child(4) > a"
       )
       .click();
+
+    console.log("[action] click menu_month button");
     await page.locator("#menu_month").click();
 
     // 電気料金を取得
-    console.log("start fetch");
+    console.log("[action] wait for loading tables");
     const tables = await page.locator(
       "#wrapper > div > div > table.desktop_only.table01.mt-1.monthJisekiTbl.conditionBackgroud"
     );
@@ -74,6 +83,7 @@ export class Fetcher {
       fullPage: true,
     });
 
+    console.log("[action] fetch tables");
     const rows = await tables.locator("tbody > tr");
 
     const usages = [];
@@ -93,7 +103,7 @@ export class Fetcher {
     }
 
     // 電気料金を保存
-    console.log("save");
+    console.log("[action] save tables to db");
     const prisma = new PrismaClient();
     for (const usage of usages) {
       await prisma.electricity_monthly_usages.upsert({
