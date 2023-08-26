@@ -7,39 +7,51 @@
 
 <script setup lang="ts">
 import { Chart } from 'chart.js/auto'
-import { ref, onMounted } from 'vue'
 
-const canvasRef = ref<HTMLCanvasElement | null>(null)
+const canvasRef = ref<HTMLCanvasElement>()
+const { data, error } = await useFetch('/api/electricity')
+if (error.value) {
+  console.log(error.value)
+}
 
-const props = defineProps<{
-  labels: string[]
-  usages: number[]
-  kwhs: number[]
-}>()
+let chart: Chart<'line' | 'bar', number[], string> | null = null
+const setupChart = () => {
+  if (!canvasRef) {
+    console.log('skip setup chart, canvasRef is nothing')
+    return
+  }
+  const canvas = canvasRef.value!.getContext('2d')
+  if (!canvasRef) {
+    console.log('skip setup chart, canvas is nothing')
+    return
+  }
+  if (!data.value) {
+    console.log('skip setup chart, data is nothing')
+    return
+  }
 
-onMounted(() => {
-  createCharts()
-})
+  const labels = data.value.labels
+  const yens = data.value.yens
+  const kwhs = data.value.kwhs
 
-function createCharts() {
-  if (canvasRef.value === null) return
-  const canvas = canvasRef.value.getContext('2d')
-  if (canvas === null) return
+  if (chart) {
+    chart.destroy()
+  }
 
-  const c = new Chart(canvas, {
+  chart = new Chart(canvas!, {
     data: {
-      labels: props.labels,
+      labels,
       datasets: [
         {
           type: 'line',
           label: '料金',
-          data: props.usages,
+          data: yens,
           yAxisID: 'left',
         },
         {
           type: 'bar',
           label: '使用量',
-          data: props.kwhs,
+          data: kwhs,
           yAxisID: 'right',
         },
       ],
@@ -67,6 +79,7 @@ function createCharts() {
       },
     },
   })
-  console.log(c)
 }
+
+onMounted(setupChart)
 </script>
