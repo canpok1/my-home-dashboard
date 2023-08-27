@@ -4,6 +4,7 @@ export interface Response {
   labels: string[]
   yens: number[]
   kwhs: number[]
+  lastUpdated: Date | null
 }
 
 export default defineEventHandler(async (event): Promise<Response> => {
@@ -30,10 +31,16 @@ export default defineEventHandler(async (event): Promise<Response> => {
       ],
     })
     const reversed = usages.reverse()
+    const lastUpdated = await prisma.electricity_monthly_usages.aggregate({
+      _max: {
+        updated_at: true,
+      },
+    })
     return {
       labels: reversed.map((v) => `${v.usage_year}/${v.usage_month}`),
       yens: reversed.map((v) => v.usage_yen),
       kwhs: reversed.map((v) => v.usage_kwh),
+      lastUpdated: lastUpdated._max.updated_at,
     }
   } finally {
     prisma.$disconnect()

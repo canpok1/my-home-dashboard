@@ -67,20 +67,26 @@ export class GasFetcher {
 
       // ガス料金を取得
       const prisma = new PrismaClient();
+      const now = new Date();
       for (let beforeMonth = 0; beforeMonth < 5; beforeMonth++) {
         if (beforeMonth != 0) {
           console.log("[Gas][action] ");
           await page.locator("#ContentPlaceHolder1_LinkButton1").click();
         }
 
-        await this.fetchAndSave(page, beforeMonth, prisma);
+        await this.fetchAndSave(page, beforeMonth, prisma, now);
       }
     } finally {
       console.log("[Gas] fetch end");
     }
   }
 
-  async fetchAndSave(page: Page, beforeMonth: number, prisma: PrismaClient) {
+  async fetchAndSave(
+    page: Page,
+    beforeMonth: number,
+    prisma: PrismaClient,
+    now: Date
+  ) {
     console.log(
       "[Gas][action] wait for loading usage data, %d month ago",
       beforeMonth
@@ -149,6 +155,7 @@ export class GasFetcher {
         usage_end_at: endAt,
         usage_amount: amount,
         usage_yen: yen,
+        updated_at: now,
       },
     });
   }

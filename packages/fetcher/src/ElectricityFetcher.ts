@@ -108,6 +108,7 @@ export class ElectricityFetcher {
 
       // 電気料金を保存
       console.log("[Electricity][action] save tables to db");
+      const now = new Date();
       const prisma = new PrismaClient();
       for (const usage of usages) {
         await prisma.electricity_monthly_usages.upsert({
@@ -128,9 +129,9 @@ export class ElectricityFetcher {
             usage_day_count: usage.dayCount,
             usage_kwh: usage.kwh,
             usage_yen: usage.yen,
+            updated_at: now,
           },
         });
-        const records = await prisma.electricity_monthly_usages.findMany();
       }
     } finally {
       console.log("[Electricity] fetch end");

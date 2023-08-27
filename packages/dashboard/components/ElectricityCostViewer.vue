@@ -1,6 +1,7 @@
 <template>
   <v-card variant="tonal">
-    <v-card-title>電気料金</v-card-title>
+    <v-card-title>電気料金 </v-card-title>
+    <v-card-subtitle> 更新 {{ $datetime(data?.lastUpdated) }} </v-card-subtitle>
     <canvas ref="canvasRef"></canvas>
   </v-card>
 </template>
