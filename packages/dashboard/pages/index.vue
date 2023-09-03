@@ -13,6 +13,9 @@
           <v-col cols="12" md="6">
             <GasCostViewer></GasCostViewer>
           </v-col>
+          <v-col cols="12" md="6">
+            <WaterCostViewer></WaterCostViewer>
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
