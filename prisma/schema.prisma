@@ -39,3 +39,17 @@ model gas_monthly_usages {
 
   @@id([usage_year, usage_month])
 }
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model water_monthly_usages {
+  usage_year     Int      @db.UnsignedInt
+  usage_month    Int      @db.UnsignedInt
+  usage_begin_at DateTime @db.Date
+  usage_end_at   DateTime @db.Date
+  usage_amount   Decimal  @db.Decimal(15, 5)
+  usage_yen      Int      @db.UnsignedInt
+  created_at     DateTime @default(now()) @db.DateTime(0)
+  updated_at     DateTime @default(now()) @db.DateTime(0)
+
+  @@id([usage_year, usage_month])
+}

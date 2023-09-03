@@ -4,9 +4,11 @@ import { Env } from "./Env";
 import { ElectricityFetcher } from "./ElectricityFetcher";
 import { schedule } from "node-cron";
 import { GasFetcher } from "./GasFetcher";
+import { WaterFetcher } from "./WaterFetcher";
 
 const electricityEnv = new Env(process.env, "ELECTRICITY");
 const gasEnv = new Env(process.env, "GAS");
+const waterEnv = new Env(process.env, "WATER");
 
 const fetchElectricity = async () => {
   const browser = await chromium.launch({
@@ -36,9 +38,24 @@ const fetchGas = async () => {
   }
 };
 
+const fetchWater = async () => {
+  const browser = await chromium.launch({
+    headless: true,
+    args: ["--single-process", "--disable-features=dbus", "--disable-gpu"],
+  });
+
+  try {
+    const fetcher = new WaterFetcher(waterEnv, "tmp");
+    await fetcher.fetch(browser);
+  } finally {
+    await browser.close();
+  }
+};
+
 (async () => {
   console.log("[Electricity] env: %s", electricityEnv);
   console.log("[Gas] env: %s", gasEnv);
+  console.log("[Water] env: %s", waterEnv);
 
   // 電気料金
   if (electricityEnv.cron === "") {
@@ -59,6 +76,17 @@ const fetchGas = async () => {
     console.log("[Gas] setup cron schedule [%s]", gasEnv.cron);
     schedule(gasEnv.cron, async () => {
       await fetchGas();
+    });
+  }
+
+  // 水道料金
+  if (waterEnv.cron === "") {
+    console.log("[Water] run at once");
+    await fetchWater();
+  } else {
+    console.log("[Water] setup cron schedule [%s]", waterEnv.cron);
+    schedule(waterEnv.cron, async () => {
+      await fetchWater();
     });
   }
 })();
