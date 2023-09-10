@@ -7,10 +7,12 @@ import { Page } from "@playwright/test";
 export class GasFetcher {
   readonly env: Env;
   readonly screenshotDir: string;
+  readonly prisma: PrismaClient;
 
-  constructor(env: Env, screenshotDir: string) {
+  constructor(env: Env, screenshotDir: string, prisma: PrismaClient) {
     this.env = env;
     this.screenshotDir = screenshotDir;
+    this.prisma = prisma;
   }
 
   async fetch(browser: Browser) {
@@ -66,7 +68,6 @@ export class GasFetcher {
       });
 
       // ガス料金を取得
-      const prisma = new PrismaClient();
       const now = new Date();
       for (let beforeMonth = 0; beforeMonth < 5; beforeMonth++) {
         if (beforeMonth != 0) {
@@ -74,19 +75,14 @@ export class GasFetcher {
           await page.locator("#ContentPlaceHolder1_LinkButton1").click();
         }
 
-        await this.fetchAndSave(page, beforeMonth, prisma, now);
+        await this.fetchAndSave(page, beforeMonth, now);
       }
     } finally {
       console.log("[Gas] fetch end");
     }
   }
 
-  async fetchAndSave(
-    page: Page,
-    beforeMonth: number,
-    prisma: PrismaClient,
-    now: Date
-  ) {
+  async fetchAndSave(page: Page, beforeMonth: number, now: Date) {
     console.log(
       "[Gas][action] wait for loading usage data, %d month ago",
       beforeMonth
@@ -135,7 +131,7 @@ export class GasFetcher {
       "[Gas][action] save usage data to db, %d month ago",
       beforeMonth
     );
-    await prisma.gas_monthly_usages.upsert({
+    await this.prisma.gas_monthly_usages.upsert({
       where: {
         usage_year_usage_month: {
           usage_year: year,

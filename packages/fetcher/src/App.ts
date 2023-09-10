@@ -5,6 +5,7 @@ import { ElectricityFetcher } from "./ElectricityFetcher";
 import { schedule } from "node-cron";
 import { GasFetcher } from "./GasFetcher";
 import { WaterFetcher } from "./WaterFetcher";
+import { PrismaClient } from "@prisma/client";
 
 const electricityEnv = new Env(process.env, "ELECTRICITY");
 const gasEnv = new Env(process.env, "GAS");
@@ -16,10 +17,13 @@ const fetchElectricity = async () => {
     args: ["--single-process", "--disable-features=dbus", "--disable-gpu"],
   });
 
+  const prisma = new PrismaClient();
+
   try {
-    const fetcher = new ElectricityFetcher(electricityEnv, "tmp");
+    const fetcher = new ElectricityFetcher(electricityEnv, "tmp", prisma);
     await fetcher.fetch(browser);
   } finally {
+    await prisma.$disconnect();
     await browser.close();
   }
 };
@@ -30,10 +34,13 @@ const fetchGas = async () => {
     args: ["--single-process", "--disable-features=dbus", "--disable-gpu"],
   });
 
+  const prisma = new PrismaClient();
+
   try {
-    const fetcher = new GasFetcher(gasEnv, "tmp");
+    const fetcher = new GasFetcher(gasEnv, "tmp", prisma);
     await fetcher.fetch(browser);
   } finally {
+    await prisma.$disconnect();
     await browser.close();
   }
 };
@@ -44,10 +51,13 @@ const fetchWater = async () => {
     args: ["--single-process", "--disable-features=dbus", "--disable-gpu"],
   });
 
+  const prisma = new PrismaClient();
+
   try {
-    const fetcher = new WaterFetcher(waterEnv, "tmp");
+    const fetcher = new WaterFetcher(waterEnv, "tmp", prisma);
     await fetcher.fetch(browser);
   } finally {
+    await prisma.$disconnect();
     await browser.close();
   }
 };

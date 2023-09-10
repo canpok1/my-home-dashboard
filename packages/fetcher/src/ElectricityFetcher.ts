@@ -1,4 +1,4 @@
-import { PrismaClient, electricity_monthly_usages } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { Browser } from "playwright-core";
 import { Env } from "./Env";
 import path from "path";
@@ -15,17 +15,18 @@ interface Usage {
 export class ElectricityFetcher {
   readonly env: Env;
   readonly screenshotDir: string;
+  readonly prisma: PrismaClient;
 
-  constructor(env: Env, screenshotDir: string) {
+  constructor(env: Env, screenshotDir: string, prisma: PrismaClient) {
     this.env = env;
     this.screenshotDir = screenshotDir;
+    this.prisma = prisma;
   }
 
   async fetch(browser: Browser) {
     console.log("[Electricity] fetch start");
     try {
       const now = new Date();
-      const prisma = new PrismaClient();
 
       const page = await browser.newPage();
       page.on("requestfailed", (req) => {
@@ -86,12 +87,7 @@ export class ElectricityFetcher {
         .click();
 
       // 電気料金を取得
-      await this.saveLatestUsage(
-        page,
-        prisma,
-        now,
-        "electricity-04-latest-usage.png"
-      );
+      await this.saveLatestUsage(page, now, "electricity-04-latest-usage.png");
 
       // 毎月の電気料金の一覧ページに移動
       console.log("[Electricity][action] click menu_month button");
@@ -100,7 +96,6 @@ export class ElectricityFetcher {
       // 電気料金を取得
       await this.saveUsageHistory(
         page,
-        prisma,
         now,
         "electricity-05-usage-history.png"
       );
@@ -109,12 +104,7 @@ export class ElectricityFetcher {
     }
   }
 
-  private async saveLatestUsage(
-    page: Page,
-    prisma: PrismaClient,
-    now: Date,
-    screenshotName: string
-  ) {
+  private async saveLatestUsage(page: Page, now: Date, screenshotName: string) {
     console.log("[Electricity][action] wait for loading latest usages");
     await page.locator("#gaiyouGaisan").waitFor();
     await page.screenshot({
@@ -152,7 +142,6 @@ export class ElectricityFetcher {
 
     console.log("[Electricity][action] save latest usage to db");
     await this.upsert(
-      prisma,
       {
         year: current.getFullYear(),
         month: current.getMonth() + 1,
@@ -166,7 +155,6 @@ export class ElectricityFetcher {
 
   private async saveUsageHistory(
     page: Page,
-    prisma: PrismaClient,
     now: Date,
     screenshotName: string
   ) {
@@ -202,7 +190,7 @@ export class ElectricityFetcher {
     // 電気料金を保存
     console.log("[Electricity][action] save usage history to db");
     for (const usage of usages) {
-      await this.upsert(prisma, usage, now);
+      await this.upsert(usage, now);
     }
   }
 
@@ -210,8 +198,8 @@ export class ElectricityFetcher {
     return path.join(this.screenshotDir, fileName);
   }
 
-  private async upsert(prisma: PrismaClient, usage: Usage, now: Date) {
-    await prisma.electricity_monthly_usages.upsert({
+  private async upsert(usage: Usage, now: Date) {
+    await this.prisma.electricity_monthly_usages.upsert({
       where: {
         usage_year_usage_month: {
           usage_year: usage.year,

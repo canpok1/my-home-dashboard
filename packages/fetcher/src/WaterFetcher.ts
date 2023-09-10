@@ -16,10 +16,12 @@ interface Usage {
 export class WaterFetcher {
   readonly env: Env;
   readonly screenshotDir: string;
+  readonly prisma: PrismaClient;
 
-  constructor(env: Env, screenshotDir: string) {
+  constructor(env: Env, screenshotDir: string, prisma: PrismaClient) {
     this.env = env;
     this.screenshotDir = screenshotDir;
+    this.prisma = prisma;
   }
 
   async fetch(browser: Browser) {
@@ -73,9 +75,8 @@ export class WaterFetcher {
       });
 
       // 料金を取得
-      const prisma = new PrismaClient();
       const now = new Date();
-      await this.fetchAndSave(page, prisma, now);
+      await this.fetchAndSave(page, now);
     } catch (err) {
       await page.screenshot({
         path: this.makeScreenshotPath("water-99-error.png"),
@@ -87,7 +88,7 @@ export class WaterFetcher {
     }
   }
 
-  async fetchAndSave(page: Page, prisma: PrismaClient, now: Date) {
+  async fetchAndSave(page: Page, now: Date) {
     console.log("[Water][action] wait for loading usage data");
     const tables = await page.locator("#fs-contents .kenshin-day+.waterUsage");
     const tablesCount = await tables?.count();
@@ -143,7 +144,7 @@ export class WaterFetcher {
         continue;
       }
 
-      await prisma.water_monthly_usages.upsert({
+      await this.prisma.water_monthly_usages.upsert({
         where: {
           usage_year_usage_month: {
             usage_year: usage.year,
