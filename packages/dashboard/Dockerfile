@@ -20,4 +20,4 @@ RUN apt-get update && apt-get install -y \
 
 ENV PORT=3000
 EXPOSE 3000
-ENTRYPOINT ["node", "server/index.mjs"]
+ENTRYPOINT ["node", "--enable-source-maps", "server/index.mjs"]

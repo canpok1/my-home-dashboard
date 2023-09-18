@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile-dev
     env_file:
       - db.env
+    environment:
+      NODE_OPTIONS: "--enable-source-maps"
 
     volumes:
       # Update this to wherever you want VS Code to mount the folder of your project
