@@ -1,20 +1,37 @@
 import { Page } from "@playwright/test";
 import playwright from "playwright-core";
-import { AppContext, RunContext } from "./Context";
+import { Env } from "../Env";
+import { Logger } from "pino";
+
+export async function withBrowser(
+  env: Env,
+  f: (browser: Browser) => Promise<void>
+) {
+  const browser = await playwright.chromium.launch({
+    headless: true,
+    args: ["--single-process", "--disable-features=dbus", "--disable-gpu"],
+  });
+
+  try {
+    await f(new Browser(env, browser));
+  } finally {
+    await browser.close();
+  }
+}
 
 export class Browser {
-  readonly appCtx: AppContext;
+  readonly env: Env;
   readonly browser: playwright.Browser;
 
-  constructor(appCtx: AppContext, browser: playwright.Browser) {
-    this.appCtx = appCtx;
+  constructor(env: Env, browser: playwright.Browser) {
+    this.env = env;
     this.browser = browser;
   }
 
-  async newPage(ctx: RunContext): Promise<Page> {
+  async newPage(logger: Logger): Promise<Page> {
     const page = await this.browser.newPage();
 
-    const browserLogger = ctx.logger.child({}, { msgPrefix: "[browser]" });
+    const browserLogger = logger.child({}, { msgPrefix: "[browser]" });
     page.on("requestfailed", (req) => {
       browserLogger.debug(
         {
@@ -36,7 +53,7 @@ export class Browser {
       }
     });
     page.on("console", (msg) => browserLogger.debug(msg.text()));
-    await page.setDefaultTimeout(this.appCtx.env.timeoutMs);
+    await page.setDefaultTimeout(this.env.timeoutMs);
 
     return page;
   }
