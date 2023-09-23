@@ -6,6 +6,8 @@ export class Env {
   readonly password: SecretString;
   readonly timeoutMs: number;
   readonly cron: string;
+  readonly screenshotDir: string;
+  readonly logLevel: string;
 
   constructor(env: NodeJS.ProcessEnv, prefix: string) {
     this.loginUrl = this.getStringValue(env, prefix + "_LOGIN_URL");
@@ -15,6 +17,8 @@ export class Env {
     );
     this.timeoutMs = this.getNumberValue(env, prefix + "_TIMEOUT_MS");
     this.cron = this.getStringValue(env, prefix + "_CRON_JST", false);
+    this.screenshotDir = this.getStringValue(env, prefix + "_SCREENSHOT_DIR");
+    this.logLevel = this.getStringValue(env, prefix + "_LOG_LEVEL");
   }
 
   getStringValue(

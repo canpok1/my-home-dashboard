@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { Browser } from "playwright-core";
-import { Env } from "./Env";
 import path from "path";
 import { Page } from "@playwright/test";
+import { AppContext, RunContext } from "./Context";
 
 interface Usage {
   year: number;
@@ -14,41 +13,39 @@ interface Usage {
 }
 
 export class WaterFetcher {
-  readonly env: Env;
-  readonly screenshotDir: string;
+  readonly appCtx: AppContext;
 
-  constructor(env: Env, screenshotDir: string) {
-    this.env = env;
-    this.screenshotDir = screenshotDir;
+  constructor(ctx: AppContext) {
+    this.appCtx = ctx;
   }
 
-  async fetch(browser: Browser, prisma: PrismaClient) {
-    console.log("[Water] fetch start");
+  async fetch(ctx: RunContext, browser: Browser) {
+    ctx.logger.info("fetch start");
     const page = await browser.newPage();
     try {
       page.on("requestfailed", (req) => {
-        console.log(
-          `[Water][browser] request failed: ${req.failure()
+        ctx.logger.debug(
+          `[browser] request failed: ${req.failure()
             ?.errorText}, ${req.method()} ${req.url()}`
         );
       });
       page.on("response", (res) => {
         if (!res.ok()) {
-          console.log(
-            `[Water][browser] ${res.status()} error: ${res
+          ctx.logger.debug(
+            `[browser] ${res.status()} error: ${res
               .request()
               .method()} ${res.url()}`
           );
         }
       });
       page.on("console", (msg) =>
-        console.log("[Water][browser] console: " + msg.text())
+        ctx.logger.debug("[browser] console: " + msg.text())
       );
-      await page.setDefaultTimeout(this.env.timeoutMs);
+      await page.setDefaultTimeout(this.appCtx.env.timeoutMs);
 
       // ログインページに移動
-      console.log("[Water][action] goto login page");
-      await page.goto(this.env.loginUrl);
+      ctx.logger.info("goto login page");
+      await page.goto(this.appCtx.env.loginUrl);
       await page.locator("#fs-contents").waitFor();
       await page.screenshot({
         path: this.makeScreenshotPath("water-01-login-page.png"),
@@ -56,16 +53,16 @@ export class WaterFetcher {
       });
 
       // ログイン
-      console.log("[Water][action] input id and password");
-      await page.locator("#loginId").fill(this.env.user);
-      await page.locator("#password").fill(this.env.password.value());
+      ctx.logger.info("input id and password");
+      await page.locator("#loginId").fill(this.appCtx.env.user);
+      await page.locator("#password").fill(this.appCtx.env.password.value());
       await page.screenshot({
         path: this.makeScreenshotPath("water-02-login-page-with-id-pw.png"),
         fullPage: true,
       });
-      console.log("[Water][action] click login button");
+      ctx.logger.info("click login button");
       await page.locator("#thisform > div.area > div.areaR > button").click();
-      console.log("[Water][action] wait for loading top page");
+      ctx.logger.info("wait for loading top page");
       await page.locator("#fs-contents").waitFor();
       await page.screenshot({
         path: this.makeScreenshotPath("water-03-top-page.png"),
@@ -74,7 +71,7 @@ export class WaterFetcher {
 
       // 料金を取得
       const now = new Date();
-      await this.fetchAndSave(prisma, page, now);
+      await this.fetchAndSave(ctx, page, now);
     } catch (err) {
       await page.screenshot({
         path: this.makeScreenshotPath("water-99-error.png"),
@@ -82,12 +79,12 @@ export class WaterFetcher {
       });
       throw err;
     } finally {
-      console.log("[Water] fetch end");
+      ctx.logger.info("fetch end");
     }
   }
 
-  async fetchAndSave(prisma: PrismaClient, page: Page, now: Date) {
-    console.log("[Water][action] wait for loading usage data");
+  async fetchAndSave(ctx: RunContext, page: Page, now: Date) {
+    ctx.logger.info("wait for loading usage data");
     const tables = await page.locator("#fs-contents .kenshin-day+.waterUsage");
     const tablesCount = await tables?.count();
 
@@ -109,8 +106,8 @@ export class WaterFetcher {
         (await tables.nth(i).locator("td").nth(5).innerText()).replace(",", "")
       );
 
-      console.log(
-        "[Water][debug] %s(%d/%d/%d) %d[m^3] %d[yen]",
+      ctx.logger.debug(
+        "%s(%d/%d/%d) %d[m^3] %d[yen]",
         dateStrOrg,
         year,
         month,
@@ -136,13 +133,13 @@ export class WaterFetcher {
     }
 
     // 料金を保存
-    console.log("[Water][action] save usage data to db");
+    ctx.logger.info("save usage data to db");
     for (const usage of usages) {
       if (usage.begin == null) {
         continue;
       }
 
-      await prisma.water_monthly_usages.upsert({
+      await this.appCtx.prisma.water_monthly_usages.upsert({
         where: {
           usage_year_usage_month: {
             usage_year: usage.year,
@@ -169,6 +166,6 @@ export class WaterFetcher {
   }
 
   private makeScreenshotPath(fileName: string): string {
-    return path.join(this.screenshotDir, fileName);
+    return path.join(this.appCtx.env.screenshotDir, fileName);
   }
 }

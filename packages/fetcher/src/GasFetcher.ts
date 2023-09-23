@@ -1,45 +1,42 @@
-import { PrismaClient } from "@prisma/client";
 import { Browser } from "playwright-core";
-import { Env } from "./Env";
 import path from "path";
 import { Page } from "@playwright/test";
+import { AppContext, RunContext } from "./Context";
 
 export class GasFetcher {
-  readonly env: Env;
-  readonly screenshotDir: string;
+  readonly appCtx: AppContext;
 
-  constructor(env: Env, screenshotDir: string) {
-    this.env = env;
-    this.screenshotDir = screenshotDir;
+  constructor(ctx: AppContext) {
+    this.appCtx = ctx;
   }
 
-  async fetch(browser: Browser, prisma: PrismaClient) {
-    console.log("[Gas] fetch start");
+  async fetch(ctx: RunContext, browser: Browser) {
+    ctx.logger.info("fetch start");
     try {
       const page = await browser.newPage();
       page.on("requestfailed", (req) => {
-        console.log(
-          `[Gas][browser] request failed: ${req.failure()
+        ctx.logger.debug(
+          `[browser] request failed: ${req.failure()
             ?.errorText}, ${req.method()} ${req.url()}`
         );
       });
       page.on("response", (res) => {
         if (!res.ok()) {
-          console.log(
-            `[Gas][browser] ${res.status()} error: ${res
+          ctx.logger.debug(
+            `[browser] ${res.status()} error: ${res
               .request()
               .method()} ${res.url()}`
           );
         }
       });
       page.on("console", (msg) =>
-        console.log("[Gas][browser] console: " + msg.text())
+        ctx.logger.debug("[browser] console: " + msg.text())
       );
-      await page.setDefaultTimeout(this.env.timeoutMs);
+      await page.setDefaultTimeout(this.appCtx.env.timeoutMs);
 
       // ログインページに移動
-      console.log("[Gas][action] goto login page");
-      await page.goto(this.env.loginUrl);
+      ctx.logger.info("goto login page");
+      await page.goto(this.appCtx.env.loginUrl);
       await page.locator("#divContent > div.divFrame01").waitFor();
       await page.screenshot({
         path: this.makeScreenshotPath("gas-01-login-page.png"),
@@ -47,49 +44,48 @@ export class GasFetcher {
       });
 
       // ログイン
-      console.log("[Gas][action] input id and password");
-      await page.locator("#ContentPlaceHolder1_txtLoginID").fill(this.env.user);
+      ctx.logger.info("input id and password");
+      await page
+        .locator("#ContentPlaceHolder1_txtLoginID")
+        .fill(this.appCtx.env.user);
       await page
         .locator("#ContentPlaceHolder1_txtPassWord")
-        .fill(this.env.password.value());
+        .fill(this.appCtx.env.password.value());
       await page.screenshot({
         path: this.makeScreenshotPath("gas-02-login-page-with-id-pw.png"),
         fullPage: true,
       });
-      console.log("[Gas][action] click login button");
+      ctx.logger.info("click login button");
       await page.locator("#ContentPlaceHolder1_btnLogin").click();
-      console.log("[Gas][action] wait for loading top page");
+      ctx.logger.info("wait for loading top page");
       await page.locator("#tblLoginInfo").waitFor();
       await page.screenshot({
         path: this.makeScreenshotPath("gas-03-top-page.png"),
         fullPage: true,
       });
 
-      // ガス料金を取得
+      // ガス料金を取得して保存
       const now = new Date();
       for (let beforeMonth = 0; beforeMonth < 5; beforeMonth++) {
         if (beforeMonth != 0) {
-          console.log("[Gas][action] ");
+          ctx.logger.info("click before month button");
           await page.locator("#ContentPlaceHolder1_LinkButton1").click();
         }
 
-        await this.fetchAndSave(prisma, page, beforeMonth, now);
+        await this.fetchAndSave(ctx, page, beforeMonth, now);
       }
     } finally {
-      console.log("[Gas] fetch end");
+      ctx.logger.info("fetch end");
     }
   }
 
   async fetchAndSave(
-    prisma: PrismaClient,
+    ctx: RunContext,
     page: Page,
     beforeMonth: number,
     now: Date
   ) {
-    console.log(
-      "[Gas][action] wait for loading usage data, %d month ago",
-      beforeMonth
-    );
+    ctx.logger.info("wait for loading usage data, %d month ago", beforeMonth);
     const year = Number(
       (
         await page.locator("#ContentPlaceHolder1_lblNowYear").innerText()
@@ -130,11 +126,8 @@ export class GasFetcher {
     );
 
     // ガス料金を保存
-    console.log(
-      "[Gas][action] save usage data to db, %d month ago",
-      beforeMonth
-    );
-    await prisma.gas_monthly_usages.upsert({
+    ctx.logger.info("save usage data to db, %d month ago", beforeMonth);
+    await this.appCtx.prisma.gas_monthly_usages.upsert({
       where: {
         usage_year_usage_month: {
           usage_year: year,
@@ -160,6 +153,6 @@ export class GasFetcher {
   }
 
   private makeScreenshotPath(fileName: string): string {
-    return path.join(this.screenshotDir, fileName);
+    return path.join(this.appCtx.env.screenshotDir, fileName);
   }
 }

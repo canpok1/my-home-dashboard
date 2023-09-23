@@ -2,124 +2,169 @@ import { chromium } from "playwright-core";
 import "dotenv/config";
 import { Env } from "./Env";
 import { ElectricityFetcher } from "./ElectricityFetcher";
-import { schedule } from "node-cron";
+import { schedule, validate } from "node-cron";
 import { GasFetcher } from "./GasFetcher";
 import { WaterFetcher } from "./WaterFetcher";
 import { PrismaClient } from "@prisma/client";
+import pino from "pino";
+import { AppContext } from "./Context";
+import { Browser } from "@playwright/test";
 
-const electricityEnv = new Env(process.env, "ELECTRICITY");
-const gasEnv = new Env(process.env, "GAS");
-const waterEnv = new Env(process.env, "WATER");
-
-const fetchElectricity = async (prisma: PrismaClient) => {
+async function withBrowser(f: (browser: Browser) => Promise<void>) {
   const browser = await chromium.launch({
     headless: true,
     args: ["--single-process", "--disable-features=dbus", "--disable-gpu"],
   });
 
   try {
-    const fetcher = new ElectricityFetcher(electricityEnv, "tmp");
-    await fetcher.fetch(browser, prisma);
+    await f(browser);
   } finally {
     await browser.close();
   }
-};
-
-const fetchGas = async (prisma: PrismaClient) => {
-  const browser = await chromium.launch({
-    headless: true,
-    args: ["--single-process", "--disable-features=dbus", "--disable-gpu"],
-  });
-
-  try {
-    const fetcher = new GasFetcher(gasEnv, "tmp");
-    await fetcher.fetch(browser, prisma);
-  } finally {
-    await browser.close();
-  }
-};
-
-const fetchWater = async (prisma: PrismaClient) => {
-  const browser = await chromium.launch({
-    headless: true,
-    args: ["--single-process", "--disable-features=dbus", "--disable-gpu"],
-  });
-
-  try {
-    const fetcher = new WaterFetcher(waterEnv, "tmp");
-    await fetcher.fetch(browser, prisma);
-  } finally {
-    await browser.close();
-  }
-};
+}
 
 (async () => {
-  console.log("[Electricity] env: %s", electricityEnv);
-  console.log("[Gas] env: %s", gasEnv);
-  console.log("[Water] env: %s", waterEnv);
+  const logger = pino({
+    transport: {
+      target: "pino-pretty",
+    },
+  });
 
-  const prisma = new PrismaClient();
+  try {
+    const prisma = new PrismaClient();
 
-  // 電気料金
-  if (electricityEnv.cron === "") {
-    console.log("[Electricity] run at once");
-    await fetchElectricity(prisma);
-  } else {
-    console.log("[Electricity] setup cron schedule [%s]", electricityEnv.cron);
-    schedule(
-      electricityEnv.cron,
-      async () => {
-        try {
-          await fetchElectricity(prisma);
-        } catch (err) {
-          console.log("[Electricity] error occured, error: ", err);
-        }
-      },
-      {
-        timezone: "Asia/Tokyo",
+    const electricityCtx: AppContext = {
+      prisma: prisma,
+      env: new Env(process.env, "ELECTRICITY"),
+    };
+
+    const gasCtx: AppContext = {
+      prisma: prisma,
+      env: new Env(process.env, "GAS"),
+    };
+
+    const waterCtx: AppContext = {
+      prisma: prisma,
+      env: new Env(process.env, "WATER"),
+    };
+
+    logger.info("electricity env: %j", electricityCtx.env);
+    logger.info("gas env: %j", gasCtx.env);
+    logger.info("water env: %j", waterCtx.env);
+
+    // 電気料金
+    {
+      const fetcher = new ElectricityFetcher(electricityCtx);
+      const l = logger.child({ target: "electricity" });
+      l.level = electricityCtx.env.logLevel;
+      const ctx = {
+        logger: l,
+      };
+
+      if (!validate(electricityCtx.env.cron)) {
+        ctx.logger.info(
+          "cron schedule[%s] is invalid, run at once",
+          electricityCtx.env.cron
+        );
+        await withBrowser(async (browser: Browser) => {
+          await fetcher.fetch(ctx, browser);
+        });
+      } else {
+        ctx.logger.info("setup cron schedule [%s]", electricityCtx.env.cron);
+        schedule(
+          electricityCtx.env.cron,
+          async () => {
+            try {
+              await withBrowser(async (browser: Browser) => {
+                await fetcher.fetch(ctx, browser);
+              });
+            } catch (err) {
+              ctx.logger.error(err);
+            }
+          },
+          {
+            timezone: "Asia/Tokyo",
+          }
+        );
       }
-    );
-  }
+    }
 
-  // ガス料金
-  if (gasEnv.cron === "") {
-    console.log("[Gas] run at once");
-    await fetchGas(prisma);
-  } else {
-    console.log("[Gas] setup cron schedule [%s]", gasEnv.cron);
-    schedule(
-      gasEnv.cron,
-      async () => {
-        try {
-          await fetchGas(prisma);
-        } catch (err) {
-          console.log("[Gas] error occured, error: ", err);
-        }
-      },
-      {
-        timezone: "Asia/Tokyo",
-      }
-    );
-  }
+    // ガス料金
+    {
+      const fetcher = new GasFetcher(gasCtx);
 
-  // 水道料金
-  if (waterEnv.cron === "") {
-    console.log("[Water] run at once");
-    await fetchWater(prisma);
-  } else {
-    console.log("[Water] setup cron schedule [%s]", waterEnv.cron);
-    schedule(
-      waterEnv.cron,
-      async () => {
-        try {
-          await fetchWater(prisma);
-        } catch (err) {
-          console.log("[Water] error occured, error: ", err);
-        }
-      },
-      {
-        timezone: "Asia/Tokyo",
+      const l = logger.child({ target: "gas" });
+      l.level = gasCtx.env.logLevel;
+      const ctx = {
+        logger: l,
+      };
+
+      if (!validate(gasCtx.env.cron)) {
+        ctx.logger.info(
+          "cron schedule[%s] is invalid, run at once",
+          gasCtx.env.cron
+        );
+        await withBrowser(async (browser: Browser) => {
+          await fetcher.fetch(ctx, browser);
+        });
+      } else {
+        ctx.logger.info("setup cron schedule [%s]", gasCtx.env.cron);
+        schedule(
+          gasCtx.env.cron,
+          async () => {
+            try {
+              await withBrowser(async (browser: Browser) => {
+                await fetcher.fetch(ctx, browser);
+              });
+            } catch (err) {
+              ctx.logger.error(err);
+            }
+          },
+          {
+            timezone: "Asia/Tokyo",
+          }
+        );
       }
-    );
+    }
+
+    // 水道料金
+    {
+      const fetcher = new WaterFetcher(waterCtx);
+
+      const l = logger.child({ target: "water" });
+      l.level = gasCtx.env.logLevel;
+      const ctx = {
+        logger: l,
+      };
+
+      if (!validate(waterCtx.env.cron)) {
+        ctx.logger.info(
+          "cron schedule[%s] is invalid, run at once",
+          waterCtx.env.cron
+        );
+        await withBrowser(async (browser: Browser) => {
+          await fetcher.fetch(ctx, browser);
+        });
+      } else {
+        ctx.logger.info("setup cron schedule [%s]", waterCtx.env.cron);
+        schedule(
+          waterCtx.env.cron,
+          async () => {
+            try {
+              await withBrowser(async (browser: Browser) => {
+                await fetcher.fetch(ctx, browser);
+              });
+            } catch (err) {
+              ctx.logger.error(err);
+            }
+          },
+          {
+            timezone: "Asia/Tokyo",
+          }
+        );
+      }
+    }
+  } catch (err) {
+    logger.error(err);
   }
 })();

@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { Browser } from "playwright-core";
-import { Env } from "./Env";
 import path from "path";
 import { Page } from "@playwright/test";
+import { AppContext, RunContext } from "./Context";
 
 interface Usage {
   year: number;
@@ -13,52 +12,50 @@ interface Usage {
 }
 
 export class ElectricityFetcher {
-  readonly env: Env;
-  readonly screenshotDir: string;
+  readonly appCtx: AppContext;
 
-  constructor(env: Env, screenshotDir: string) {
-    this.env = env;
-    this.screenshotDir = screenshotDir;
+  constructor(ctx: AppContext) {
+    this.appCtx = ctx;
   }
 
-  async fetch(browser: Browser, prisma: PrismaClient) {
-    console.log("[Electricity] fetch start");
+  async fetch(ctx: RunContext, browser: Browser) {
+    ctx.logger.info("fetch start");
     try {
       const now = new Date();
 
       const page = await browser.newPage();
       page.on("requestfailed", (req) => {
-        console.log(
-          `[Electricity][browser] request failed: ${req.failure()
+        ctx.logger.debug(
+          `[browser] request failed: ${req.failure()
             ?.errorText}, ${req.method()} ${req.url()}`
         );
       });
       page.on("response", (res) => {
         if (!res.ok()) {
-          console.log(
-            `[Electricity][browser] ${res.status()} error: ${res
+          ctx.logger.debug(
+            `[browser] ${res.status()} error: ${res
               .request()
               .method()} ${res.url()}`
           );
         }
       });
       page.on("console", (msg) =>
-        console.log("[Electricity][browser] console: " + msg.text())
+        ctx.logger.debug("[browser] console: " + msg.text())
       );
-      await page.setDefaultTimeout(this.env.timeoutMs);
+      await page.setDefaultTimeout(this.appCtx.env.timeoutMs);
 
       // ログインページに移動
-      console.log("[Electricity][action] goto login page");
-      await page.goto(this.env.loginUrl);
+      ctx.logger.info("goto login page");
+      await page.goto(this.appCtx.env.loginUrl);
       await page.screenshot({
         path: this.makeScreenshotPath("electricity-01-login-page.png"),
         fullPage: true,
       });
 
       // ログイン
-      console.log("[Electricity][action] input id and password");
-      await page.locator("#k_id").fill(this.env.user);
-      await page.locator("#k_pw").fill(this.env.password.value());
+      ctx.logger.info("input id and password");
+      await page.locator("#k_id").fill(this.appCtx.env.user);
+      await page.locator("#k_pw").fill(this.appCtx.env.password.value());
       await page.screenshot({
         path: this.makeScreenshotPath(
           "electricity-02-login-page-with-id-pw.png"
@@ -66,10 +63,10 @@ export class ElectricityFetcher {
         fullPage: true,
       });
 
-      console.log("[Electricity][action] click login button");
+      ctx.logger.info("click login button");
       await page.locator("#loginFormDtl").locator(".headLoginbtn").click();
 
-      console.log("[Electricity][action] wait for loading top page");
+      ctx.logger.info("wait for loading top page");
       await page.locator(".loginName").waitFor();
       await page.screenshot({
         path: this.makeScreenshotPath("electricity-03-top-page.png"),
@@ -77,51 +74,51 @@ export class ElectricityFetcher {
       });
 
       // 今月の電気料金のページに移動
-      console.log("[Electricity][action] click detail link");
+      ctx.logger.info("click detail link");
       await page
         .locator(
           "#headerRyoukin > table.header_ryoukin_tbl.desktop_only > tbody > tr > td:nth-child(4) > a"
         )
         .click();
 
-      // 電気料金を取得
+      // 電気料金を取得して保存
       await this.saveLatestUsage(
-        prisma,
+        ctx,
         page,
         now,
         "electricity-04-latest-usage.png"
       );
 
       // 毎月の電気料金の一覧ページに移動
-      console.log("[Electricity][action] click menu_month button");
+      ctx.logger.info("click menu_month button");
       await page.locator("#menu_month").click();
 
-      // 電気料金を取得
+      // 電気料金を取得して保存
       await this.saveUsageHistory(
-        prisma,
+        ctx,
         page,
         now,
         "electricity-05-usage-history.png"
       );
     } finally {
-      console.log("[Electricity] fetch end");
+      ctx.logger.info("fetch end");
     }
   }
 
   private async saveLatestUsage(
-    prisma: PrismaClient,
+    ctx: RunContext,
     page: Page,
     now: Date,
     screenshotName: string
   ) {
-    console.log("[Electricity][action] wait for loading latest usages");
+    ctx.logger.info("wait for loading latest usages");
     await page.locator("#gaiyouGaisan").waitFor();
     await page.screenshot({
       path: this.makeScreenshotPath(screenshotName),
       fullPage: true,
     });
 
-    console.log("[Electricity][action] fetch latest usage");
+    ctx.logger.info("fetch latest usage");
     const prevDateLabel = (
       await page.locator("#gaiyouJiseki > div.gaiyouTitle").innerText()
     )
@@ -149,9 +146,8 @@ export class ElectricityFetcher {
       ).replace(",", "")
     );
 
-    console.log("[Electricity][action] save latest usage to db");
+    ctx.logger.info("save latest usage to db");
     await this.upsert(
-      prisma,
       {
         year: current.getFullYear(),
         month: current.getMonth() + 1,
@@ -164,12 +160,12 @@ export class ElectricityFetcher {
   }
 
   private async saveUsageHistory(
-    prisma: PrismaClient,
+    ctx: RunContext,
     page: Page,
     now: Date,
     screenshotName: string
   ) {
-    console.log("[Electricity][action] wait for loading usage history");
+    ctx.logger.info("wait for loading usage history");
     const tables = await page.locator(
       "#wrapper > div > div > table.desktop_only.table01.mt-1.monthJisekiTbl.conditionBackgroud"
     );
@@ -179,7 +175,7 @@ export class ElectricityFetcher {
       fullPage: true,
     });
 
-    console.log("[Electricity][action] fetch usage history");
+    ctx.logger.info("fetch usage history");
     const rows = await tables.locator("tbody > tr");
 
     const usages: Usage[] = [];
@@ -199,18 +195,18 @@ export class ElectricityFetcher {
     }
 
     // 電気料金を保存
-    console.log("[Electricity][action] save usage history to db");
+    ctx.logger.info("save usage history to db");
     for (const usage of usages) {
-      await this.upsert(prisma, usage, now);
+      await this.upsert(usage, now);
     }
   }
 
   private makeScreenshotPath(fileName: string): string {
-    return path.join(this.screenshotDir, fileName);
+    return path.join(this.appCtx.env.screenshotDir, fileName);
   }
 
-  private async upsert(prisma: PrismaClient, usage: Usage, now: Date) {
-    await prisma.electricity_monthly_usages.upsert({
+  private async upsert(usage: Usage, now: Date) {
+    await this.appCtx.prisma.electricity_monthly_usages.upsert({
       where: {
         usage_year_usage_month: {
           usage_year: usage.year,
