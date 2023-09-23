@@ -10,9 +10,13 @@ export class Scheduler {
   async schedule(ctx: RunContext, fetcher: Fetcher, cronValue: string) {
     if (!cron.validate(cronValue)) {
       ctx.logger.info("cron schedule[%s] is invalid, run at once", cron);
-      await this.withBrowser(async (browser: Browser) => {
-        await fetcher.fetch(ctx, browser);
-      });
+      try {
+        await this.withBrowser(async (browser: Browser) => {
+          await fetcher.fetch(ctx, browser);
+        });
+      } catch (err) {
+        ctx.logger.error(err);
+      }
     } else {
       ctx.logger.info("setup cron schedule [%s]", cronValue);
       cron.schedule(
