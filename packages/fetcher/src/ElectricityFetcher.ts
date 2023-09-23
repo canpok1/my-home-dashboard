@@ -1,7 +1,7 @@
-import { Browser } from "playwright-core";
 import path from "path";
 import { Page } from "@playwright/test";
 import { AppContext, RunContext } from "./Context";
+import { Browser } from "./Browser";
 
 interface Usage {
   year: number;
@@ -23,26 +23,7 @@ export class ElectricityFetcher {
     try {
       const now = new Date();
 
-      const page = await browser.newPage();
-      page.on("requestfailed", (req) => {
-        ctx.logger.debug(
-          `[browser] request failed: ${req.failure()
-            ?.errorText}, ${req.method()} ${req.url()}`
-        );
-      });
-      page.on("response", (res) => {
-        if (!res.ok()) {
-          ctx.logger.debug(
-            `[browser] ${res.status()} error: ${res
-              .request()
-              .method()} ${res.url()}`
-          );
-        }
-      });
-      page.on("console", (msg) =>
-        ctx.logger.debug("[browser] console: " + msg.text())
-      );
-      await page.setDefaultTimeout(this.appCtx.env.timeoutMs);
+      const page = await browser.newPage(ctx);
 
       // ログインページに移動
       ctx.logger.info("goto login page");

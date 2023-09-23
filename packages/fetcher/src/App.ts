@@ -3,15 +3,14 @@ import { ElectricityFetcher } from "./ElectricityFetcher";
 import { GasFetcher } from "./GasFetcher";
 import { WaterFetcher } from "./WaterFetcher";
 import { PrismaClient } from "@prisma/client";
-import pino from "pino";
+import pino, { stdTimeFunctions } from "pino";
 import { AppContext } from "./Context";
 import { Scheduler } from "./Scheduler";
 
 (async () => {
   const logger = pino({
-    transport: {
-      target: "pino-pretty",
-    },
+    name: "fetcher",
+    timestamp: stdTimeFunctions.isoTime,
   });
 
   try {
@@ -22,27 +21,26 @@ import { Scheduler } from "./Scheduler";
       prisma: prisma,
       env: new Env(process.env, "ELECTRICITY"),
     };
+    logger.info({ env: electricityCtx.env }, "loaded electricity env");
 
     const gasCtx: AppContext = {
       prisma: prisma,
       env: new Env(process.env, "GAS"),
     };
+    logger.info({ env: gasCtx.env }, "loaded gas env");
 
     const waterCtx: AppContext = {
       prisma: prisma,
       env: new Env(process.env, "WATER"),
     };
+    logger.info({ env: waterCtx.env }, "loaded water env");
 
-    logger.info("electricity env: %j", electricityCtx.env);
-    logger.info("gas env: %j", gasCtx.env);
-    logger.info("water env: %j", waterCtx.env);
-
-    const scheduler = new Scheduler();
     // 電気料金
     {
-      const l = logger.child({ target: "electricity" });
+      const l = logger.child({}, { msgPrefix: "[electricity]" });
       l.level = electricityCtx.env.logLevel;
 
+      const scheduler = new Scheduler(electricityCtx);
       await scheduler.schedule(
         { logger: l },
         new ElectricityFetcher(electricityCtx),
@@ -52,9 +50,10 @@ import { Scheduler } from "./Scheduler";
 
     // ガス料金
     {
-      const l = logger.child({ target: "gas" });
+      const l = logger.child({}, { msgPrefix: "[gas]" });
       l.level = gasCtx.env.logLevel;
 
+      const scheduler = new Scheduler(electricityCtx);
       await scheduler.schedule(
         { logger: l },
         new GasFetcher(gasCtx),
@@ -64,9 +63,10 @@ import { Scheduler } from "./Scheduler";
 
     // 水道料金
     {
-      const l = logger.child({ target: "water" });
+      const l = logger.child({}, { msgPrefix: "[water]" });
       l.level = waterCtx.env.logLevel;
 
+      const scheduler = new Scheduler(electricityCtx);
       await scheduler.schedule(
         { logger: l },
         new WaterFetcher(waterCtx),
