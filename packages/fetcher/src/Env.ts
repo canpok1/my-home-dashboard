@@ -14,7 +14,7 @@ export class Env {
       this.getStringValue(env, prefix + "_PASSWORD")
     );
     this.timeoutMs = this.getNumberValue(env, prefix + "_TIMEOUT_MS");
-    this.cron = this.getStringValue(env, prefix + "_CRON", false);
+    this.cron = this.getStringValue(env, prefix + "_CRON_JST", false);
   }
 
   getStringValue(

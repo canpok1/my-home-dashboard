@@ -66,9 +66,19 @@ const fetchWater = async (prisma: PrismaClient) => {
     await fetchElectricity(prisma);
   } else {
     console.log("[Electricity] setup cron schedule [%s]", electricityEnv.cron);
-    schedule(electricityEnv.cron, async () => {
-      await fetchElectricity(prisma);
-    });
+    schedule(
+      electricityEnv.cron,
+      async () => {
+        try {
+          await fetchElectricity(prisma);
+        } catch (err) {
+          console.log("[Electricity] error occured, error: ", err);
+        }
+      },
+      {
+        timezone: "Asia/Tokyo",
+      }
+    );
   }
 
   // ガス料金
@@ -77,9 +87,19 @@ const fetchWater = async (prisma: PrismaClient) => {
     await fetchGas(prisma);
   } else {
     console.log("[Gas] setup cron schedule [%s]", gasEnv.cron);
-    schedule(gasEnv.cron, async () => {
-      await fetchGas(prisma);
-    });
+    schedule(
+      gasEnv.cron,
+      async () => {
+        try {
+          await fetchGas(prisma);
+        } catch (err) {
+          console.log("[Gas] error occured, error: ", err);
+        }
+      },
+      {
+        timezone: "Asia/Tokyo",
+      }
+    );
   }
 
   // 水道料金
@@ -88,8 +108,18 @@ const fetchWater = async (prisma: PrismaClient) => {
     await fetchWater(prisma);
   } else {
     console.log("[Water] setup cron schedule [%s]", waterEnv.cron);
-    schedule(waterEnv.cron, async () => {
-      await fetchWater(prisma);
-    });
+    schedule(
+      waterEnv.cron,
+      async () => {
+        try {
+          await fetchWater(prisma);
+        } catch (err) {
+          console.log("[Water] error occured, error: ", err);
+        }
+      },
+      {
+        timezone: "Asia/Tokyo",
+      }
+    );
   }
 })();
