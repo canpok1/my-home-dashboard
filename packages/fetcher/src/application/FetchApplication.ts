@@ -55,8 +55,10 @@ export class FetchApplication {
       new MySqlClient(this.prisma),
       new Scheduler()
     );
+
     const logger = parentLogger.child({}, { msgPrefix: "[gas]" });
     logger.level = this.gasEnv.logLevel;
+
     await service.run(logger);
   }
 
@@ -67,8 +69,10 @@ export class FetchApplication {
       new MySqlClient(this.prisma),
       new Scheduler()
     );
+
     const logger = parentLogger.child({}, { msgPrefix: "[water]" });
     logger.level = this.waterEnv.logLevel;
+
     await service.run(logger);
   }
 }

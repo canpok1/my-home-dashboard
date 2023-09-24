@@ -39,6 +39,33 @@ export class MySqlClient {
     }
   }
 
+  async saveElectricityDailyUsages(
+    usages: electricity.DailyUsageModel[],
+    now: Date
+  ): Promise<void> {
+    for (const usage of usages) {
+      await this.prisma.electricity_daily_usages.upsert({
+        where: {
+          usage_year_usage_month_usage_date: {
+            usage_year: usage.year,
+            usage_month: usage.month,
+            usage_date: usage.date,
+          },
+        },
+        create: {
+          usage_year: usage.year,
+          usage_month: usage.month,
+          usage_date: usage.date,
+          usage_amount: usage.amount,
+        },
+        update: {
+          usage_amount: usage.amount,
+          updated_at: now,
+        },
+      });
+    }
+  }
+
   async saveGasMonthlyUsages(
     usages: gas.MonthlyUsageModel[],
     now: Date

@@ -10,13 +10,26 @@ export interface MonthlyUsageModel {
   yen: number;
 }
 
+export interface DailyUsageModel {
+  year: number;
+  month: number;
+  date: number;
+  amount: number;
+}
+
 export interface UsageFetcher {
   fetchMonthly(logger: Logger): Promise<MonthlyUsageModel[]>;
+  fetchDaily(logger: Logger): Promise<DailyUsageModel[]>;
 }
 
 export interface UsageRepository {
   saveElectricityMonthlyUsages(
     usages: MonthlyUsageModel[],
+    now: Date
+  ): Promise<void>;
+
+  saveElectricityDailyUsages(
+    usages: DailyUsageModel[],
     now: Date
   ): Promise<void>;
 }
@@ -47,7 +60,10 @@ export class UsageService {
   }
 
   private async fetchAndSave(logger: Logger, now: Date): Promise<void> {
-    const models = await this.fetcher.fetchMonthly(logger);
-    await this.repository.saveElectricityMonthlyUsages(models, now);
+    const monthlyUsages = await this.fetcher.fetchMonthly(logger);
+    await this.repository.saveElectricityMonthlyUsages(monthlyUsages, now);
+
+    const dailyUsages = await this.fetcher.fetchDaily(logger);
+    await this.repository.saveElectricityDailyUsages(dailyUsages, now);
   }
 }
