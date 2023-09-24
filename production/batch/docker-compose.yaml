@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  fetcher:
+    image: ghcr.io/canpok1/my-home-dashboard/fetcher:latest
+    env_file:
+      - ".env"

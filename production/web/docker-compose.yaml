@@ -9,7 +9,7 @@ services:
     volumes:
       - "db-store:/var/lib/mysql"
     ports:
-      - "53306:3306"
+      - "23306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping"]
       start_period: "10s"
@@ -26,11 +26,6 @@ services:
     image: ghcr.io/canpok1/my-home-dashboard/dashboard:latest
     ports:
       - "13000:3000"
-    env_file:
-      - ".env"
-
-  fetcher:
-    image: ghcr.io/canpok1/my-home-dashboard/fetcher:latest
     env_file:
       - ".env"
 
