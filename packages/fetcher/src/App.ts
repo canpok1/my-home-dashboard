@@ -1,12 +1,11 @@
-import { Env } from "./Env";
+import { CommonEnv, Env } from "./Env";
 import { PrismaClient } from "@prisma/client";
 import { FetchApplication } from "./application/FetchApplication";
-import * as bunyan from "bunyan";
+import { createLogger } from "./Logger";
 
 (async () => {
-  const logger = bunyan.createLogger({
-    name: "fetcher",
-  });
+  const commonEnv = new CommonEnv(process.env);
+  const logger = createLogger(commonEnv);
 
   try {
     const prisma = new PrismaClient();

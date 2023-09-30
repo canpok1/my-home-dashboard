@@ -43,7 +43,6 @@ export class FetchApplication {
     );
 
     const logger = parentLogger.child({ usage_type: "electricity" });
-    logger.level(this.electricityEnv.logLevel);
 
     await service.run(logger);
   }
@@ -57,7 +56,6 @@ export class FetchApplication {
     );
 
     const logger = parentLogger.child({ usage_type: "gas" });
-    logger.level(this.gasEnv.logLevel);
 
     await service.run(logger);
   }
@@ -71,7 +69,6 @@ export class FetchApplication {
     );
 
     const logger = parentLogger.child({ usage_type: "water" });
-    logger.level(this.waterEnv.logLevel);
 
     await service.run(logger);
   }
