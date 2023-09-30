@@ -1,6 +1,6 @@
-import { Logger } from "pino";
 import { Scheduler } from "./Scheduler";
 import { Env } from "../Env";
+import Logger from "bunyan";
 
 export interface MonthlyUsageModel {
   year: number;

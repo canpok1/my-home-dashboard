@@ -1,5 +1,5 @@
+import Logger from "bunyan";
 import * as cron from "node-cron";
-import { Logger } from "pino";
 
 export class Scheduler {
   async schedule(logger: Logger, cronValue: string, f: () => Promise<void>) {

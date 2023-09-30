@@ -1,4 +1,3 @@
-import { Logger } from "pino";
 import * as electricity from "../domain/Electricity";
 import * as gas from "../domain/Gas";
 import * as water from "../domain/Water";
@@ -9,6 +8,7 @@ import { PrismaClient } from "@prisma/client";
 import { Scheduler } from "../infra/Scheduler";
 import { GasClient } from "../infra/GasClient";
 import { WaterClient } from "../infra/WaterClient";
+import Logger from "bunyan";
 
 export class FetchApplication {
   readonly electricityEnv: Env;
@@ -42,8 +42,8 @@ export class FetchApplication {
       new Scheduler()
     );
 
-    const logger = parentLogger.child({}, { msgPrefix: "[electricity]" });
-    logger.level = this.electricityEnv.logLevel;
+    const logger = parentLogger.child({ usage_type: "electricity" });
+    logger.level(this.electricityEnv.logLevel);
 
     await service.run(logger);
   }
@@ -56,8 +56,8 @@ export class FetchApplication {
       new Scheduler()
     );
 
-    const logger = parentLogger.child({}, { msgPrefix: "[gas]" });
-    logger.level = this.gasEnv.logLevel;
+    const logger = parentLogger.child({ usage_type: "gas" });
+    logger.level(this.gasEnv.logLevel);
 
     await service.run(logger);
   }
@@ -70,8 +70,8 @@ export class FetchApplication {
       new Scheduler()
     );
 
-    const logger = parentLogger.child({}, { msgPrefix: "[water]" });
-    logger.level = this.waterEnv.logLevel;
+    const logger = parentLogger.child({ usage_type: "water" });
+    logger.level(this.waterEnv.logLevel);
 
     await service.run(logger);
   }

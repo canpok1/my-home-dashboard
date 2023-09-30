@@ -1,7 +1,7 @@
 import { Page } from "@playwright/test";
 import playwright from "playwright-core";
 import { Env } from "../Env";
-import { Logger } from "pino";
+import Logger from "bunyan";
 
 export async function withBrowser(
   env: Env,
@@ -31,28 +31,29 @@ export class Browser {
   async newPage(logger: Logger): Promise<Page> {
     const page = await this.browser.newPage();
 
-    const browserLogger = logger.child({}, { msgPrefix: "[browser]" });
     page.on("requestfailed", (req) => {
-      browserLogger.debug(
+      logger.debug(
         {
           error: req.failure()?.errorText,
           method: req.method(),
           url: req.url(),
         },
-        "request failed"
+        "[browser]request failed"
       );
     });
     page.on("response", (res) => {
       const status = res.status();
       if (status >= 400) {
-        browserLogger.debug(
+        logger.debug(
           { status: status, method: res.request().method(), url: res.url() },
-          "%d error",
+          "[browser]response: %d error",
           status
         );
       }
     });
-    page.on("console", (msg) => browserLogger.debug(msg.text()));
+    page.on("console", (msg) =>
+      logger.debug(`[browser]console: ${msg.text()}`)
+    );
     await page.setDefaultTimeout(this.env.timeoutMs);
 
     return page;

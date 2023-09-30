@@ -5,7 +5,7 @@
   "main": "App.ts",
   "scripts": {
     "build": "tsc",
-    "start": "dotenv -e .env ts-node src/App.ts | pino-pretty",
+    "start": "dotenv -e .env ts-node src/App.ts | bunyan",
     "clean": "rm -rf output && rm -rf tmp && rm -f tsconfig.tsbuildinfo",
     "lint": "echo \"Warn: no lint specified\"",
     "typecheck": "tsc --noEmit",
@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/bunyan": "^1.8.9",
     "@types/jest": "^29.5.5",
     "@types/node": "^20.4.5",
     "@types/node-cron": "^3.0.8",
@@ -26,8 +27,7 @@
   "dependencies": {
     "@playwright/test": "^1.37.0",
     "@prisma/client": "^5.1.1",
-    "node-cron": "^3.0.2",
-    "pino": "^8.15.1",
-    "pino-pretty": "^10.2.0"
+    "bunyan": "^1.8.15",
+    "node-cron": "^3.0.2"
   }
 }

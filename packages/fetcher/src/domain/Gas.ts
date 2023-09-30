@@ -1,4 +1,4 @@
-import { Logger } from "pino";
+import Logger from "bunyan";
 import { Env } from "../Env";
 import { Scheduler } from "./Scheduler";
 

@@ -1,7 +1,7 @@
+import Logger from "bunyan";
 import { DailyUsageModel, MonthlyUsageModel } from "../domain/Electricity";
 import { Env } from "../Env";
 import { Browser, withBrowser } from "./Browser";
-import { Logger } from "pino";
 import { BrowserPage } from "./BrowserPage";
 import { nthMatch } from "./ScrapeUtils";
 
@@ -13,7 +13,7 @@ export class ElectricityClient {
   }
 
   async fetchMonthly(parentLogger: Logger): Promise<MonthlyUsageModel[]> {
-    const logger = parentLogger.child({}, { msgPrefix: "[monthly]" });
+    const logger = parentLogger.child({ term: "monthly" });
 
     logger.info("fetch monthly start");
     let usages: MonthlyUsageModel[] = [];
@@ -59,7 +59,7 @@ export class ElectricityClient {
   }
 
   async fetchDaily(parentLogger: Logger): Promise<DailyUsageModel[]> {
-    const logger = parentLogger.child({}, { msgPrefix: "[daily]" });
+    const logger = parentLogger.child({ term: "daily" });
 
     logger.info("fetch daily start");
     let usages: DailyUsageModel[] = [];
@@ -259,7 +259,7 @@ export class ElectricityClient {
         date: date,
         amount: amount,
       };
-      logger.debug("%j", usage);
+      logger.debug("usage: %j", usage);
 
       usages.push(usage);
 

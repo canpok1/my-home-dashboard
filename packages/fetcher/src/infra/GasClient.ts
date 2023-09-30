@@ -3,7 +3,7 @@ import { Page } from "@playwright/test";
 import { Browser, withBrowser } from "./Browser";
 import { Env } from "../Env";
 import { MonthlyUsageModel } from "../domain/Gas";
-import { Logger } from "pino";
+import Logger from "bunyan";
 
 export class GasClient {
   readonly env: Env;

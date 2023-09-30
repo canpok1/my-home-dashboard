@@ -1,12 +1,11 @@
 import { Env } from "./Env";
 import { PrismaClient } from "@prisma/client";
-import pino, { stdTimeFunctions } from "pino";
 import { FetchApplication } from "./application/FetchApplication";
+import * as bunyan from "bunyan";
 
 (async () => {
-  const logger = pino({
+  const logger = bunyan.createLogger({
     name: "fetcher",
-    timestamp: stdTimeFunctions.isoTime,
   });
 
   try {

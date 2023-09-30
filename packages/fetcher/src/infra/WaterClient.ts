@@ -2,8 +2,8 @@ import path from "path";
 import { Page } from "@playwright/test";
 import { Browser, withBrowser } from "./Browser";
 import { MonthlyUsageModel } from "../domain/Water";
-import { Logger } from "pino";
 import { Env } from "../Env";
+import Logger from "bunyan";
 
 export class WaterClient {
   readonly env: Env;

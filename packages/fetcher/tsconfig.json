@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "output"
+    "outDir": "output",
+    "lib": ["ES2023"]
   },
   "references": [{ "path": "../lib" }]
 }
