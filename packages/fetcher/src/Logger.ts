@@ -18,7 +18,7 @@ export function toLogLevel(s: string): number {
 
 export function createLogger(env: CommonEnv): Logger {
   return bunyan.createLogger({
-    name: "fetcher",
+    name: env.appName,
     streams: [
       {
         stream: process.stdout,
@@ -38,6 +38,7 @@ export function createLogger(env: CommonEnv): Logger {
 
 type LogRecord = {
   msg: string;
+  name?: string;
   err?: Error;
 };
 
@@ -69,13 +70,21 @@ function formatSlack(
       break;
   }
 
-  const fields = [
-    {
+  const fields = [];
+  if (record.name) {
+    fields.push({
+      title: "name",
+      value: record.name,
+      short: true,
+    });
+  }
+  if (levelName) {
+    fields.push({
       title: "level",
       value: String(levelName),
       short: true,
-    },
-  ];
+    });
+  }
   if (record.err?.stack) {
     fields.push({
       title: "stack trace",
