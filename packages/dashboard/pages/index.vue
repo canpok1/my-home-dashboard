@@ -8,7 +8,10 @@
       <v-container>
         <v-row>
           <v-col cols="12" md="6">
-            <ElectricityCostViewer></ElectricityCostViewer>
+            <ElectricityDailyCostViewer></ElectricityDailyCostViewer>
+          </v-col>
+          <v-col cols="12" md="6">
+            <ElectricityMonthlyCostViewer></ElectricityMonthlyCostViewer>
           </v-col>
           <v-col cols="12" md="6">
             <GasCostViewer></GasCostViewer>

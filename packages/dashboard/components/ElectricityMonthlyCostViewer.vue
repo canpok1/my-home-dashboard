@@ -1,6 +1,6 @@
 <template>
   <v-card variant="tonal">
-    <v-card-title>電気料金 </v-card-title>
+    <v-card-title>電気料金（月次） </v-card-title>
     <v-card-subtitle> 更新 {{ $datetime(data?.lastUpdated) }} </v-card-subtitle>
     <canvas ref="canvasRef"></canvas>
   </v-card>
@@ -11,7 +11,7 @@ import { Chart } from 'chart.js/auto'
 
 const canvasRef = ref<HTMLCanvasElement>()
 const { data, error } = await useFetch('/api/electricity', {
-  params: { limit: 12 },
+  params: { limit: 12, term: 'monthly' },
 })
 if (error.value) {
   console.log(error.value)
