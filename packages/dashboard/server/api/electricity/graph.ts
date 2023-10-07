@@ -55,6 +55,7 @@ async function findMonthly(
       updated_at: true,
     },
   })
+
   return {
     labels: reversed.map((v) => `${v.usage_year}/${v.usage_month}`),
     yens: reversed.map((v) => v.usage_yen),

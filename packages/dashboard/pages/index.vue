@@ -11,6 +11,9 @@
             <ElectricityDailyCostViewer></ElectricityDailyCostViewer>
           </v-col>
           <v-col cols="12" md="6">
+            <ElectricityDailyCostTable></ElectricityDailyCostTable>
+          </v-col>
+          <v-col cols="12" md="6">
             <ElectricityMonthlyCostViewer></ElectricityMonthlyCostViewer>
           </v-col>
           <v-col cols="12" md="6">
