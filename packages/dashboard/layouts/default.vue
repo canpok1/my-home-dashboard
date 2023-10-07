@@ -6,6 +6,10 @@
         title="電気使用量（日次）"
         href="/electricity/daily"
       ></v-list-item>
+      <v-list-item
+        title="電気使用量（月次）"
+        href="/electricity/monthly"
+      ></v-list-item>
     </v-navigation-drawer>
 
     <v-app-bar color="green">

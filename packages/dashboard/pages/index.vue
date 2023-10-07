@@ -4,12 +4,16 @@
       <v-col cols="12" md="6">
         <ElectricityDailyCostViewer>
           <template #actions>
-            <v-btn href="./electricity/daily">詳細</v-btn>
+            <v-btn href="/electricity/daily">詳細</v-btn>
           </template>
         </ElectricityDailyCostViewer>
       </v-col>
       <v-col cols="12" md="6">
-        <ElectricityMonthlyCostViewer></ElectricityMonthlyCostViewer>
+        <ElectricityMonthlyCostViewer>
+          <template #actions>
+            <v-btn href="/electricity/monthly">詳細</v-btn>
+          </template>
+        </ElectricityMonthlyCostViewer>
       </v-col>
       <v-col cols="12" md="6">
         <GasCostViewer></GasCostViewer>
