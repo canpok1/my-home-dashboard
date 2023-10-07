@@ -2,7 +2,7 @@
   <v-card variant="tonal">
     <v-card-title>{{ title }} </v-card-title>
     <v-card-subtitle> 更新 {{ $datetime(data?.lastUpdated) }} </v-card-subtitle>
-    <v-data-table :headers="headers" :items="data?.usages"> </v-data-table>
+    <v-data-table :headers="headers" :items="usages"> </v-data-table>
   </v-card>
 </template>
 
@@ -18,6 +18,14 @@ const headers = [
 
 const { data, error } = await useFetch('/api/electricity/table', {
   params: { limit: 31, term: 'daily' },
+})
+const usages = computed(() => {
+  return data.value?.usages.map((v) => {
+    return {
+      date: v.date,
+      amount: formatNumber(v.amount),
+    }
+  })
 })
 if (error.value) {
   console.log(error.value)
