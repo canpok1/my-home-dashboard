@@ -1,7 +1,7 @@
 <template>
   <v-card variant="tonal">
     <v-card-item>
-      <v-card-title>電気使用量（月次） </v-card-title>
+      <v-card-title>{{ title }}</v-card-title>
       <v-card-subtitle>
         更新 {{ $datetime(data?.lastUpdated) }}
       </v-card-subtitle>
@@ -17,6 +17,10 @@
 
 <script setup lang="ts">
 import { Chart } from 'chart.js/auto'
+
+defineProps<{
+  title?: string
+}>()
 
 const canvasRef = ref<HTMLCanvasElement>()
 const { data, error } = await useFetch('/api/electricity/graph', {

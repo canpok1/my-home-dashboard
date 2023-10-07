@@ -2,6 +2,12 @@
   <div>
     <v-container>
       <v-row>
+        <v-col cols="12">
+          <h1 class="text-h5">ガス使用量詳細（月次）</h1>
+        </v-col>
+      </v-row>
+
+      <v-row>
         <v-col cols="12" md="6">
           <GasMonthlyCostGraph></GasMonthlyCostGraph>
         </v-col>
