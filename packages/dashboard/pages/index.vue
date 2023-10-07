@@ -16,7 +16,11 @@
         </ElectricityMonthlyCostViewer>
       </v-col>
       <v-col cols="12" md="6">
-        <GasCostViewer></GasCostViewer>
+        <GasCostViewer>
+          <template #actions>
+            <v-btn href="/gas/monthly">詳細</v-btn>
+          </template>
+        </GasCostViewer>
       </v-col>
       <v-col cols="12" md="6">
         <WaterCostViewer></WaterCostViewer>

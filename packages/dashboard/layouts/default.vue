@@ -10,6 +10,7 @@
         title="電気使用量（月次）"
         href="/electricity/monthly"
       ></v-list-item>
+      <v-list-item title="ガス使用量（月次）" href="/gas/monthly"></v-list-item>
     </v-navigation-drawer>
 
     <v-app-bar color="green">
