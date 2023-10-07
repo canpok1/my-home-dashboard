@@ -1,8 +1,17 @@
 <template>
   <v-card variant="tonal">
-    <v-card-title>電気料金（日次） </v-card-title>
-    <v-card-subtitle> 更新 {{ $datetime(data?.lastUpdated) }} </v-card-subtitle>
-    <canvas ref="canvasRef"></canvas>
+    <v-card-item>
+      <v-card-title> 電気使用量（日次） </v-card-title>
+      <v-card-subtitle>
+        更新 {{ $datetime(data?.lastUpdated) }}
+      </v-card-subtitle>
+      <template #append>
+        <slot name="actions"></slot>
+      </template>
+    </v-card-item>
+    <v-card-text>
+      <canvas ref="canvasRef"></canvas>
+    </v-card-text>
   </v-card>
 </template>
 
