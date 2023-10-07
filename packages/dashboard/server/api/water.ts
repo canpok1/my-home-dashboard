@@ -37,7 +37,9 @@ export default defineEventHandler(async (event): Promise<Response> => {
       },
     })
     return {
-      labels: reversed.map((v) => `${v.usage_year}/${v.usage_month}`),
+      labels: reversed.map((v) =>
+        formatMonthlyLabel(v.usage_year, v.usage_month)
+      ),
       yens: reversed.map((v) => v.usage_yen),
       amounts: reversed.map((v) => v.usage_amount.toNumber()),
       lastUpdated: lastUpdated._max.updated_at,

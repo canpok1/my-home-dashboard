@@ -57,7 +57,9 @@ async function findMonthly(
   })
 
   return {
-    labels: reversed.map((v) => `${v.usage_year}/${v.usage_month}`),
+    labels: reversed.map((v) =>
+      formatMonthlyLabel(v.usage_year, v.usage_month)
+    ),
     yens: reversed.map((v) => v.usage_yen),
     kwhs: reversed.map((v) => v.usage_kwh),
     lastUpdated: lastUpdated._max.updated_at,
@@ -89,8 +91,8 @@ async function findDaily(
     },
   })
   return {
-    labels: reversed.map(
-      (v) => `${v.usage_year}/${v.usage_month}/${v.usage_date}`
+    labels: reversed.map((v) =>
+      formatDailyLabel(v.usage_year, v.usage_month, v.usage_date)
     ),
     yens: [],
     kwhs: reversed.map((v) => Number(v.usage_amount)),

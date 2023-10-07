@@ -60,7 +60,7 @@ async function findMonthly(
   return {
     usages: usages.map((v) => {
       return {
-        date: `${v.usage_year}/${v.usage_month}`,
+        date: formatMonthlyLabel(v.usage_year, v.usage_month),
         yen: v.usage_yen,
         amount: v.usage_kwh,
       }
@@ -95,7 +95,7 @@ async function findDaily(
   return {
     usages: usages.map((v) => {
       return {
-        date: `${v.usage_year}/${v.usage_month}/${v.usage_date}`,
+        date: formatDailyLabel(v.usage_year, v.usage_month, v.usage_date),
         yen: 0,
         amount: Number(v.usage_amount),
       }
