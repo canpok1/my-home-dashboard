@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12" md="6">
-          <ElectricityMonthlyCostViewer></ElectricityMonthlyCostViewer>
+          <ElectricityMonthlyCostGraph></ElectricityMonthlyCostGraph>
         </v-col>
         <v-col cols="12" md="6">
           <ElectricityMonthlyCostTable></ElectricityMonthlyCostTable>

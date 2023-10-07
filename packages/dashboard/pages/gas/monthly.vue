@@ -3,10 +3,10 @@
     <v-container>
       <v-row>
         <v-col cols="12" md="6">
-          <GasCostViewer></GasCostViewer>
+          <GasMonthlyCostGraph></GasMonthlyCostGraph>
         </v-col>
         <v-col cols="12" md="6">
-          <GasCostTable></GasCostTable>
+          <GasMonthlyCostTable></GasMonthlyCostTable>
         </v-col>
       </v-row>
     </v-container>

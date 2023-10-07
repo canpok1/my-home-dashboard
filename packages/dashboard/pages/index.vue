@@ -2,32 +2,32 @@
   <v-container>
     <v-row>
       <v-col cols="12" md="6">
-        <ElectricityDailyCostViewer>
+        <ElectricityDailyCostGraph>
           <template #actions>
             <v-btn href="/electricity/daily">詳細</v-btn>
           </template>
-        </ElectricityDailyCostViewer>
+        </ElectricityDailyCostGraph>
       </v-col>
       <v-col cols="12" md="6">
-        <ElectricityMonthlyCostViewer>
+        <ElectricityMonthlyCostGraph>
           <template #actions>
             <v-btn href="/electricity/monthly">詳細</v-btn>
           </template>
-        </ElectricityMonthlyCostViewer>
+        </ElectricityMonthlyCostGraph>
       </v-col>
       <v-col cols="12" md="6">
-        <GasCostViewer>
+        <GasMonthlyCostGraph>
           <template #actions>
             <v-btn href="/gas/monthly">詳細</v-btn>
           </template>
-        </GasCostViewer>
+        </GasMonthlyCostGraph>
       </v-col>
       <v-col cols="12" md="6">
-        <WaterCostViewer>
+        <WaterMonthlyCostGraph>
           <template #actions>
             <v-btn href="/water/monthly">詳細</v-btn>
           </template>
-        </WaterCostViewer>
+        </WaterMonthlyCostGraph>
       </v-col>
     </v-row>
   </v-container>
