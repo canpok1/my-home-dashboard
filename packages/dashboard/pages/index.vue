@@ -23,7 +23,11 @@
         </GasCostViewer>
       </v-col>
       <v-col cols="12" md="6">
-        <WaterCostViewer></WaterCostViewer>
+        <WaterCostViewer>
+          <template #actions>
+            <v-btn href="/water/monthly">詳細</v-btn>
+          </template>
+        </WaterCostViewer>
       </v-col>
     </v-row>
   </v-container>
