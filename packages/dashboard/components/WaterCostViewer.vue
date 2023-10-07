@@ -10,7 +10,7 @@
 import { Chart } from 'chart.js/auto'
 
 const canvasRef = ref<HTMLCanvasElement>()
-const { data, error } = await useFetch('/api/water', {
+const { data, error } = await useFetch('/api/water/graph', {
   params: { limit: 12 },
 })
 if (error.value) {
