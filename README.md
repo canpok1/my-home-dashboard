@@ -8,3 +8,4 @@
 - [スキーマ定義](database/README.md)
 - カバレッジ
   - [fetcher](coverage/fetcher/lcov-report/index.html)
+  - [lib](coverage/lib/lcov-report/index.html)
