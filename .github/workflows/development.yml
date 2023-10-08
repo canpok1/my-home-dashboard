@@ -214,11 +214,13 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: coverage-reports
+          path: public/coverage
 
       - name: Download db docs
         uses: actions/download-artifact@v3
         with:
           name: db-docs
+          path: public/database
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
