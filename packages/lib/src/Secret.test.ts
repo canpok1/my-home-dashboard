@@ -1,6 +1,21 @@
 import { SecretString } from "./Secret";
 
 describe("SecretStringクラス", () => {
+  describe("value()", () => {
+    it.each`
+      org         | expected
+      ${"x"}      | ${"x"}
+      ${"xx"}     | ${"xx"}
+      ${"xxx"}    | ${"xxx"}
+      ${"xxxx"}   | ${"xxxx"}
+      ${"xxxxx"}  | ${"xxxxx"}
+      ${"xxxxxx"} | ${"xxxxxx"}
+    `("$orgは$expectedとして取得できること", ({ org, expected }) => {
+      const s = new SecretString(org);
+      expect(s.value()).toEqual(expected);
+    });
+  });
+
   describe("toString()", () => {
     it.each`
       org         | expected
