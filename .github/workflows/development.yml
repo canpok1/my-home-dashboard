@@ -124,7 +124,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/database
+          publish_dir: ./docs
 
       - uses: actions/cache/save@v3
         if: always()
