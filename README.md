@@ -5,7 +5,7 @@
 
 - [開発環境について](docs/README_for_development.md)
 - [本番環境について](docs/README_for_production.md)
-- [その他ドキュメント（gh-pagesブランチ参照）](../gh-pages/)
+- [その他ドキュメント（github pages参照）](http://ktnet.info/my-home-dashboard/)
 
 ## 構成図
 
