@@ -30,9 +30,17 @@ jobs:
 
       - run: npm run -w lib build
 
+      - run: npm run test
+
       - run: npm run typecheck
 
       - run: npm run lint
+
+      - name: archive coverage reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-reports
+          path: public/coverage
 
       - uses: actions/cache/save@v3
         if: always()
@@ -120,12 +128,11 @@ jobs:
         working-directory: ./packages/migrate
         run: make migrate options="down -all"
 
-      - name: deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: archive db docs
+        uses: actions/upload-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          enable_jekyll: true
+          name: db-docs
+          path: public/database
 
       - uses: actions/cache/save@v3
         if: always()
@@ -196,3 +203,26 @@ jobs:
             cd production/batch
             docker compose pull
             docker compose up -d
+
+  deploy_public:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download coverage reports
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-reports
+
+      - name: Download db docs
+        uses: actions/download-artifact@v3
+        with:
+          name: db-docs
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          enable_jekyll: true

@@ -1,5 +1,6 @@
 {
   "name": "dashboard",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "nuxt build",
@@ -13,13 +14,14 @@
     "lint:prettier": "prettier --check --ignore-path .gitignore .",
     "format-fix": "prettier --write --ignore-path .gitignore .",
     "typecheck": "nuxi typecheck",
-    "update-prisma-cli": "prisma db pull && prisma generate"
+    "update-prisma-cli": "prisma db pull && prisma generate",
+    "test": "echo 'skip: no test specified'"
   },
   "devDependencies": {
     "@mdi/font": "^7.2.96",
     "@types/node": "^18",
     "chart.js": "^4.3.0",
-    "nuxt": "^3.4.3",
+    "nuxt": "3.6",
     "sass": "^1.62.1",
     "vite-plugin-vuetify": "^1.0.2",
     "vue-tsc": "^1.6.1",

@@ -9,7 +9,7 @@
     "clean": "rm -rf output && rm -rf tmp && rm -f tsconfig.tsbuildinfo",
     "lint": "echo \"Warn: no lint specified\"",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
+    "test": "jest --coverage --collectCoverageFrom=./src/**/*.ts --coverageDirectory=../../public/coverage/fetcher",
     "install:chromium": "npx -y playwright install --with-deps chromium"
   },
   "author": "",

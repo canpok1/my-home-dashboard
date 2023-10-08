@@ -6,3 +6,5 @@
 開発用ドキュメントを配置しています。
 
 - [スキーマ定義](database/README.md)
+- カバレッジ
+  - [fetcher](coverage/fetcher/lcov-report/index.html)
