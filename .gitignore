@@ -1,6 +1,0 @@
-GITHUB_TOKEN.txt
-node_modules
-.env
-tmp
-output
-*.tsbuildinfo
