@@ -3,9 +3,9 @@
 自宅向けのダッシュボードです。
 生活に必要な各種情報を一覧で確認できます。
 
-- [開発環境について](doc/README_for_development.md)
-- [本番環境について](doc/README_for_production.md)
-- [スキーマ定義](doc/database/README.md)
+- [開発環境について](docs/README_for_development.md)
+- [本番環境について](docs/README_for_production.md)
+- [スキーマ定義](docs/database/README.md)
 
 ## 構成図
 

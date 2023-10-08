@@ -2,7 +2,7 @@
   "name": "my-home-dashboard",
   "version": "1.0.0",
   "directories": {
-    "doc": "doc"
+    "doc": "docs"
   },
   "scripts": {
     "lint": "npm run lint --workspaces",
