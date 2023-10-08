@@ -5,7 +5,7 @@
 
 - [開発環境について](docs/README_for_development.md)
 - [本番環境について](docs/README_for_production.md)
-- [スキーマ定義](docs/database/README.md)
+- [その他ドキュメント（gh-pagesブランチ参照）](../gh-pages/)
 
 ## 構成図
 
