@@ -112,13 +112,19 @@ jobs:
         working-directory: ./packages/migrate
         run: make lint
 
-      - name: check diff between db and document
+      - name: make db document
         working-directory: ./packages/migrate
-        run: make diff
+        run: make doc
 
       - name: test migrate down all
         working-directory: ./packages/migrate
         run: make migrate options="down -all"
+
+      - name: deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/database
 
       - uses: actions/cache/save@v3
         if: always()
