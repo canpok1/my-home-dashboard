@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">72.72% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>8/11</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>3/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>8/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -135,7 +135,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -147,22 +147,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Scheduler } from "./Scheduler";
@@ -186,34 +186,34 @@ export interface UsageRepository {
   saveWaterMonthlyUsages(usages: MonthlyUsageModel[], now: Date): Promise&lt;void&gt;;
 }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export class U</span>sageService {
+export class UsageService {
   readonly env: Env;
   readonly fetcher: UsageFetcher;
   readonly repository: UsageRepository;
   readonly scheduler: Scheduler;
 &nbsp;
-<span class="fstat-no" title="function not covered" >  constructor(</span>
+  constructor(
     env: Env,
     fetcher: UsageFetcher,
     repository: UsageRepository,
     scheduler: Scheduler
   ) {
-<span class="cstat-no" title="statement not covered" >    this.env = env;</span>
-<span class="cstat-no" title="statement not covered" >    this.fetcher = fetcher;</span>
-<span class="cstat-no" title="statement not covered" >    this.repository = repository;</span>
-<span class="cstat-no" title="statement not covered" >    this.scheduler = scheduler;</span>
+    this.env = env;
+    this.fetcher = fetcher;
+    this.repository = repository;
+    this.scheduler = scheduler;
   }
 &nbsp;
-  async <span class="fstat-no" title="function not covered" >run(</span>logger: Logger): Promise&lt;void&gt; {
-<span class="cstat-no" title="statement not covered" >    await this.scheduler.schedule(logger, this.env.cron, <span class="fstat-no" title="function not covered" >async () =</span>&gt;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" > {</span></span></span>
+  async run(logger: Logger): Promise&lt;void&gt; {
+    await this.scheduler.schedule(logger, this.env.cron, <span class="fstat-no" title="function not covered" >async () =</span>&gt;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" > {</span></span>
       const now = <span class="cstat-no" title="statement not covered" >new Date();</span>
 <span class="cstat-no" title="statement not covered" >      await this.fetchAndSave(logger, now);</span>
     });
   }
 &nbsp;
-  async <span class="fstat-no" title="function not covered" >fetchAndSave(</span>logger: Logger, now: Date): Promise&lt;void&gt; {
-    const usages = <span class="cstat-no" title="statement not covered" >await this.fetcher.fetchMonthly(logger);</span>
-<span class="cstat-no" title="statement not covered" >    await this.repository.saveWaterMonthlyUsages(usages, now);</span>
+  async fetchAndSave(logger: Logger, now: Date): Promise&lt;void&gt; {
+    const usages = await this.fetcher.fetchMonthly(logger);
+    await this.repository.saveWaterMonthlyUsages(usages, now);
   }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -223,7 +223,7 @@ export interface UsageRepository {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-10-08T13:54:51.318Z
+                at 2023-10-08T15:15:57.171Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
