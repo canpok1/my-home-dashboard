@@ -8,10 +8,13 @@
       </v-row>
 
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12" sm="4" md="3">
+          <ElectricityMonthlyCostAvgViewer> </ElectricityMonthlyCostAvgViewer>
+        </v-col>
+        <v-col cols="12" sm="8" md="9">
           <ElectricityMonthlyCostGraph></ElectricityMonthlyCostGraph>
         </v-col>
-        <v-col cols="12" md="6">
+        <v-col cols="12">
           <ElectricityMonthlyCostTable></ElectricityMonthlyCostTable>
         </v-col>
       </v-row>

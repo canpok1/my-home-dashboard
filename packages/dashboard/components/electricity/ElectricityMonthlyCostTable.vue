@@ -24,8 +24,8 @@ const usages = computed(() => {
   return data.value?.usages.map((v) => {
     return {
       date: v.date,
-      amount: formatNumber(v.amount),
-      yen: formatNumber(v.yen),
+      amount: formatNumber(v.amount, 0),
+      yen: formatNumber(v.yen, 0),
     }
   })
 })

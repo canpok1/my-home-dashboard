@@ -8,10 +8,13 @@
       </v-row>
 
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12" sm="4" md="3">
+          <ElectricityDailyCostAvgViewer> </ElectricityDailyCostAvgViewer>
+        </v-col>
+        <v-col cols="12" sm="8" md="9">
           <ElectricityDailyCostGraph></ElectricityDailyCostGraph>
         </v-col>
-        <v-col cols="12" md="6">
+        <v-col cols="12">
           <ElectricityDailyCostTable></ElectricityDailyCostTable>
         </v-col>
       </v-row>

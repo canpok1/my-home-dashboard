@@ -8,10 +8,13 @@
       </v-row>
 
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12" sm="4" md="3">
+          <WaterMonthlyCostAvgViewer> </WaterMonthlyCostAvgViewer>
+        </v-col>
+        <v-col cols="12" sm="8" md="9">
           <WaterMonthlyCostGraph></WaterMonthlyCostGraph>
         </v-col>
-        <v-col cols="12" md="6">
+        <v-col cols="12">
           <WaterMonthlyCostTable></WaterMonthlyCostTable>
         </v-col>
       </v-row>

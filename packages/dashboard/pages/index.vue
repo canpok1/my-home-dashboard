@@ -1,6 +1,20 @@
 <template>
   <v-container>
     <v-row>
+      <v-col cols="12" sm="4" md="3">
+        <ElectricityDailyCostAvgViewer> </ElectricityDailyCostAvgViewer>
+      </v-col>
+      <v-col cols="12" sm="4" md="3">
+        <ElectricityMonthlyCostAvgViewer> </ElectricityMonthlyCostAvgViewer>
+      </v-col>
+      <v-col cols="12" sm="4" md="3">
+        <GasMonthlyCostAvgViewer> </GasMonthlyCostAvgViewer>
+      </v-col>
+      <v-col cols="12" sm="4" md="3">
+        <WaterMonthlyCostAvgViewer> </WaterMonthlyCostAvgViewer>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="12" md="6">
         <ElectricityDailyCostGraph title="電気使用量（日次）">
           <template #actions>
