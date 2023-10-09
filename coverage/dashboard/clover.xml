@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1696823121804" clover="3.2.0">
-  <project timestamp="1696823121804" name="All files">
-    <metrics statements="118" coveredstatements="11" conditionals="10" coveredconditionals="0" methods="28" coveredmethods="3" elements="156" coveredelements="14" complexity="0" loc="118" ncloc="118" packages="5" files="8" classes="8"/>
+<coverage generated="1696862622336" clover="3.2.0">
+  <project timestamp="1696862622337" name="All files">
+    <metrics statements="119" coveredstatements="12" conditionals="10" coveredconditionals="0" methods="28" coveredmethods="3" elements="157" coveredelements="15" complexity="0" loc="119" ncloc="119" packages="5" files="8" classes="8"/>
     <package name="server.api.electricity">
       <metrics statements="49" coveredstatements="0" conditionals="6" coveredconditionals="0" methods="13" coveredmethods="0"/>
       <file name="graph.ts" path="/home/runner/work/my-home-dashboard/my-home-dashboard/packages/dashboard/server/api/electricity/graph.ts">
@@ -152,11 +152,12 @@
       </file>
     </package>
     <package name="utils">
-      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
       <file name="format.ts" path="/home/runner/work/my-home-dashboard/my-home-dashboard/packages/dashboard/utils/format.ts">
-        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
-        <line num="2" count="2" type="stmt"/>
+        <line num="2" count="8" type="stmt"/>
+        <line num="6" count="8" type="stmt"/>
       </file>
     </package>
   </project>
