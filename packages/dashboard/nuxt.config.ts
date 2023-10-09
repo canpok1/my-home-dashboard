@@ -23,4 +23,10 @@ export default defineNuxtConfig({
     },
   },
   css: ['@/assets/main.scss', '@mdi/font/css/materialdesignicons.css'],
+  components: [
+    {
+      path: 'components',
+      pathPrefix: false,
+    },
+  ],
 })
