@@ -15,7 +15,8 @@
     "format-fix": "prettier --write --ignore-path .gitignore .",
     "typecheck": "nuxi typecheck",
     "update-prisma-cli": "prisma db pull && prisma generate",
-    "test": "jest --coverage --collectCoverageFrom=./server/**/*.ts --collectCoverageFrom=./utils/**/*.ts --coverageDirectory=../../public/coverage/dashboard"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
     "@mdi/font": "^7.2.96",

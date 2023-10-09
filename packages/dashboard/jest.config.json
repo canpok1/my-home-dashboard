@@ -1,4 +1,7 @@
 {
   "preset": "ts-jest",
-  "testEnvironment": "node"
+  "testEnvironment": "node",
+
+  "collectCoverageFrom": ["./server/**/*.ts", "./utils/**/*.ts"],
+  "coverageDirectory": "../../public/coverage/dashboard"
 }

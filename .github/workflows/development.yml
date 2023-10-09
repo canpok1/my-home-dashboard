@@ -30,7 +30,7 @@ jobs:
 
       - run: npm run -w lib build
 
-      - run: npm run test
+      - run: npm run test:coverage
 
       - run: npm run typecheck
 

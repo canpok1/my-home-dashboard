@@ -11,7 +11,8 @@
     "clean": "rm -rf output && rm -f tsconfig.tsbuildinfo",
     "lint": "echo \"Warn: no lint specified\"",
     "typecheck": "tsc --noEmit",
-    "test": "jest --coverage --collectCoverageFrom='./src/**/!(Index)*.ts' --coverageDirectory=../../public/coverage/lib"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "author": "",
   "license": "ISC"
