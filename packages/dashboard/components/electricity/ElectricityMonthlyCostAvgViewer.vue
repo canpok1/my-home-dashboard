@@ -1,16 +1,28 @@
 <template>
   <v-card variant="tonal">
     <v-card-subtitle>電気平均（{{ term }}ヵ月間）</v-card-subtitle>
-    <v-card-text>
-      <div class="text-h3 text-center">
+    <v-card-text v-if="displayMode === 'amount'">
+      <div class="text-h4 text-center">
         <span>{{ amountAvg }}</span>
       </div>
       <div class="text-right">kWh/月</div>
+    </v-card-text>
+    <v-card-text v-else>
+      <div class="text-h4 text-center">
+        <span>{{ yenAvg }}</span>
+      </div>
+      <div class="text-right">円/月</div>
     </v-card-text>
   </v-card>
 </template>
 
 <script setup lang="ts">
+const props = defineProps<{
+  displayMode: 'amount' | 'yen'
+}>()
+
+const { displayMode } = toRefs(props)
+
 const { data, error } = await useFetch('/api/electricity/table', {
   params: { limit: 12, term: 'monthly' },
 })
@@ -26,6 +38,14 @@ const amountAvg = computed(() => {
     return 0
   }
   const sum = usages.map((v) => v.amount).reduce((a, b) => a + b)
+  return formatNumber(sum / usages.length, 2)
+})
+const yenAvg = computed(() => {
+  const usages = data.value?.usages
+  if (!usages) {
+    return 0
+  }
+  const sum = usages.map((v) => v.yen).reduce((a, b) => a + b)
   return formatNumber(sum / usages.length, 2)
 })
 </script>

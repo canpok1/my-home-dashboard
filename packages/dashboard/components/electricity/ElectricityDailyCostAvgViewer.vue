@@ -2,7 +2,7 @@
   <v-card variant="tonal">
     <v-card-subtitle>電気平均（{{ term }}日間）</v-card-subtitle>
     <v-card-text>
-      <div class="text-h3 text-center">
+      <div class="text-h4 text-center">
         <span>{{ amountAvg }}</span>
       </div>
       <div class="text-right">kWh/日</div>

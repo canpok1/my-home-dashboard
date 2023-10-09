@@ -9,7 +9,16 @@
 
       <v-row>
         <v-col cols="12" sm="4" md="3">
-          <WaterMonthlyCostAvgViewer> </WaterMonthlyCostAvgViewer>
+          <v-row>
+            <v-col cols="12">
+              <WaterMonthlyCostAvgViewer display-mode="amount">
+              </WaterMonthlyCostAvgViewer>
+            </v-col>
+            <v-col cols="12">
+              <WaterMonthlyCostAvgViewer display-mode="yen">
+              </WaterMonthlyCostAvgViewer>
+            </v-col>
+          </v-row>
         </v-col>
         <v-col cols="12" sm="8" md="9">
           <WaterMonthlyCostGraph></WaterMonthlyCostGraph>

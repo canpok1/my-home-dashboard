@@ -9,7 +9,16 @@
 
       <v-row>
         <v-col cols="12" sm="4" md="3">
-          <ElectricityMonthlyCostAvgViewer> </ElectricityMonthlyCostAvgViewer>
+          <v-row>
+            <v-col cols="12">
+              <ElectricityMonthlyCostAvgViewer display-mode="amount">
+              </ElectricityMonthlyCostAvgViewer>
+            </v-col>
+            <v-col cols="12">
+              <ElectricityMonthlyCostAvgViewer display-mode="yen">
+              </ElectricityMonthlyCostAvgViewer>
+            </v-col>
+          </v-row>
         </v-col>
         <v-col cols="12" sm="8" md="9">
           <ElectricityMonthlyCostGraph></ElectricityMonthlyCostGraph>

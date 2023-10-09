@@ -1,17 +1,28 @@
 <template>
   <v-container>
     <v-row>
+      <v-col cols="12">
+        <v-radio-group v-model="displayMode" inline hide-details>
+          <v-radio label="使用量表示" value="amount"></v-radio>
+          <v-radio label="金額表示" value="yen"></v-radio>
+        </v-radio-group>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="12" sm="4" md="3">
         <ElectricityDailyCostAvgViewer> </ElectricityDailyCostAvgViewer>
       </v-col>
       <v-col cols="12" sm="4" md="3">
-        <ElectricityMonthlyCostAvgViewer> </ElectricityMonthlyCostAvgViewer>
+        <ElectricityMonthlyCostAvgViewer :display-mode="displayMode">
+        </ElectricityMonthlyCostAvgViewer>
       </v-col>
       <v-col cols="12" sm="4" md="3">
-        <GasMonthlyCostAvgViewer> </GasMonthlyCostAvgViewer>
+        <GasMonthlyCostAvgViewer :display-mode="displayMode">
+        </GasMonthlyCostAvgViewer>
       </v-col>
       <v-col cols="12" sm="4" md="3">
-        <WaterMonthlyCostAvgViewer> </WaterMonthlyCostAvgViewer>
+        <WaterMonthlyCostAvgViewer :display-mode="displayMode">
+        </WaterMonthlyCostAvgViewer>
       </v-col>
     </v-row>
     <v-row>
@@ -47,4 +58,6 @@
   </v-container>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const displayMode: Ref<'amount' | 'yen'> = ref('amount')
+</script>

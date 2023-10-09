@@ -9,7 +9,16 @@
 
       <v-row>
         <v-col cols="12" sm="4" md="3">
-          <GasMonthlyCostAvgViewer> </GasMonthlyCostAvgViewer>
+          <v-row>
+            <v-col cols="12">
+              <GasMonthlyCostAvgViewer display-mode="amount">
+              </GasMonthlyCostAvgViewer>
+            </v-col>
+            <v-col cols="12">
+              <GasMonthlyCostAvgViewer display-mode="yen">
+              </GasMonthlyCostAvgViewer>
+            </v-col>
+          </v-row>
         </v-col>
         <v-col cols="12" sm="8" md="9">
           <GasMonthlyCostGraph></GasMonthlyCostGraph>
