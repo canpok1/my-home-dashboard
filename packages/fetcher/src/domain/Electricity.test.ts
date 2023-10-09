@@ -10,65 +10,68 @@ import { Scheduler } from "./Scheduler";
 import { Env } from "../Env";
 import Logger from "bunyan";
 
+function makeMockScheduler(): Scheduler {
+  return {
+    async schedule(
+      logger: Logger,
+      cron: string,
+      f: () => Promise<void>
+    ): Promise<void> {
+      await f();
+    },
+  };
+}
+
+function makeMonthlyUsage(): MonthlyUsageModel {
+  return {
+    year: 0,
+    month: 0,
+    dayCount: 0,
+    kwh: 0,
+    yen: 0,
+  };
+}
+
+function makeDailyUsage(): DailyUsageModel {
+  return {
+    year: 0,
+    month: 0,
+    date: 0,
+    amount: 0,
+  };
+}
+
 describe("UsageServiceクラス", () => {
-  it("run()", async () => {
-    const env = mock<Env>();
-    const fetcher = mock<UsageFetcher>();
-    const repository = mock<UsageRepository>();
-    const scheduler = mock<Scheduler>();
-    const logger = mock<Logger>();
+  describe("run()", () => {
+    it("fetcherで取得した情報をrepositoryに渡していること", async () => {
+      const fetcher = mock<UsageFetcher>();
+      const repository = mock<UsageRepository>();
 
-    // テスト
-    const service = new UsageService(env, fetcher, repository, scheduler);
-    await service.run(logger);
+      const monthlyUsages: MonthlyUsageModel[] = [makeMonthlyUsage()];
+      const dailyUsages: DailyUsageModel[] = [makeDailyUsage()];
+      fetcher.fetchMonthly.mockReturnValueOnce(Promise.resolve(monthlyUsages));
+      fetcher.fetchDaily.mockReturnValueOnce(Promise.resolve(dailyUsages));
 
-    // 検証
-    expect(scheduler.schedule).toHaveBeenCalledTimes(1);
-  });
+      // テスト
+      const service = new UsageService(
+        mock<Env>(),
+        fetcher,
+        repository,
+        makeMockScheduler()
+      );
+      await service.run(mock<Logger>());
 
-  it("fetchAndSave()", async () => {
-    const env = mock<Env>();
-    const fetcher = mock<UsageFetcher>();
-    const repository = mock<UsageRepository>();
-    const scheduler = mock<Scheduler>();
-    const logger = mock<Logger>();
-    const now = new Date();
-
-    const monthlyUsages: MonthlyUsageModel[] = [
-      {
-        year: 0,
-        month: 0,
-        dayCount: 0,
-        kwh: 0,
-        yen: 0,
-      },
-    ];
-    const dailyUsages: DailyUsageModel[] = [
-      {
-        year: 0,
-        month: 0,
-        date: 0,
-        amount: 0,
-      },
-    ];
-
-    fetcher.fetchMonthly.mockReturnValueOnce(Promise.resolve(monthlyUsages));
-    fetcher.fetchDaily.mockReturnValueOnce(Promise.resolve(dailyUsages));
-
-    // テスト
-    const service = new UsageService(env, fetcher, repository, scheduler);
-    await service.fetchAndSave(logger, now);
-
-    // 検証
-    expect(repository.saveElectricityMonthlyUsages).toHaveBeenNthCalledWith(
-      1,
-      monthlyUsages,
-      now
-    );
-    expect(repository.saveElectricityDailyUsages).toHaveBeenNthCalledWith(
-      1,
-      dailyUsages,
-      now
-    );
+      // 検証
+      expect(repository.saveElectricityMonthlyUsages).toHaveBeenNthCalledWith(
+        1,
+        monthlyUsages,
+        expect.any(Date)
+      );
+      expect(repository.saveElectricityDailyUsages).toHaveBeenNthCalledWith(
+        1,
+        dailyUsages,
+        expect.any(Date)
+      );
+    });
   });
 });

@@ -44,7 +44,7 @@ export class UsageService {
     });
   }
 
-  async fetchAndSave(logger: Logger, now: Date): Promise<void> {
+  private async fetchAndSave(logger: Logger, now: Date): Promise<void> {
     const models = await this.fetcher.fetchMonthly(logger);
     await this.repository.saveGasMonthlyUsages(models, now);
   }
