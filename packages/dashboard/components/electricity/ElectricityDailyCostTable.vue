@@ -2,7 +2,9 @@
   <v-card variant="tonal">
     <v-card-title>{{ title }} </v-card-title>
     <v-card-subtitle> 更新 {{ $datetime(data?.lastUpdated) }} </v-card-subtitle>
-    <v-data-table :headers="headers" :items="usages"> </v-data-table>
+    <v-card-text>
+      <v-data-table :headers="headers" :items="usages"> </v-data-table>
+    </v-card-text>
   </v-card>
 </template>
 
