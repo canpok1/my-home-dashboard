@@ -90,14 +90,16 @@ const waterMonthlyCostGraph = ref<InstanceType<
   typeof WaterMonthlyCostGraph
 > | null>(null)
 
-const resize = () => {
+const windowWidth = ref(0)
+watch(windowWidth, () => {
   electricityDailyCostGraph.value?.resize()
   electricityMonthlyCostGraph.value?.resize()
   gasMonthlyCostGraph.value?.resize()
   waterMonthlyCostGraph.value?.resize()
-}
-
+})
 onMounted(() => {
-  window.addEventListener('resize', resize)
+  window.addEventListener('resize', () => {
+    windowWidth.value = window.innerWidth
+  })
 })
 </script>

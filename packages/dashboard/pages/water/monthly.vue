@@ -35,9 +35,13 @@
 import WaterMonthlyCostGraph from '@/components/water/WaterMonthlyCostGraph.vue'
 const graph = ref<InstanceType<typeof WaterMonthlyCostGraph>>()
 
+const windowWidth = ref(0)
+watch(windowWidth, () => {
+  graph.value?.resize()
+})
 onMounted(() => {
   window.addEventListener('resize', () => {
-    graph.value?.resize()
+    windowWidth.value = window.innerWidth
   })
 })
 </script>

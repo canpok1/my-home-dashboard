@@ -26,9 +26,13 @@
 import ElectricityDailyCostGraph from '@/components/electricity/ElectricityDailyCostGraph.vue'
 const graph = ref<InstanceType<typeof ElectricityDailyCostGraph>>()
 
+const windowWidth = ref(0)
+watch(windowWidth, () => {
+  graph.value?.resize()
+})
 onMounted(() => {
   window.addEventListener('resize', () => {
-    graph.value?.resize()
+    windowWidth.value = window.innerWidth
   })
 })
 </script>
