@@ -1,13 +1,5 @@
 <template>
-  <v-card variant="tonal">
-    <v-card-subtitle>電気平均（{{ term }}日間）</v-card-subtitle>
-    <v-card-text>
-      <div class="text-h4 text-center">
-        <span>{{ amountAvg }}</span>
-      </div>
-      <div class="text-right">kWh/日</div>
-    </v-card-text>
-  </v-card>
+  <value-viewer :title="title" :value="amountAvg" unit="kWh/日"></value-viewer>
 </template>
 
 <script setup lang="ts">
@@ -17,13 +9,14 @@ const { data, error } = await useFetch('/api/electricity/table', {
 if (error.value) {
   console.log(error.value)
 }
-const term = computed(() => {
-  return data.value?.dailyUsages?.length || 0
+const title = computed(() => {
+  const term = data.value?.dailyUsages?.length || 0
+  return `電気平均（${term}日間）`
 })
 const amountAvg = computed(() => {
   const usages = data.value?.dailyUsages
   if (!usages) {
-    return 0
+    return '0'
   }
   const sum = usages.map((v) => v.amount).reduce((a, b) => a + b)
   return formatNumber(sum / usages.length, 2)
