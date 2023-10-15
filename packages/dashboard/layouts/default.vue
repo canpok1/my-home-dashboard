@@ -1,5 +1,10 @@
 <template>
   <v-app>
+    <v-app-bar color="green">
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>MyHomeDashboard</v-toolbar-title>
+    </v-app-bar>
+
     <v-navigation-drawer v-model="drawer">
       <v-list v-model:opened="open" density="compact">
         <v-list-item title="ホーム" href="/" prepend-icon="mdi-home">
@@ -47,11 +52,6 @@
         </v-list-group>
       </v-list>
     </v-navigation-drawer>
-
-    <v-app-bar color="green">
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>MyHomeDashboard</v-toolbar-title>
-    </v-app-bar>
 
     <v-main>
       <slot />
