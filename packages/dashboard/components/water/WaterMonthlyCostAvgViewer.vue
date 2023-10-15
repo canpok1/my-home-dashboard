@@ -30,10 +30,10 @@ if (error.value) {
   console.log(error.value)
 }
 const term = computed(() => {
-  return data.value?.usages.length || 0
+  return data.value?.monthlyUsages.length || 0
 })
 const amountAvg = computed(() => {
-  const usages = data.value?.usages
+  const usages = data.value?.monthlyUsages
   if (!usages) {
     return 0
   }
@@ -41,7 +41,7 @@ const amountAvg = computed(() => {
   return formatNumber(sum / (usages.length * 2), 2)
 })
 const yenAvg = computed(() => {
-  const usages = data.value?.usages
+  const usages = data.value?.monthlyUsages
   if (!usages) {
     return 0
   }

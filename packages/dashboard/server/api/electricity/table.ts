@@ -1,11 +1,22 @@
 import { PrismaClient } from '@prisma/client'
 
+export type Term = 'daily' | 'monthly'
+export interface DailyUsage {
+  date: string
+  yen: number
+  amount: number
+}
+
+export interface MonthlyUsage {
+  date: string
+  yen: number
+  dayCount: number
+  amount: number
+}
+
 export interface Response {
-  usages: {
-    date: string
-    yen: number
-    amount: number
-  }[]
+  dailyUsages?: DailyUsage[]
+  monthlyUsages?: MonthlyUsage[]
   lastUpdated: Date | null
 }
 
@@ -58,10 +69,11 @@ async function findMonthly(
   })
 
   return {
-    usages: usages.map((v) => {
+    monthlyUsages: usages.map((v) => {
       return {
         date: formatMonthlyLabel(v.usage_year, v.usage_month),
         yen: v.usage_yen,
+        dayCount: v.usage_day_count,
         amount: v.usage_kwh,
       }
     }),
@@ -93,7 +105,7 @@ async function findDaily(
     },
   })
   return {
-    usages: usages.map((v) => {
+    dailyUsages: usages.map((v) => {
       return {
         date: formatDailyLabel(v.usage_year, v.usage_month, v.usage_date),
         yen: 0,

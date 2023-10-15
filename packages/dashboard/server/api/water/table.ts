@@ -1,8 +1,10 @@
 import { PrismaClient } from '@prisma/client'
 
 export interface Response {
-  usages: {
+  monthlyUsages: {
     date: string
+    beginAt: string
+    endAt: string
     yen: number
     amount: number
   }[]
@@ -38,9 +40,11 @@ export default defineEventHandler(async (event): Promise<Response> => {
       },
     })
     return {
-      usages: usages.map((v) => {
+      monthlyUsages: usages.map((v) => {
         return {
           date: formatMonthlyLabel(v.usage_year, v.usage_month),
+          beginAt: formatDateJst(v.usage_begin_at, 'YYYY/MM/DD'),
+          endAt: formatDateJst(v.usage_end_at, 'YYYY/MM/DD'),
           yen: v.usage_yen,
           amount: Number(v.usage_amount),
         }

@@ -18,10 +18,10 @@ if (error.value) {
   console.log(error.value)
 }
 const term = computed(() => {
-  return data.value?.usages.length || 0
+  return data.value?.dailyUsages?.length || 0
 })
 const amountAvg = computed(() => {
-  const usages = data.value?.usages
+  const usages = data.value?.dailyUsages
   if (!usages) {
     return 0
   }

@@ -15,6 +15,8 @@ defineProps<{
 
 const headers = [
   { title: '年月', align: 'end', key: 'date' },
+  { title: '開始日', align: 'end', key: 'beginAt' },
+  { title: '終了日', align: 'end', key: 'endAt' },
   { title: '使用量（m^3）', align: 'end', key: 'amount' },
   { title: '料金（円）', align: 'end', key: 'yen' },
 ] as const
@@ -23,9 +25,11 @@ const { data, error } = await useFetch('/api/water/table', {
   params: { limit: 31, term: 'monthly' },
 })
 const usages = computed(() => {
-  return data.value?.usages.map((v) => {
+  return data.value?.monthlyUsages.map((v) => {
     return {
       date: v.date,
+      beginAt: v.beginAt,
+      endAt: v.endAt,
       amount: formatNumber(v.amount, 0),
       yen: formatNumber(v.yen, 0),
     }

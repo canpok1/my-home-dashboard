@@ -15,6 +15,7 @@ defineProps<{
 
 const headers = [
   { title: '年月', align: 'end', key: 'date' },
+  { title: '使用日数', align: 'end', key: 'dayCount' },
   { title: '使用量（kWh）', align: 'end', key: 'amount' },
   { title: '料金（円）', align: 'end', key: 'yen' },
 ] as const
@@ -23,9 +24,13 @@ const { data, error } = await useFetch('/api/electricity/table', {
   params: { limit: 31, term: 'monthly' },
 })
 const usages = computed(() => {
-  return data.value?.usages.map((v) => {
+  if (!data.value?.monthlyUsages) {
+    return []
+  }
+  return data.value?.monthlyUsages.map((v) => {
     return {
       date: v.date,
+      dayCount: v.dayCount,
       amount: formatNumber(v.amount, 0),
       yen: formatNumber(v.yen, 0),
     }

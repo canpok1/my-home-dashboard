@@ -22,7 +22,10 @@ const { data, error } = await useFetch('/api/electricity/table', {
   params: { limit: 31, term: 'daily' },
 })
 const usages = computed(() => {
-  return data.value?.usages.map((v) => {
+  if (!data.value?.dailyUsages) {
+    return []
+  }
+  return data.value?.dailyUsages.map((v) => {
     return {
       date: v.date,
       amount: formatNumber(v.amount, 0),
