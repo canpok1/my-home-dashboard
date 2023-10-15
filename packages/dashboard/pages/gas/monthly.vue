@@ -21,7 +21,7 @@
           </v-row>
         </v-col>
         <v-col cols="12" sm="8" md="9">
-          <GasMonthlyCostGraph></GasMonthlyCostGraph>
+          <GasMonthlyCostGraph ref="graph"></GasMonthlyCostGraph>
         </v-col>
         <v-col cols="12">
           <GasMonthlyCostTable></GasMonthlyCostTable>
@@ -31,4 +31,13 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import GasMonthlyCostGraph from '@/components/gas/GasMonthlyCostGraph.vue'
+const graph = ref<InstanceType<typeof GasMonthlyCostGraph>>()
+
+onMounted(() => {
+  window.addEventListener('resize', () => {
+    graph.value?.resize()
+  })
+})
+</script>

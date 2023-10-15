@@ -23,12 +23,6 @@ defineProps<{
 }>()
 
 const canvasRef = ref<HTMLCanvasElement>()
-const { data, error } = await useFetch('/api/electricity/graph', {
-  params: { limit: 31, term: 'daily', format: 'graph' },
-})
-if (error.value) {
-  console.log(error.value)
-}
 
 let chart: Chart<'line' | 'bar', number[], string> | null = null
 const setupChart = () => {
@@ -79,6 +73,17 @@ const setupChart = () => {
       },
     },
   })
+}
+
+defineExpose({
+  resize: setupChart,
+})
+
+const { data, error } = await useFetch('/api/electricity/graph', {
+  params: { limit: 31, term: 'daily', format: 'graph' },
+})
+if (error.value) {
+  console.log(error.value)
 }
 
 onMounted(setupChart)

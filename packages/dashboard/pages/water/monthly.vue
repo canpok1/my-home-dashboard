@@ -21,7 +21,7 @@
           </v-row>
         </v-col>
         <v-col cols="12" sm="8" md="9">
-          <WaterMonthlyCostGraph></WaterMonthlyCostGraph>
+          <WaterMonthlyCostGraph ref="graph"></WaterMonthlyCostGraph>
         </v-col>
         <v-col cols="12">
           <WaterMonthlyCostTable></WaterMonthlyCostTable>
@@ -31,4 +31,13 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import WaterMonthlyCostGraph from '@/components/water/WaterMonthlyCostGraph.vue'
+const graph = ref<InstanceType<typeof WaterMonthlyCostGraph>>()
+
+onMounted(() => {
+  window.addEventListener('resize', () => {
+    graph.value?.resize()
+  })
+})
+</script>

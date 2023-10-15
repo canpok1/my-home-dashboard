@@ -94,5 +94,7 @@ const setupChart = () => {
   })
 }
 
+defineExpose({ setupChart })
+
 onMounted(setupChart)
 </script>

@@ -1,5 +1,6 @@
 <template>
   <CostGraph
+    ref="graph"
     :title="title"
     :x-labels="xLabels"
     :line-params="lineParams"
@@ -16,6 +17,15 @@
 defineProps<{
   title?: string
 }>()
+
+const graph = ref()
+const resize = () => {
+  graph.value.setupChart()
+}
+
+defineExpose({
+  resize,
+})
 
 const { data, error } = await useFetch('/api/gas/graph', {
   params: { limit: 12 },

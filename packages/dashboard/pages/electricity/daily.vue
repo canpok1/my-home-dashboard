@@ -12,7 +12,7 @@
           <ElectricityDailyCostAvgViewer> </ElectricityDailyCostAvgViewer>
         </v-col>
         <v-col cols="12" sm="8" md="9">
-          <ElectricityDailyCostGraph></ElectricityDailyCostGraph>
+          <ElectricityDailyCostGraph ref="graph"></ElectricityDailyCostGraph>
         </v-col>
         <v-col cols="12">
           <ElectricityDailyCostTable></ElectricityDailyCostTable>
@@ -22,4 +22,13 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ElectricityDailyCostGraph from '@/components/electricity/ElectricityDailyCostGraph.vue'
+const graph = ref<InstanceType<typeof ElectricityDailyCostGraph>>()
+
+onMounted(() => {
+  window.addEventListener('resize', () => {
+    graph.value?.resize()
+  })
+})
+</script>

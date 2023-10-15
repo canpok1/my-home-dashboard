@@ -21,7 +21,9 @@
           </v-row>
         </v-col>
         <v-col cols="12" sm="8" md="9">
-          <ElectricityMonthlyCostGraph></ElectricityMonthlyCostGraph>
+          <ElectricityMonthlyCostGraph
+            ref="graph"
+          ></ElectricityMonthlyCostGraph>
         </v-col>
         <v-col cols="12">
           <ElectricityMonthlyCostTable></ElectricityMonthlyCostTable>
@@ -31,4 +33,13 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ElectricityMonthlyCostGraph from '@/components/electricity/ElectricityMonthlyCostGraph.vue'
+const graph = ref<InstanceType<typeof ElectricityMonthlyCostGraph>>()
+
+onMounted(() => {
+  window.addEventListener('resize', () => {
+    graph.value?.resize()
+  })
+})
+</script>
