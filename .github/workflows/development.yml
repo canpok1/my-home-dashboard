@@ -3,6 +3,10 @@ name: CI for development
 on:
   push:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   code_test:
     runs-on: ubuntu-latest
