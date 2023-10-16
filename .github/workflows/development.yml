@@ -161,7 +161,7 @@ jobs:
         with:
           context: .
           file: packages/${{ matrix.app }}/Dockerfile
-          push: github.ref == 'refs/heads/main'
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
             ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
 
