@@ -19,7 +19,7 @@
     "test:coverage": "jest --coverage"
   },
   "devDependencies": {
-    "@mdi/font": "^7.2.96",
+    "@mdi/font": "^7.3.67",
     "@types/chart.js": "^2.9.38",
     "@types/node": "^20",
     "chart.js": "^4.3.0",
