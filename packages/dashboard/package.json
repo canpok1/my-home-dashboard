@@ -21,7 +21,7 @@
   "devDependencies": {
     "@mdi/font": "^7.2.96",
     "@types/chart.js": "^2.9.38",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "chart.js": "^4.3.0",
     "nuxt": "3.6",
     "sass": "^1.62.1",
