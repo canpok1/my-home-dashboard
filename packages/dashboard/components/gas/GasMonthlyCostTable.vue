@@ -30,7 +30,7 @@ const usages = computed(() => {
       date: v.date,
       beginAt: v.beginAt,
       endAt: v.endAt,
-      amount: formatNumber(v.amount, 0),
+      amount: formatNumber(v.amount, 2),
       yen: formatNumber(v.yen, 0),
     }
   })

@@ -31,7 +31,7 @@ const usages = computed(() => {
     return {
       date: v.date,
       dayCount: v.dayCount,
-      amount: formatNumber(v.amount, 0),
+      amount: formatNumber(v.amount, 2),
       yen: formatNumber(v.yen, 0),
     }
   })

@@ -28,7 +28,7 @@ const usages = computed(() => {
   return data.value?.dailyUsages.map((v) => {
     return {
       date: v.date,
-      amount: formatNumber(v.amount, 0),
+      amount: formatNumber(v.amount, 2),
     }
   })
 })
