@@ -22,21 +22,23 @@ defineProps<{
   title?: string
 }>()
 
+const { $logger } = useNuxtApp()
+
 const canvasRef = ref<HTMLCanvasElement>()
 
 let chart: Chart<'line' | 'bar', number[], string> | null = null
 const setupChart = () => {
   if (!canvasRef) {
-    console.log('skip setup chart, canvasRef is nothing')
+    $logger.info('skip setup chart, canvasRef is nothing')
     return
   }
   const canvas = canvasRef.value!.getContext('2d')
   if (!canvasRef) {
-    console.log('skip setup chart, canvas is nothing')
+    $logger.info('skip setup chart, canvas is nothing')
     return
   }
   if (!data.value) {
-    console.log('skip setup chart, data is nothing')
+    $logger.info('skip setup chart, data is nothing')
     return
   }
 
@@ -83,7 +85,7 @@ const { data, error } = await useFetch('/api/electricity/graph', {
   params: { limit: 31, term: 'daily', format: 'graph' },
 })
 if (error.value) {
-  console.log(error.value)
+  $logger.error(error.value)
 }
 
 onMounted(setupChart)

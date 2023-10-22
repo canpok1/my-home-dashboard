@@ -13,6 +13,8 @@ defineProps<{
   title?: string
 }>()
 
+const { $logger } = useNuxtApp()
+
 const headers = [
   { title: '年月', align: 'end', key: 'date' },
   { title: '開始日', align: 'end', key: 'beginAt' },
@@ -36,6 +38,6 @@ const usages = computed(() => {
   })
 })
 if (error.value) {
-  console.log(error.value)
+  $logger.error(error.value)
 }
 </script>

@@ -16,6 +16,8 @@
 <script setup lang="ts">
 import { Chart } from 'chart.js/auto'
 
+const { $logger } = useNuxtApp()
+
 const props = defineProps<{
   title?: string
   xLabels: string[]
@@ -38,12 +40,12 @@ const { xLabels, lineParams, barParams } = toRefs(props)
 let chart: Chart<'line' | 'bar', number[], string> | null = null
 const setupChart = () => {
   if (!canvasRef) {
-    console.log('skip setup chart, canvasRef is nothing')
+    $logger.info('skip setup chart, canvasRef is nothing')
     return
   }
   const canvas = canvasRef.value!.getContext('2d')
   if (!canvasRef) {
-    console.log('skip setup chart, canvas is nothing')
+    $logger.info('skip setup chart, canvas is nothing')
     return
   }
 

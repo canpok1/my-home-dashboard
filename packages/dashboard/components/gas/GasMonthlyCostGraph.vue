@@ -18,6 +18,8 @@ defineProps<{
   title?: string
 }>()
 
+const { $logger } = useNuxtApp()
+
 const graph = ref()
 const resize = () => {
   graph.value.setupChart()
@@ -31,7 +33,7 @@ const { data, error } = await useFetch('/api/gas/graph', {
   params: { limit: 12 },
 })
 if (error.value) {
-  console.log(error.value)
+  $logger.error(error.value)
 }
 const xLabels = computed(() => data.value?.labels || [])
 const lineParams = computed(() => {

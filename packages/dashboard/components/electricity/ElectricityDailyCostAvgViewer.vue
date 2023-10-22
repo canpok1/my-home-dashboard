@@ -3,11 +3,12 @@
 </template>
 
 <script setup lang="ts">
+const { $logger } = useNuxtApp()
 const { data, error } = await useFetch('/api/electricity/table', {
   params: { limit: 31, term: 'daily' },
 })
 if (error.value) {
-  console.log(error.value)
+  $logger.error(error.value)
 }
 const title = computed(() => {
   const term = data.value?.dailyUsages?.length || 0

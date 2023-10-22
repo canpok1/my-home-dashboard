@@ -18,13 +18,15 @@ const props = defineProps<{
   displayMode: 'amount' | 'yen'
 }>()
 
+const { $logger } = useNuxtApp()
+
 const { displayMode } = toRefs(props)
 
 const { data, error } = await useFetch('/api/water/table', {
   params: { limit: 12 },
 })
 if (error.value) {
-  console.log(error.value)
+  $logger.error(error.value)
 }
 const title = computed(() => {
   const term = data.value?.monthlyUsages.length || 0
