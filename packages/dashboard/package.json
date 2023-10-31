@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@mdi/font": "^7.3.67",
-    "@types/chart.js": "^2.9.38",
+    "@types/chart.js": "^2.9.39",
     "@types/node": "^20",
     "chart.js": "^4.3.0",
     "nuxt": "3.6",
