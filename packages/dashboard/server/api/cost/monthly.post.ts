@@ -33,24 +33,46 @@ export default defineEventHandler(async (event) => {
       costTypeId = newCostType.id
     }
 
+    type Record = {
+      year: number
+      month: number
+      yen: number
+    }
+    const records = new Map<string, Record>()
     for (const cost of body.costs) {
       const { year, month } = extractDatetimeElementJst(new Date(cost.date))
+      const key = `${year}-${month}`
+
+      const record = records.get(key)
+      if (record) {
+        record.yen = record.yen + cost.yen
+        records.set(key, record)
+      } else {
+        records.set(key, {
+          year,
+          month,
+          yen: cost.yen,
+        })
+      }
+    }
+
+    for (const record of records.values()) {
       await prisma.monthly_costs.upsert({
         where: {
           cost_type_id_cost_year_cost_month: {
             cost_type_id: costTypeId,
-            cost_year: year,
-            cost_month: month,
+            cost_year: record.year,
+            cost_month: record.month,
           },
         },
         create: {
           cost_type_id: costTypeId,
-          cost_year: year,
-          cost_month: month,
-          cost_yen: cost.yen,
+          cost_year: record.year,
+          cost_month: record.month,
+          cost_yen: record.yen,
         },
         update: {
-          cost_yen: cost.yen,
+          cost_yen: record.yen,
         },
       })
     }
