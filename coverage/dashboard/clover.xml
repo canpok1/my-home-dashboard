@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1698994043470" clover="3.2.0">
-  <project timestamp="1698994043470" name="All files">
-    <metrics statements="155" coveredstatements="22" conditionals="15" coveredconditionals="1" methods="31" coveredmethods="5" elements="201" coveredelements="28" complexity="0" loc="155" ncloc="155" packages="6" files="10" classes="10"/>
+<coverage generated="1698997939705" clover="3.2.0">
+  <project timestamp="1698997939705" name="All files">
+    <metrics statements="156" coveredstatements="22" conditionals="15" coveredconditionals="1" methods="31" coveredmethods="5" elements="202" coveredelements="28" complexity="0" loc="156" ncloc="156" packages="6" files="10" classes="10"/>
     <package name="server.api.cost">
-      <metrics statements="25" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <metrics statements="26" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="1" coveredmethods="0"/>
       <file name="monthly.post.ts" path="/home/runner/work/my-home-dashboard/my-home-dashboard/packages/dashboard/server/api/cost/monthly.post.ts">
-        <metrics statements="25" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <metrics statements="26" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="0" type="stmt"/>
         <line num="13" count="0" type="stmt"/>
         <line num="14" count="0" type="stmt"/>
         <line num="15" count="0" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
-        <line num="25" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="28" count="0" type="stmt"/>
-        <line num="33" count="0" type="stmt"/>
-        <line num="41" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="26" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="34" count="0" type="stmt"/>
         <line num="42" count="0" type="stmt"/>
         <line num="43" count="0" type="stmt"/>
         <line num="44" count="0" type="stmt"/>
-        <line num="46" count="0" type="stmt"/>
-        <line num="47" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="48" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="48" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="49" count="0" type="stmt"/>
-        <line num="51" count="0" type="stmt"/>
-        <line num="59" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="52" count="0" type="stmt"/>
         <line num="60" count="0" type="stmt"/>
-        <line num="79" count="0" type="stmt"/>
-        <line num="83" count="0" type="stmt"/>
+        <line num="61" count="0" type="stmt"/>
+        <line num="80" count="0" type="stmt"/>
         <line num="84" count="0" type="stmt"/>
-        <line num="89" count="0" type="stmt"/>
+        <line num="85" count="0" type="stmt"/>
+        <line num="90" count="0" type="stmt"/>
       </file>
     </package>
     <package name="server.api.electricity">
