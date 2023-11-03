@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
   const prisma = new PrismaClient()
   try {
     const body = await readBody<Request>(event)
+    console.log('received: %j', body)
 
     const costType = await prisma.cost_types.findUnique({
       where: {
