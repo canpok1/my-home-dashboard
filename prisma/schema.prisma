@@ -65,3 +65,25 @@ model electricity_daily_usages {
 
   @@id([usage_year, usage_month, usage_date])
 }
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cost_types {
+  id            BigInt          @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  type_name     String          @unique(map: "uk_cost_types_type_name") @db.VarChar(255)
+  created_at    DateTime        @default(now()) @db.DateTime(0)
+  updated_at    DateTime        @default(now()) @db.DateTime(0)
+  monthly_costs monthly_costs[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model monthly_costs {
+  cost_type_id BigInt     @db.UnsignedBigInt
+  cost_year    Int        @db.UnsignedInt
+  cost_month   Int        @db.UnsignedInt
+  cost_yen     Int        @db.UnsignedInt
+  created_at   DateTime   @default(now()) @db.DateTime(0)
+  updated_at   DateTime   @default(now()) @db.DateTime(0)
+  cost_types   cost_types @relation(fields: [cost_type_id], references: [id], onUpdate: Restrict, map: "fk_monthly_costs_cost_type_id")
+
+  @@id([cost_type_id, cost_year, cost_month])
+}

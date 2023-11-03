@@ -1,3 +1,5 @@
+import { extractDatetimeElementJst } from './date'
+
 export function formatDailyLabel(
   year: number,
   month: number,
@@ -17,17 +19,12 @@ export function formatMonthlyLabel(year: number, month: number): string {
 
 export type FormatType = 'YYYY/MM/DD'
 export function formatDateJst(d: Date, t: FormatType): string {
-  // 日本時間に補正
-  const offsetted = new Date(
-    d.getTime() + (d.getTimezoneOffset() + 9 * 60) * 60 * 1000
-  )
-
-  const year = offsetted.getFullYear()
-  const month = (offsetted.getMonth() + 1).toString().padStart(2, '0')
-  const day = offsetted.getDate().toString().padStart(2, '0')
+  const { year, month, day } = extractDatetimeElementJst(d)
+  const monthStr = month.toString().padStart(2, '0')
+  const dayStr = day.toString().padStart(2, '0')
 
   switch (t) {
     case 'YYYY/MM/DD':
-      return `${year}/${month}/${day}`
+      return `${year}/${monthStr}/${dayStr}`
   }
 }
