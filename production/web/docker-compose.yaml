@@ -31,3 +31,8 @@ services:
 
 volumes:
   db-store:
+
+networks:
+  default:
+    name: my-home-dashboard-network
+
