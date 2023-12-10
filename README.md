@@ -7,6 +7,6 @@
 
 - [スキーマ定義](database/README.md)
 - カバレッジ
-  - [dashboard](coverage/dashboard/lcov-report/index.html)
+  - [dashboard](coverage/dashboard/index.html)
   - [fetcher](coverage/fetcher/lcov-report/index.html)
   - [lib](coverage/lib/lcov-report/index.html)
