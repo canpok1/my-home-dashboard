@@ -6,3 +6,4 @@ output
 *.tsbuildinfo
 public/database
 public/coverage
+.DS_Store
