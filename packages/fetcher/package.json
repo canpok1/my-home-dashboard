@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/bunyan": "^1.8.10",
+    "@types/bunyan": "^1.8.11",
     "@types/node": "^20.8.10",
     "@types/node-cron": "^3.0.11",
     "ts-node": "^10.9.2",
