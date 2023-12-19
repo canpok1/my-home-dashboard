@@ -15,6 +15,7 @@ services:
       start_period: "10s"
       interval: "10s"
       retries: 30
+    restart: always
 
   migrate:
     image: ghcr.io/canpok1/my-home-dashboard/migrate:latest
@@ -24,10 +25,9 @@ services:
 
   dashboard:
     image: ghcr.io/canpok1/my-home-dashboard/dashboard:latest
-    ports:
-      - "13000:3000"
     env_file:
       - ".env"
+    restart: always
 
 volumes:
   db-store:
