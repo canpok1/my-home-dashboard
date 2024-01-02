@@ -19,7 +19,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@mdi/font": "^7.3.67",
+    "@mdi/font": "^7.4.47",
     "@types/chart.js": "^2.9.39",
     "@types/node": "^20",
     "@vitest/coverage-v8": "^1.1.1",
