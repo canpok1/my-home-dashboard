@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1704289680545" clover="3.2.0">
-  <project timestamp="1704289680545" name="All files">
+<coverage generated="1704290017776" clover="3.2.0">
+  <project timestamp="1704290017776" name="All files">
     <metrics statements="53" coveredstatements="7" conditionals="17" coveredconditionals="0" methods="13" coveredmethods="5" elements="83" coveredelements="12" complexity="0" loc="53" ncloc="53" packages="1" files="3" classes="3"/>
     <file name="Env.ts" path="/home/runner/work/my-home-dashboard/my-home-dashboard/packages/lib/src/Env.ts">
       <metrics statements="15" coveredstatements="0" conditionals="3" coveredconditionals="0" methods="3" coveredmethods="0"/>
