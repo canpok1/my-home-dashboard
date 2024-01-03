@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: my-home-dashboard-migrate
+spec:
+  schedule: 0 1 * * *
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: my-home-dashboard-migrate
+            image: ghcr.io/canpok1/my-home-dashboard/migrate:latest
+            env:
+              - name: MYSQL_DATABASE
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-db
+                    key: database
+              - name: MYSQL_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-db
+                    key: user
+              - name: MYSQL_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-db
+                    key: password
+              - name: MYSQL_HOST_ON_DOCKER_NETWORK
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-db
+                    key: host
+              - name: MYSQL_PORT_ON_DOCKER_NETWORK
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-db
+                    key: port
+          restartPolicy: OnFailure
+
