@@ -20,7 +20,7 @@
     "@types/node": "^20.10.5",
     "@types/node-cron": "^3.0.11",
     "ts-node": "^10.9.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "@playwright/test": "^1.37.0",
