@@ -4,7 +4,7 @@
   "description": "",
   "main": "output/Index.js",
   "devDependencies": {
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "build": "tsc",
