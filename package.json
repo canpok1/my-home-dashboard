@@ -10,13 +10,18 @@
     "test": "npm run test --workspaces",
     "test:coverage": "npm run test:coverage --workspaces",
     "clean": "npm run clean --workspaces",
-    "update-prisma-cli": "prisma db pull && prisma generate"
+    "update-prisma-cli": "dotenv -e .devcontainer/db.env prisma db pull && prisma generate",
+    "migrate-version": "npm run -w migrate migrate-version",
+    "migrate-up-all": "npm run -w migrate migrate-up-all",
+    "migrate-up-one": "npm run -w migrate migrate-up-one",
+    "migrate-down-one": "npm run -w migrate migrate-down-one"
   },
   "private": true,
   "workspaces": [
     "packages/dashboard",
     "packages/fetcher",
-    "packages/lib"
+    "packages/lib",
+    "packages/migrate"
   ],
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.0.0",

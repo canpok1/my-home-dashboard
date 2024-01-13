@@ -2,11 +2,10 @@ version: "3.9"
 services:
   # Update this to the name of the service you want to work with in your docker-compose.yml file
   dev:
+    container_name: dev
     build:
       context: .
       dockerfile: Dockerfile-dev
-    env_file:
-      - db.env
     environment:
       NODE_OPTIONS: "--enable-source-maps"
 
@@ -27,6 +26,7 @@ services:
       - "host.docker.internal:host-gateway"
 
   db:
+    container_name: db
     image: "mariadb:10.11"
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"

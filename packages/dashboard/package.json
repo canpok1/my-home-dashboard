@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "dotenv -e .env nuxt dev",
-    "generate": "nuxt generate",
+    "dev": "dotenv -e ../../.devcontainer/db.env nuxt dev",
+    "generate": "dotenv -e ../../.devcontainer/db.env nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "clean": "nuxi clean",
@@ -14,7 +14,6 @@
     "lint:prettier": "prettier --check --ignore-path .gitignore .",
     "format-fix": "prettier --write --ignore-path .gitignore .",
     "typecheck": "nuxi typecheck",
-    "update-prisma-cli": "prisma db pull && prisma generate",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
