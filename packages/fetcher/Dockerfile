@@ -20,7 +20,7 @@ ENV TZ=Asia/Tokyo
 
 COPY --from=builder /src/package*.json ./
 COPY --from=builder /src/packages/lib/package*.json ./packages/lib/
-COPY --from=builder /src/packages/lib/output ./packages/lib/output/
+COPY --from=builder /src/packages/lib/output ./packages/lib/src/
 COPY --from=builder /src/packages/fetcher/package*.json ./packages/fetcher/
 COPY --from=builder /src/packages/fetcher/output ./packages/fetcher/output/
 COPY --from=builder /src/prisma/ ./prisma/
