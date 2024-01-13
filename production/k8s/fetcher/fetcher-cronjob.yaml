@@ -1,0 +1,96 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: my-home-dashboard-fetcher
+spec:
+  schedule: 0 */6 * * *
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: my-home-dashboard-fetcher
+            image: ghcr.io/canpok1/my-home-dashboard/fetcher:latest
+            args: ["fetch=electricity,gas"]
+            env:
+              - name: APP_NAME
+                value: "fetcher_mini_pc"
+              - name: LOG_LEVEL
+                value: "info"
+              - name: SLACK_LOG_LEVEL
+                value: "error"
+              - name: SLACK_WEBHOOK_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-slack
+                    key: webhook-url
+              - name: ELECTRICITY_LOGIN_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-fetcher
+                    key: electricity-login-url
+              - name: ELECTRICITY_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-fetcher
+                    key: electricity-user
+              - name: ELECTRICITY_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-fetcher
+                    key: electricity-password
+              - name: ELECTRICITY_TIMEOUT_MS
+                value: "120000"
+              - name: ELECTRICITY_SCREENSHOT_DIR
+                value: "tmp"
+              - name: ELECTRICITY_CRON_JST
+                value: "-"
+              - name: GAS_LOGIN_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-fetcher
+                    key: gas-login-url
+              - name: GAS_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-fetcher
+                    key: gas-user
+              - name: GAS_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-fetcher
+                    key: gas-password
+              - name: GAS_TIMEOUT_MS
+                value: "120000"
+              - name: GAS_SCREENSHOT_DIR
+                value: "tmp"
+              - name: GAS_CRON_JST
+                value: "-"
+              - name: WATER_LOGIN_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-fetcher
+                    key: water-login-url
+              - name: WATER_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-fetcher
+                    key: water-user
+              - name: WATER_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-fetcher
+                    key: water-password
+              - name: WATER_TIMEOUT_MS
+                value: "120000"
+              - name: WATER_SCREENSHOT_DIR
+                value: "tmp"
+              - name: WATER_CRON_JST
+                value: "-"
+              - name: DB_URL_FOR_PRISMA
+                valueFrom:
+                  secretKeyRef:
+                    name: my-home-dashboard-db
+                    key: prisma-url
+          restartPolicy: OnFailure
+
