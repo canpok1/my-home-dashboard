@@ -5,7 +5,7 @@
   "main": "App.ts",
   "scripts": {
     "build": "tsc",
-    "start": "dotenv -e ../../.devcontainer/db.env -e .env ts-node src/App.ts | bunyan",
+    "start": "dotenv -e ../../.devcontainer/db.env -e .env ts-node src/App.ts",
     "clean": "rm -rf output && rm -rf tmp && rm -f tsconfig.tsbuildinfo",
     "lint": "echo \"Warn: no lint specified\"",
     "typecheck": "tsc --noEmit",

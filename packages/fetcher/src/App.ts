@@ -1,7 +1,28 @@
 import { CommonEnv, Env } from "./Env";
 import { PrismaClient } from "@prisma/client";
-import { FetchApplication } from "./application/FetchApplication";
+import { FetchApplication, Params } from "./application/FetchApplication";
 import { createLogger } from "./Logger";
+import { findValueStrings } from "lib/src/Arrays";
+
+function makeAppParams(args: string[]): Params {
+  const appParams = {
+    enableElectricity: false,
+    enableGas: false,
+    enableWater: false,
+  };
+  for (const enableType of findValueStrings(args, "fetch")) {
+    if (enableType == "electricity") {
+      appParams.enableElectricity = true;
+    }
+    if (enableType == "gas") {
+      appParams.enableGas = true;
+    }
+    if (enableType == "water") {
+      appParams.enableWater = true;
+    }
+  }
+  return appParams;
+}
 
 (async () => {
   const commonEnv = new CommonEnv(process.env);
@@ -10,6 +31,8 @@ import { createLogger } from "./Logger";
   try {
     const prisma = new PrismaClient();
     await prisma.$queryRaw`SELECT 1`; // DB接続チェック
+
+    const appParams = makeAppParams(process.argv);
 
     const electricityEnv = new Env(process.env, "ELECTRICITY");
     logger.info({ env: electricityEnv }, "loaded electricity env");
@@ -20,7 +43,13 @@ import { createLogger } from "./Logger";
     const waterEnv = new Env(process.env, "WATER");
     logger.info({ env: waterEnv }, "loaded water env");
 
-    const app = new FetchApplication(electricityEnv, gasEnv, waterEnv, prisma);
+    const app = new FetchApplication(
+      electricityEnv,
+      gasEnv,
+      waterEnv,
+      prisma,
+      appParams
+    );
     await app.run(logger);
   } catch (err) {
     logger.error(err);

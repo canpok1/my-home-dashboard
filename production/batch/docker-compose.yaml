@@ -4,3 +4,4 @@ services:
     image: ghcr.io/canpok1/my-home-dashboard/fetcher:latest
     env_file:
       - ".env"
+    command: ["fetch=electricity,gas"]
