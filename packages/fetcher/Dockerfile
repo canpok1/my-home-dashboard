@@ -22,7 +22,7 @@ COPY --from=builder /src/package*.json ./
 COPY --from=builder /src/packages/lib/package*.json ./packages/lib/
 COPY --from=builder /src/packages/lib/output ./packages/lib/src/
 COPY --from=builder /src/packages/fetcher/package*.json ./packages/fetcher/
-COPY --from=builder /src/packages/fetcher/output ./packages/fetcher/output/
+COPY --from=builder /src/packages/fetcher/output ./packages/fetcher/src/
 COPY --from=builder /src/prisma/ ./prisma/
 
 RUN apt-get update && apt-get install -y \
@@ -33,4 +33,4 @@ RUN apt-get update && apt-get install -y \
  && npm run -w fetcher install:chromium \
  && npm ci --production
 
-ENTRYPOINT ["node", "packages/fetcher/output/App.js"]
+ENTRYPOINT ["node", "packages/fetcher/src/App.js"]
