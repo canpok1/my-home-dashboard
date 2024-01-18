@@ -23,6 +23,7 @@ COPY --from=builder /src/packages/lib/package*.json ./packages/lib/
 COPY --from=builder /src/packages/lib/output ./packages/lib/src/
 COPY --from=builder /src/packages/fetcher/package*.json ./packages/fetcher/
 COPY --from=builder /src/packages/fetcher/output ./packages/fetcher/src/
+COPY --from=builder /src/packages/fetcher/run.sh ./packages/fetcher/
 COPY --from=builder /src/prisma/ ./prisma/
 
 RUN apt-get update && apt-get install -y \
@@ -30,7 +31,7 @@ RUN apt-get update && apt-get install -y \
   fonts-ipafont-mincho \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
- && npm run -w fetcher install:chromium \
- && npm ci --production
+ && npm ci --omit=dev \
+ && chmod 744 ./packages/fetcher/run.sh
 
-ENTRYPOINT ["node", "packages/fetcher/src/App.js"]
+ENTRYPOINT ["./packages/fetcher/run.sh"]
