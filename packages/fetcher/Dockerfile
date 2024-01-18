@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && npm ci --omit=dev \
+ && npx prisma generate \
  && chmod 744 ./packages/fetcher/run.sh
 
 ENTRYPOINT ["./packages/fetcher/run.sh"]
