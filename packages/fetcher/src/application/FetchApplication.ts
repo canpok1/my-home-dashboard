@@ -5,7 +5,6 @@ import { ElectricityClient } from "../infra/ElectricityClient";
 import { MySqlClient } from "../infra/MySqlClient";
 import { Env } from "../Env";
 import { PrismaClient } from "@prisma/client";
-import { Scheduler } from "../infra/Scheduler";
 import { GasClient } from "../infra/GasClient";
 import { WaterClient } from "../infra/WaterClient";
 import Logger from "bunyan";
@@ -61,8 +60,7 @@ export class FetchApplication {
     const service = new electricity.UsageService(
       this.electricityEnv,
       new ElectricityClient(this.electricityEnv),
-      new MySqlClient(this.prisma),
-      new Scheduler()
+      new MySqlClient(this.prisma)
     );
 
     const logger = parentLogger.child({ usage_type: "electricity" });
@@ -74,8 +72,7 @@ export class FetchApplication {
     const service = new gas.UsageService(
       this.gasEnv,
       new GasClient(this.gasEnv),
-      new MySqlClient(this.prisma),
-      new Scheduler()
+      new MySqlClient(this.prisma)
     );
 
     const logger = parentLogger.child({ usage_type: "gas" });
@@ -87,8 +84,7 @@ export class FetchApplication {
     const service = new water.UsageService(
       this.waterEnv,
       new WaterClient(this.waterEnv),
-      new MySqlClient(this.prisma),
-      new Scheduler()
+      new MySqlClient(this.prisma)
     );
 
     const logger = parentLogger.child({ usage_type: "water" });

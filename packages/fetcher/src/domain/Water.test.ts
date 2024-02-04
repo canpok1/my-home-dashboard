@@ -5,21 +5,8 @@ import {
   UsageRepository,
   UsageService,
 } from "./Water";
-import { Scheduler } from "./Scheduler";
 import { Env } from "../Env";
 import Logger from "bunyan";
-
-function makeMockScheduler(): Scheduler {
-  return {
-    async schedule(
-      logger: Logger,
-      cron: string,
-      f: () => Promise<void>
-    ): Promise<void> {
-      await f();
-    },
-  };
-}
 
 function makeMonthlyUsage(): MonthlyUsageModel {
   return {
@@ -42,12 +29,7 @@ describe("UsageServiceクラス", () => {
       fetcher.fetchMonthly.mockReturnValueOnce(Promise.resolve(monthlyUsages));
 
       // テスト
-      const service = new UsageService(
-        mock<Env>(),
-        fetcher,
-        repository,
-        makeMockScheduler()
-      );
+      const service = new UsageService(mock<Env>(), fetcher, repository);
       await service.run(mock<Logger>());
 
       // 検証

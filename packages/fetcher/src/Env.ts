@@ -23,7 +23,6 @@ export class Env {
   readonly user: string;
   readonly password: SecretString;
   readonly timeoutMs: number;
-  readonly cron: string;
   readonly screenshotDir: string;
 
   constructor(env: NodeJS.ProcessEnv, prefix: string) {
@@ -31,7 +30,6 @@ export class Env {
     this.user = getStringValue(env, prefix + "_USER");
     this.password = new SecretString(getStringValue(env, prefix + "_PASSWORD"));
     this.timeoutMs = getNumberValue(env, prefix + "_TIMEOUT_MS");
-    this.cron = getStringValue(env, prefix + "_CRON_JST", false);
     this.screenshotDir = getStringValue(env, prefix + "_SCREENSHOT_DIR");
   }
 }

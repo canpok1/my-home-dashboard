@@ -1,6 +1,5 @@
 import Logger from "bunyan";
 import { Env } from "../Env";
-import { Scheduler } from "./Scheduler";
 
 export interface MonthlyUsageModel {
   year: number;
@@ -38,25 +37,16 @@ export class UsageService {
   readonly env: Env;
   readonly fetcher: UsageFetcher;
   readonly repository: UsageRepository;
-  readonly scheduler: Scheduler;
 
-  constructor(
-    env: Env,
-    fetcher: UsageFetcher,
-    repository: UsageRepository,
-    scheduler: Scheduler
-  ) {
+  constructor(env: Env, fetcher: UsageFetcher, repository: UsageRepository) {
     this.env = env;
     this.fetcher = fetcher;
     this.repository = repository;
-    this.scheduler = scheduler;
   }
 
   async run(logger: Logger): Promise<void> {
-    await this.scheduler.schedule(logger, this.env.cron, async () => {
-      const now = new Date();
-      await this.fetchAndSave(logger, now);
-    });
+    const now = new Date();
+    await this.fetchAndSave(logger, now);
   }
 
   private async fetchAndSave(logger: Logger, now: Date): Promise<void> {
