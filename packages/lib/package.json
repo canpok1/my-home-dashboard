@@ -15,5 +15,8 @@
     "test:coverage": "jest --coverage"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "crypto": "^1.0.1"
+  }
 }

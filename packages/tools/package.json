@@ -1,0 +1,11 @@
+{
+  "name": "tools",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "encrypt": "dotenv -e .env ts-node src/Encrypter.ts",
+    "decrypt": "dotenv -e .env ts-node src/Decrypter.ts"
+  },
+  "author": "",
+  "license": "ISC"
+}
