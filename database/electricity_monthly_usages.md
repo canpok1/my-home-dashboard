@@ -9,6 +9,7 @@
 
 ```sql
 CREATE TABLE `electricity_monthly_usages` (
+  `electricity_fetch_setting_id` bigint(20) unsigned DEFAULT NULL COMMENT '電気料金取得設定ID',
   `usage_year` int(10) unsigned NOT NULL COMMENT '年',
   `usage_month` int(10) unsigned NOT NULL COMMENT '月',
   `usage_day_count` int(10) unsigned NOT NULL COMMENT '使用日数',
@@ -26,6 +27,7 @@ CREATE TABLE `electricity_monthly_usages` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| electricity_fetch_setting_id | bigint(20) unsigned | NULL | true |  |  |  | 電気料金取得設定ID |
 | usage_year | int(10) unsigned |  | false |  |  |  | 年 |
 | usage_month | int(10) unsigned |  | false |  |  |  | 月 |
 | usage_day_count | int(10) unsigned |  | false |  |  |  | 使用日数 |

@@ -9,6 +9,7 @@
 
 ```sql
 CREATE TABLE `gas_monthly_usages` (
+  `gas_fetch_setting_id` bigint(20) unsigned DEFAULT NULL COMMENT 'ガス料金取得設定ID',
   `usage_year` int(10) unsigned NOT NULL COMMENT '年',
   `usage_month` int(10) unsigned NOT NULL COMMENT '月',
   `usage_begin_at` date NOT NULL COMMENT '開始日',
@@ -27,6 +28,7 @@ CREATE TABLE `gas_monthly_usages` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| gas_fetch_setting_id | bigint(20) unsigned | NULL | true |  |  |  | ガス料金取得設定ID |
 | usage_year | int(10) unsigned |  | false |  |  |  | 年 |
 | usage_month | int(10) unsigned |  | false |  |  |  | 月 |
 | usage_begin_at | date |  | false |  |  |  | 開始日 |
