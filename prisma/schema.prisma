@@ -87,3 +87,33 @@ model monthly_costs {
 
   @@id([cost_type_id, cost_year, cost_month])
 }
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model electricity_fetch_settings {
+  id                 BigInt @db.UnsignedBigInt
+  user_name          String @db.VarChar(255)
+  encrypted_password String @db.VarChar(512)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model gas_fetch_settings {
+  id                 BigInt @db.UnsignedBigInt
+  user_name          String @db.VarChar(255)
+  encrypted_password String @db.VarChar(512)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model water_fetch_settings {
+  id                 BigInt @db.UnsignedBigInt
+  user_name          String @db.VarChar(255)
+  encrypted_password String @db.VarChar(512)
+
+  @@ignore
+}
