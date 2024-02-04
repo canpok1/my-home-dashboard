@@ -6,7 +6,8 @@
     "migrate-version": "dotenv -e ../../.devcontainer/db.env make migrate-version",
     "migrate-up-all": "dotenv -e ../../.devcontainer/db.env make migrate-up",
     "migrate-up-one": "dotenv -e ../../.devcontainer/db.env make migrate-up-one",
-    "migrate-down-one": "dotenv -e ../../.devcontainer/db.env make migrate-down-one"
+    "migrate-down-one": "dotenv -e ../../.devcontainer/db.env make migrate-down-one",
+    "migrate-force-v": "dotenv -e ../../.devcontainer/db.env make migrate-force-v"
   },
   "author": "",
   "license": "ISC"
