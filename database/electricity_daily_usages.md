@@ -9,14 +9,15 @@
 
 ```sql
 CREATE TABLE `electricity_daily_usages` (
-  `electricity_fetch_setting_id` bigint(20) unsigned DEFAULT NULL COMMENT '電気料金取得設定ID',
+  `electricity_fetch_setting_id` bigint(20) unsigned NOT NULL COMMENT '電気料金取得設定ID',
   `usage_year` int(10) unsigned NOT NULL COMMENT '年',
   `usage_month` int(10) unsigned NOT NULL COMMENT '月',
   `usage_date` int(10) unsigned NOT NULL COMMENT '日',
   `usage_amount` decimal(15,5) unsigned NOT NULL COMMENT '使用量(kWh)',
   `created_at` datetime NOT NULL DEFAULT current_timestamp() COMMENT '作成日時(UTC)',
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新日時(UTC)',
-  PRIMARY KEY (`usage_year`,`usage_month`,`usage_date`)
+  PRIMARY KEY (`electricity_fetch_setting_id`,`usage_year`,`usage_month`,`usage_date`),
+  CONSTRAINT `fk_electricity_daily_usages_electricity_fetch_setting_id` FOREIGN KEY (`electricity_fetch_setting_id`) REFERENCES `electricity_fetch_settings` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='日間電気使用状況'
 ```
 
@@ -26,7 +27,7 @@ CREATE TABLE `electricity_daily_usages` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
-| electricity_fetch_setting_id | bigint(20) unsigned | NULL | true |  |  |  | 電気料金取得設定ID |
+| electricity_fetch_setting_id | bigint(20) unsigned |  | false |  |  | [electricity_fetch_settings](electricity_fetch_settings.md) | 電気料金取得設定ID |
 | usage_year | int(10) unsigned |  | false |  |  |  | 年 |
 | usage_month | int(10) unsigned |  | false |  |  |  | 月 |
 | usage_date | int(10) unsigned |  | false |  |  |  | 日 |
@@ -38,13 +39,14 @@ CREATE TABLE `electricity_daily_usages` (
 
 | Name | Type | Definition |
 | ---- | ---- | ---------- |
-| PRIMARY | PRIMARY KEY | PRIMARY KEY (usage_year, usage_month, usage_date) |
+| fk_electricity_daily_usages_electricity_fetch_setting_id | FOREIGN KEY | FOREIGN KEY (electricity_fetch_setting_id) REFERENCES electricity_fetch_settings (id) |
+| PRIMARY | PRIMARY KEY | PRIMARY KEY (electricity_fetch_setting_id, usage_year, usage_month, usage_date) |
 
 ## Indexes
 
 | Name | Definition |
 | ---- | ---------- |
-| PRIMARY | PRIMARY KEY (usage_year, usage_month, usage_date) USING BTREE |
+| PRIMARY | PRIMARY KEY (electricity_fetch_setting_id, usage_year, usage_month, usage_date) USING BTREE |
 
 ## Relations
 

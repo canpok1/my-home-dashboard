@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1707129338034" clover="3.2.0">
-  <project timestamp="1707129338034" name="All files">
+<coverage generated="1707137879772" clover="3.2.0">
+  <project timestamp="1707137879772" name="All files">
     <metrics statements="450" coveredstatements="57" conditionals="37" coveredconditionals="2" methods="66" coveredmethods="10" elements="553" coveredelements="69" complexity="0" loc="450" ncloc="450" packages="4" files="14" classes="14"/>
     <package name="src">
       <metrics statements="85" coveredstatements="0" conditionals="16" coveredconditionals="0" methods="12" coveredmethods="0"/>
@@ -432,14 +432,14 @@
         <line num="63" count="0" type="stmt"/>
         <line num="76" count="0" type="stmt"/>
         <line num="77" count="0" type="stmt"/>
-        <line num="105" count="0" type="stmt"/>
-        <line num="106" count="0" type="stmt"/>
-        <line num="132" count="0" type="stmt"/>
-        <line num="133" count="0" type="stmt"/>
-        <line num="163" count="0" type="stmt"/>
-        <line num="164" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="165" count="0" type="stmt"/>
-        <line num="168" count="0" type="stmt"/>
+        <line num="107" count="0" type="stmt"/>
+        <line num="108" count="0" type="stmt"/>
+        <line num="136" count="0" type="stmt"/>
+        <line num="137" count="0" type="stmt"/>
+        <line num="169" count="0" type="stmt"/>
+        <line num="170" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="171" count="0" type="stmt"/>
+        <line num="174" count="0" type="stmt"/>
       </file>
       <file name="ScrapeUtils.ts" path="/home/runner/work/my-home-dashboard/my-home-dashboard/packages/fetcher/src/infra/ScrapeUtils.ts">
         <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>

@@ -27,7 +27,7 @@ CREATE TABLE `gas_fetch_settings` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
-| id | bigint(20) unsigned |  | false | auto_increment |  |  | ID |
+| id | bigint(20) unsigned |  | false | auto_increment | [gas_monthly_usages](gas_monthly_usages.md) |  | ID |
 | gas_site_id | bigint(20) unsigned |  | false |  |  |  | ガス料金サイトID |
 | user_name | varchar(255) |  | false |  |  |  | ユーザー名 |
 | encrypted_password | varchar(512) |  | false |  |  |  | 暗号化済パスワード |

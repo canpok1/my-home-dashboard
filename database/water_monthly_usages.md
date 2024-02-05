@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `water_monthly_usages` (
-  `water_fetch_setting_id` bigint(20) unsigned DEFAULT NULL COMMENT '水道料金取得設定ID',
+  `water_fetch_setting_id` bigint(20) unsigned NOT NULL COMMENT '水道料金取得設定ID',
   `usage_year` int(10) unsigned NOT NULL COMMENT '年',
   `usage_month` int(10) unsigned NOT NULL COMMENT '月',
   `usage_begin_at` date NOT NULL COMMENT '開始日',
@@ -18,7 +18,8 @@ CREATE TABLE `water_monthly_usages` (
   `usage_yen` int(10) unsigned NOT NULL COMMENT '料金(円)',
   `created_at` datetime NOT NULL DEFAULT current_timestamp() COMMENT '作成日時',
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新日時',
-  PRIMARY KEY (`usage_year`,`usage_month`)
+  PRIMARY KEY (`water_fetch_setting_id`,`usage_year`,`usage_month`),
+  CONSTRAINT `fk_water_monthly_usages_water_fetch_setting_id` FOREIGN KEY (`water_fetch_setting_id`) REFERENCES `water_fetch_settings` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='月間水道使用状況'
 ```
 
@@ -28,7 +29,7 @@ CREATE TABLE `water_monthly_usages` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
-| water_fetch_setting_id | bigint(20) unsigned | NULL | true |  |  |  | 水道料金取得設定ID |
+| water_fetch_setting_id | bigint(20) unsigned |  | false |  |  | [water_fetch_settings](water_fetch_settings.md) | 水道料金取得設定ID |
 | usage_year | int(10) unsigned |  | false |  |  |  | 年 |
 | usage_month | int(10) unsigned |  | false |  |  |  | 月 |
 | usage_begin_at | date |  | false |  |  |  | 開始日 |
@@ -42,13 +43,14 @@ CREATE TABLE `water_monthly_usages` (
 
 | Name | Type | Definition |
 | ---- | ---- | ---------- |
-| PRIMARY | PRIMARY KEY | PRIMARY KEY (usage_year, usage_month) |
+| fk_water_monthly_usages_water_fetch_setting_id | FOREIGN KEY | FOREIGN KEY (water_fetch_setting_id) REFERENCES water_fetch_settings (id) |
+| PRIMARY | PRIMARY KEY | PRIMARY KEY (water_fetch_setting_id, usage_year, usage_month) |
 
 ## Indexes
 
 | Name | Definition |
 | ---- | ---------- |
-| PRIMARY | PRIMARY KEY (usage_year, usage_month) USING BTREE |
+| PRIMARY | PRIMARY KEY (water_fetch_setting_id, usage_year, usage_month) USING BTREE |
 
 ## Relations
 

@@ -27,7 +27,7 @@ CREATE TABLE `water_fetch_settings` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
-| id | bigint(20) unsigned |  | false | auto_increment |  |  | ID |
+| id | bigint(20) unsigned |  | false | auto_increment | [water_monthly_usages](water_monthly_usages.md) |  | ID |
 | water_site_id | bigint(20) unsigned |  | false |  |  |  | 水道料金サイトID |
 | user_name | varchar(255) |  | false |  |  |  | ユーザー名 |
 | encrypted_password | varchar(512) |  | false |  |  |  | 暗号化済パスワード |
