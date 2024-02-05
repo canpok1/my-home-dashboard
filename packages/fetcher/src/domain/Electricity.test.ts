@@ -1,6 +1,7 @@
 import { mock } from "jest-mock-extended";
 import {
   DailyUsageModel,
+  FetchSettingRepository,
   MonthlyUsageModel,
   UsageFetcher,
   UsageRepository,
@@ -8,9 +9,11 @@ import {
 } from "./Electricity";
 import { Env } from "../Env";
 import Logger from "bunyan";
+import { SecretString } from "lib/src/Secret";
 
 function makeMonthlyUsage(): MonthlyUsageModel {
   return {
+    id: 0n,
     year: 0,
     month: 0,
     dayCount: 0,
@@ -21,6 +24,7 @@ function makeMonthlyUsage(): MonthlyUsageModel {
 
 function makeDailyUsage(): DailyUsageModel {
   return {
+    id: 0n,
     year: 0,
     month: 0,
     date: 0,
@@ -32,24 +36,45 @@ describe("UsageServiceクラス", () => {
   describe("run()", () => {
     it("fetcherで取得した情報をrepositoryに渡していること", async () => {
       const fetcher = mock<UsageFetcher>();
-      const repository = mock<UsageRepository>();
+      const fetchSettingRepo = mock<FetchSettingRepository>();
+      const usageRepo = mock<UsageRepository>();
 
       const monthlyUsages: MonthlyUsageModel[] = [makeMonthlyUsage()];
       const dailyUsages: DailyUsageModel[] = [makeDailyUsage()];
       fetcher.fetchMonthly.mockReturnValueOnce(Promise.resolve(monthlyUsages));
       fetcher.fetchDaily.mockReturnValueOnce(Promise.resolve(dailyUsages));
 
+      fetchSettingRepo.findAllElectricityFetchSettings.mockReturnValue(
+        Promise.resolve([
+          {
+            id: 0n,
+            siteId: 0n,
+            userName: "dummy",
+            password: new SecretString("dummy"),
+          },
+        ])
+      );
+
+      const logger = mock<Logger>();
+      logger.info.mockReturnValue();
+      logger.child.mockReturnValue(logger);
+
       // テスト
-      const service = new UsageService(mock<Env>(), fetcher, repository);
-      await service.run(mock<Logger>());
+      const service = new UsageService(
+        mock<Env>(),
+        fetcher,
+        fetchSettingRepo,
+        usageRepo
+      );
+      await service.run(logger);
 
       // 検証
-      expect(repository.saveElectricityMonthlyUsages).toHaveBeenNthCalledWith(
+      expect(usageRepo.saveElectricityMonthlyUsages).toHaveBeenNthCalledWith(
         1,
         monthlyUsages,
         expect.any(Date)
       );
-      expect(repository.saveElectricityDailyUsages).toHaveBeenNthCalledWith(
+      expect(usageRepo.saveElectricityDailyUsages).toHaveBeenNthCalledWith(
         1,
         dailyUsages,
         expect.any(Date)

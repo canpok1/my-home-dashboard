@@ -44,6 +44,7 @@ function makeAppParams(args: string[]): Params {
     logger.info({ env: waterEnv }, "loaded water env");
 
     const app = new FetchApplication(
+      commonEnv,
       electricityEnv,
       gasEnv,
       waterEnv,

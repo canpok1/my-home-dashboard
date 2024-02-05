@@ -2,12 +2,71 @@ import { PrismaClient } from "@prisma/client";
 import * as electricity from "../domain/Electricity";
 import * as gas from "../domain/Gas";
 import * as water from "../domain/Water";
+import { SecretString } from "lib/src/Secret";
+import { EncryptedValue } from "lib/src/Encrypt";
 
-export class MySqlClient {
+export class MySqlClient
+  implements
+    electricity.UsageRepository,
+    electricity.FetchSettingRepository,
+    gas.UsageRepository,
+    gas.FetchSettingRepository,
+    water.UsageRepository,
+    water.FetchSettingRepository
+{
   readonly prisma: PrismaClient;
+  readonly encryptionPassword: SecretString;
 
-  constructor(prisma: PrismaClient) {
+  constructor(prisma: PrismaClient, encryptionPassword: SecretString) {
     this.prisma = prisma;
+    this.encryptionPassword = encryptionPassword;
+  }
+
+  async findAllElectricityFetchSettings(): Promise<
+    electricity.FetchSettingModel[]
+  > {
+    const settings = await this.prisma.electricity_fetch_settings.findMany();
+    return settings.map((v) => {
+      const password = EncryptedValue.makeFromSerializedText(
+        v.encrypted_password
+      ).decrypt(this.encryptionPassword);
+      return {
+        id: v.id,
+        siteId: v.electricity_site_id,
+        userName: v.user_name,
+        password: password,
+      };
+    });
+  }
+
+  async findAllGasFetchSettings(): Promise<gas.FetchSettingModel[]> {
+    const settings = await this.prisma.gas_fetch_settings.findMany();
+    return settings.map((v) => {
+      const password = EncryptedValue.makeFromSerializedText(
+        v.encrypted_password
+      ).decrypt(this.encryptionPassword);
+      return {
+        id: v.id,
+        siteId: v.gas_site_id,
+        userName: v.user_name,
+        password: password,
+      };
+    });
+  }
+
+  async findAllWaterFetchSettings(): Promise<water.FetchSettingModel[]> {
+    const settings = await this.prisma.water_fetch_settings.findMany();
+    return settings.map((v) => {
+      const password = EncryptedValue.makeFromSerializedText(
+        v.encrypted_password
+      ).decrypt(this.encryptionPassword);
+      return {
+        id: v.id,
+        siteId: v.water_site_id,
+        userName: v.user_name,
+        password: password,
+      };
+    });
   }
 
   async saveElectricityMonthlyUsages(

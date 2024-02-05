@@ -1,5 +1,6 @@
 import { mock } from "jest-mock-extended";
 import {
+  FetchSettingRepository,
   MonthlyUsageModel,
   UsageFetcher,
   UsageRepository,
@@ -7,9 +8,11 @@ import {
 } from "./Gas";
 import { Env } from "../Env";
 import Logger from "bunyan";
+import { SecretString } from "lib/src/Secret";
 
 function makeMonthlyUsage(): MonthlyUsageModel {
   return {
+    id: 0n,
     year: 0,
     month: 0,
     begin: "yyyy-mm-dd",
@@ -23,17 +26,38 @@ describe("UsageServiceクラス", () => {
   describe("run()", () => {
     it("fetcherで取得した情報をrepositoryに渡していること", async () => {
       const fetcher = mock<UsageFetcher>();
-      const repository = mock<UsageRepository>();
+      const fetchSettingRepo = mock<FetchSettingRepository>();
+      const usageRepo = mock<UsageRepository>();
 
       const monthlyUsages: MonthlyUsageModel[] = [makeMonthlyUsage()];
       fetcher.fetchMonthly.mockReturnValueOnce(Promise.resolve(monthlyUsages));
 
+      fetchSettingRepo.findAllGasFetchSettings.mockReturnValue(
+        Promise.resolve([
+          {
+            id: 0n,
+            siteId: 0n,
+            userName: "dummy",
+            password: new SecretString("dummy"),
+          },
+        ])
+      );
+
+      const logger = mock<Logger>();
+      logger.info.mockReturnValue();
+      logger.child.mockReturnValue(logger);
+
       // テスト
-      const service = new UsageService(mock<Env>(), fetcher, repository);
-      await service.run(mock<Logger>());
+      const service = new UsageService(
+        mock<Env>(),
+        fetcher,
+        fetchSettingRepo,
+        usageRepo
+      );
+      await service.run(logger);
 
       // 検証
-      expect(repository.saveGasMonthlyUsages).toHaveBeenNthCalledWith(
+      expect(usageRepo.saveGasMonthlyUsages).toHaveBeenNthCalledWith(
         1,
         monthlyUsages,
         expect.any(Date)

@@ -3,7 +3,7 @@ import * as gas from "../domain/Gas";
 import * as water from "../domain/Water";
 import { ElectricityClient } from "../infra/ElectricityClient";
 import { MySqlClient } from "../infra/MySqlClient";
-import { Env } from "../Env";
+import { CommonEnv, Env } from "../Env";
 import { PrismaClient } from "@prisma/client";
 import { GasClient } from "../infra/GasClient";
 import { WaterClient } from "../infra/WaterClient";
@@ -16,6 +16,7 @@ export interface Params {
 }
 
 export class FetchApplication {
+  readonly commonEnv: CommonEnv;
   readonly electricityEnv: Env;
   readonly gasEnv: Env;
   readonly waterEnv: Env;
@@ -23,12 +24,14 @@ export class FetchApplication {
   readonly params: Params;
 
   constructor(
+    commonEnv: CommonEnv,
     electricityEnv: Env,
     gasEnv: Env,
     waterEnv: Env,
     prisma: PrismaClient,
     params: Params
   ) {
+    this.commonEnv = commonEnv;
     this.electricityEnv = electricityEnv;
     this.gasEnv = gasEnv;
     this.waterEnv = waterEnv;
@@ -57,10 +60,15 @@ export class FetchApplication {
   }
 
   private async runElectricity(parentLogger: Logger): Promise<void> {
+    const mysqlClient = new MySqlClient(
+      this.prisma,
+      this.commonEnv.encryptionPassword
+    );
     const service = new electricity.UsageService(
       this.electricityEnv,
-      new ElectricityClient(this.electricityEnv),
-      new MySqlClient(this.prisma)
+      new ElectricityClient(this.commonEnv, this.electricityEnv),
+      mysqlClient,
+      mysqlClient
     );
 
     const logger = parentLogger.child({ usage_type: "electricity" });
@@ -69,10 +77,15 @@ export class FetchApplication {
   }
 
   private async runGas(parentLogger: Logger): Promise<void> {
+    const mysqlClient = new MySqlClient(
+      this.prisma,
+      this.commonEnv.encryptionPassword
+    );
     const service = new gas.UsageService(
       this.gasEnv,
-      new GasClient(this.gasEnv),
-      new MySqlClient(this.prisma)
+      new GasClient(this.commonEnv, this.gasEnv),
+      mysqlClient,
+      mysqlClient
     );
 
     const logger = parentLogger.child({ usage_type: "gas" });
@@ -81,10 +94,15 @@ export class FetchApplication {
   }
 
   private async runWater(parentLogger: Logger): Promise<void> {
+    const mysqlClient = new MySqlClient(
+      this.prisma,
+      this.commonEnv.encryptionPassword
+    );
     const service = new water.UsageService(
       this.waterEnv,
-      new WaterClient(this.waterEnv),
-      new MySqlClient(this.prisma)
+      new WaterClient(this.commonEnv, this.waterEnv),
+      mysqlClient,
+      mysqlClient
     );
 
     const logger = parentLogger.child({ usage_type: "water" });

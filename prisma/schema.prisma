@@ -92,7 +92,6 @@ model monthly_costs {
   @@id([cost_type_id, cost_year, cost_month])
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model electricity_fetch_settings {
   id                  BigInt   @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
@@ -103,10 +102,8 @@ model electricity_fetch_settings {
   updated_at          DateTime @default(now()) @db.DateTime(0)
 
   @@unique([electricity_site_id, user_name], map: "uk_electricity_fetch_settings_electricity_site_id_user_name")
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model gas_fetch_settings {
   id                 BigInt   @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
@@ -117,10 +114,8 @@ model gas_fetch_settings {
   updated_at         DateTime @default(now()) @db.DateTime(0)
 
   @@unique([gas_site_id, user_name], map: "uk_gas_fetch_settings_gas_site_id_user_name")
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model water_fetch_settings {
   id                 BigInt   @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
@@ -131,5 +126,4 @@ model water_fetch_settings {
   updated_at         DateTime @default(now()) @db.DateTime(0)
 
   @@unique([water_site_id, user_name], map: "uk_water_fetch_settings_water_site_id_user_name")
-  @@ignore
 }

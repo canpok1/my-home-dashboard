@@ -24,21 +24,16 @@ spec:
                     secretKeyRef:
                       name: my-home-dashboard-slack
                       key: webhook-url
+                - name: ENCRYPTION_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: my-home-dashboard-common
+                      key: encryption-password
                 - name: ELECTRICITY_LOGIN_URL
                   valueFrom:
                     secretKeyRef:
                       name: my-home-dashboard-fetcher
                       key: electricity-login-url
-                - name: ELECTRICITY_USER
-                  valueFrom:
-                    secretKeyRef:
-                      name: my-home-dashboard-fetcher
-                      key: electricity-user
-                - name: ELECTRICITY_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: my-home-dashboard-fetcher
-                      key: electricity-password
                 - name: ELECTRICITY_TIMEOUT_MS
                   value: "120000"
                 - name: ELECTRICITY_SCREENSHOT_DIR
@@ -48,16 +43,6 @@ spec:
                     secretKeyRef:
                       name: my-home-dashboard-fetcher
                       key: gas-login-url
-                - name: GAS_USER
-                  valueFrom:
-                    secretKeyRef:
-                      name: my-home-dashboard-fetcher
-                      key: gas-user
-                - name: GAS_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: my-home-dashboard-fetcher
-                      key: gas-password
                 - name: GAS_TIMEOUT_MS
                   value: "120000"
                 - name: GAS_SCREENSHOT_DIR
@@ -67,16 +52,6 @@ spec:
                     secretKeyRef:
                       name: my-home-dashboard-fetcher
                       key: water-login-url
-                - name: WATER_USER
-                  valueFrom:
-                    secretKeyRef:
-                      name: my-home-dashboard-fetcher
-                      key: water-user
-                - name: WATER_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: my-home-dashboard-fetcher
-                      key: water-password
                 - name: WATER_TIMEOUT_MS
                   value: "120000"
                 - name: WATER_SCREENSHOT_DIR

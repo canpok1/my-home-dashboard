@@ -1,18 +1,23 @@
 import path from "path";
 import { Page } from "@playwright/test";
 import { Browser, withBrowser } from "./Browser";
-import { Env } from "../Env";
-import { MonthlyUsageModel } from "../domain/Gas";
+import { CommonEnv, Env } from "../Env";
+import { FetchSettingModel, MonthlyUsageModel } from "../domain/Gas";
 import Logger from "bunyan";
 
 export class GasClient {
+  readonly commonEnv: CommonEnv;
   readonly env: Env;
 
-  constructor(env: Env) {
+  constructor(commonEnv: CommonEnv, env: Env) {
+    this.commonEnv = commonEnv;
     this.env = env;
   }
 
-  async fetchMonthly(logger: Logger): Promise<MonthlyUsageModel[]> {
+  async fetchMonthly(
+    logger: Logger,
+    setting: FetchSettingModel
+  ): Promise<MonthlyUsageModel[]> {
     logger.info("fetch start");
     let usages: MonthlyUsageModel[] = [];
     try {
@@ -32,10 +37,10 @@ export class GasClient {
         logger.info("input id and password");
         await page
           .locator("#ContentPlaceHolder1_txtLoginID")
-          .fill(this.env.user);
+          .fill(setting.userName);
         await page
           .locator("#ContentPlaceHolder1_txtPassWord")
-          .fill(this.env.password.value());
+          .fill(setting.password.value());
         await page.screenshot({
           path: this.makeScreenshotPath("gas-02-login-page-with-id-pw.png"),
           fullPage: true,
@@ -57,7 +62,9 @@ export class GasClient {
             await page.locator("#ContentPlaceHolder1_LinkButton1").click();
           }
 
-          usages.push(await this.fetchByBeforeMonth(logger, page, beforeMonth));
+          usages.push(
+            await this.fetchByBeforeMonth(logger, setting, page, beforeMonth)
+          );
         }
       });
     } finally {
@@ -68,6 +75,7 @@ export class GasClient {
 
   async fetchByBeforeMonth(
     logger: Logger,
+    setting: FetchSettingModel,
     page: Page,
     beforeMonth: number
   ): Promise<MonthlyUsageModel> {
@@ -112,6 +120,7 @@ export class GasClient {
     );
 
     return {
+      id: setting.id,
       year: year,
       month: month,
       begin: beginAt,

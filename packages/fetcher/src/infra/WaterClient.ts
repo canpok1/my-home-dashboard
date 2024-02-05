@@ -1,18 +1,23 @@
 import path from "path";
 import { Page } from "@playwright/test";
 import { Browser, withBrowser } from "./Browser";
-import { MonthlyUsageModel } from "../domain/Water";
-import { Env } from "../Env";
+import { FetchSettingModel, MonthlyUsageModel } from "../domain/Water";
+import { CommonEnv, Env } from "../Env";
 import Logger from "bunyan";
 
 export class WaterClient {
+  readonly commonEnv: CommonEnv;
   readonly env: Env;
 
-  constructor(env: Env) {
+  constructor(commonEnv: CommonEnv, env: Env) {
+    this.commonEnv = commonEnv;
     this.env = env;
   }
 
-  async fetchMonthly(logger: Logger): Promise<MonthlyUsageModel[]> {
+  async fetchMonthly(
+    logger: Logger,
+    setting: FetchSettingModel
+  ): Promise<MonthlyUsageModel[]> {
     logger.info("fetch start");
     let usages: MonthlyUsageModel[] = [];
     try {
@@ -30,8 +35,8 @@ export class WaterClient {
 
           // ログイン
           logger.info("input id and password");
-          await page.locator("#loginId").fill(this.env.user);
-          await page.locator("#password").fill(this.env.password.value());
+          await page.locator("#loginId").fill(setting.userName);
+          await page.locator("#password").fill(setting.password.value());
           await page.screenshot({
             path: this.makeScreenshotPath("water-02-login-page-with-id-pw.png"),
             fullPage: true,
@@ -49,7 +54,7 @@ export class WaterClient {
 
           // 料金を取得
           const now = new Date();
-          usages = usages.concat(await this.fetch(logger, page, now));
+          usages = usages.concat(await this.fetch(logger, setting, page, now));
         } catch (err) {
           await page.screenshot({
             path: this.makeScreenshotPath("water-99-error.png"),
@@ -66,6 +71,7 @@ export class WaterClient {
 
   async fetch(
     logger: Logger,
+    setting: FetchSettingModel,
     page: Page,
     now: Date
   ): Promise<MonthlyUsageModel[]> {
@@ -108,6 +114,7 @@ export class WaterClient {
       }
 
       usages.push({
+        id: setting.id,
         year: year,
         month: month,
         begin: null,

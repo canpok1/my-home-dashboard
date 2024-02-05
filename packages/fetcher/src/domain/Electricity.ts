@@ -1,7 +1,16 @@
 import Logger from "bunyan";
 import { Env } from "../Env";
+import { SecretString } from "lib/src/Secret";
+
+export interface FetchSettingModel {
+  id: bigint;
+  siteId: bigint;
+  userName: string;
+  password: SecretString;
+}
 
 export interface MonthlyUsageModel {
+  id: bigint;
   year: number;
   month: number;
   dayCount: number;
@@ -10,6 +19,7 @@ export interface MonthlyUsageModel {
 }
 
 export interface DailyUsageModel {
+  id: bigint;
   year: number;
   month: number;
   date: number;
@@ -17,8 +27,18 @@ export interface DailyUsageModel {
 }
 
 export interface UsageFetcher {
-  fetchMonthly(logger: Logger): Promise<MonthlyUsageModel[]>;
-  fetchDaily(logger: Logger): Promise<DailyUsageModel[]>;
+  fetchMonthly(
+    logger: Logger,
+    setting: FetchSettingModel
+  ): Promise<MonthlyUsageModel[]>;
+  fetchDaily(
+    logger: Logger,
+    setting: FetchSettingModel
+  ): Promise<DailyUsageModel[]>;
+}
+
+export interface FetchSettingRepository {
+  findAllElectricityFetchSettings(): Promise<FetchSettingModel[]>;
 }
 
 export interface UsageRepository {
@@ -36,24 +56,64 @@ export interface UsageRepository {
 export class UsageService {
   readonly env: Env;
   readonly fetcher: UsageFetcher;
-  readonly repository: UsageRepository;
+  readonly fetchSettingRepo: FetchSettingRepository;
+  readonly usageRepo: UsageRepository;
 
-  constructor(env: Env, fetcher: UsageFetcher, repository: UsageRepository) {
+  constructor(
+    env: Env,
+    fetcher: UsageFetcher,
+    fetchSettingRepo: FetchSettingRepository,
+    usageRepo: UsageRepository
+  ) {
     this.env = env;
     this.fetcher = fetcher;
-    this.repository = repository;
+    this.fetchSettingRepo = fetchSettingRepo;
+    this.usageRepo = usageRepo;
   }
 
-  async run(logger: Logger): Promise<void> {
+  async run(parentLogger: Logger): Promise<void> {
     const now = new Date();
-    await this.fetchAndSave(logger, now);
+    const settings =
+      await this.fetchSettingRepo.findAllElectricityFetchSettings();
+    parentLogger.info(
+      "loaded electricity_fetch_settings, count %d",
+      settings.length
+    );
+
+    for (const setting of settings) {
+      const logger = parentLogger.child({
+        setting_id: setting.id.toString(),
+        user_name: setting.userName,
+      });
+
+      logger.info(
+        "fetch electricity start by setting[%s, %s]",
+        setting.id.toString(),
+        setting.userName
+      );
+      try {
+        await this.fetchAndSave(logger, now, setting);
+      } catch (err) {
+        logger.error({ err }, "fetch electricity failed");
+      } finally {
+        logger.info(
+          "fetch electricity end by setting[%s, %s]",
+          setting.id.toString(),
+          setting.userName
+        );
+      }
+    }
   }
 
-  private async fetchAndSave(logger: Logger, now: Date): Promise<void> {
-    const monthlyUsages = await this.fetcher.fetchMonthly(logger);
-    await this.repository.saveElectricityMonthlyUsages(monthlyUsages, now);
+  private async fetchAndSave(
+    logger: Logger,
+    now: Date,
+    setting: FetchSettingModel
+  ): Promise<void> {
+    const monthlyUsages = await this.fetcher.fetchMonthly(logger, setting);
+    await this.usageRepo.saveElectricityMonthlyUsages(monthlyUsages, now);
 
-    const dailyUsages = await this.fetcher.fetchDaily(logger);
-    await this.repository.saveElectricityDailyUsages(dailyUsages, now);
+    const dailyUsages = await this.fetcher.fetchDaily(logger, setting);
+    await this.usageRepo.saveElectricityDailyUsages(dailyUsages, now);
   }
 }

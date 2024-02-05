@@ -8,6 +8,7 @@ export class CommonEnv {
   readonly slackLogLevel: LogLevel;
   readonly slackWebhookUrl: string;
   readonly dbUrlForPrisma: string;
+  readonly encryptionPassword: SecretString;
 
   constructor(env: NodeJS.ProcessEnv) {
     this.appName = getStringValue(env, "APP_NAME");
@@ -15,20 +16,19 @@ export class CommonEnv {
     this.slackLogLevel = getLogLevel(env, "SLACK_LOG_LEVEL");
     this.slackWebhookUrl = getStringValue(env, "SLACK_WEBHOOK_URL");
     this.dbUrlForPrisma = getStringValue(env, "DB_URL_FOR_PRISMA");
+    this.encryptionPassword = new SecretString(
+      getStringValue(env, "ENCRYPTION_PASSWORD")
+    );
   }
 }
 
 export class Env {
   readonly loginUrl: string;
-  readonly user: string;
-  readonly password: SecretString;
   readonly timeoutMs: number;
   readonly screenshotDir: string;
 
   constructor(env: NodeJS.ProcessEnv, prefix: string) {
     this.loginUrl = getStringValue(env, prefix + "_LOGIN_URL");
-    this.user = getStringValue(env, prefix + "_USER");
-    this.password = new SecretString(getStringValue(env, prefix + "_PASSWORD"));
     this.timeoutMs = getNumberValue(env, prefix + "_TIMEOUT_MS");
     this.screenshotDir = getStringValue(env, prefix + "_SCREENSHOT_DIR");
   }

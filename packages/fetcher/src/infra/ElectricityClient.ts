@@ -1,18 +1,28 @@
 import Logger from "bunyan";
-import { DailyUsageModel, MonthlyUsageModel } from "../domain/Electricity";
-import { Env } from "../Env";
+import {
+  DailyUsageModel,
+  FetchSettingModel,
+  MonthlyUsageModel,
+  UsageFetcher,
+} from "../domain/Electricity";
+import { CommonEnv, Env } from "../Env";
 import { Browser, withBrowser } from "./Browser";
 import { BrowserPage } from "./BrowserPage";
 import { nthMatch } from "./ScrapeUtils";
 
-export class ElectricityClient {
+export class ElectricityClient implements UsageFetcher {
+  readonly commonEnv: CommonEnv;
   readonly env: Env;
 
-  constructor(env: Env) {
+  constructor(commonEnv: CommonEnv, env: Env) {
+    this.commonEnv = commonEnv;
     this.env = env;
   }
 
-  async fetchMonthly(parentLogger: Logger): Promise<MonthlyUsageModel[]> {
+  async fetchMonthly(
+    parentLogger: Logger,
+    setting: FetchSettingModel
+  ): Promise<MonthlyUsageModel[]> {
     const logger = parentLogger.child({ term: "monthly" });
 
     logger.info("fetch monthly start");
@@ -28,7 +38,7 @@ export class ElectricityClient {
         );
 
         // ログインしてトップページに移動
-        await this.login(logger, page);
+        await this.login(logger, setting, page);
 
         // 今月の電気料金のページに移動
         logger.info("click detail link");
@@ -40,7 +50,7 @@ export class ElectricityClient {
 
         // 電気料金を取得
         usages.push(
-          await this.fetchLatestUsage(logger, page, "latest-usage.png")
+          await this.fetchLatestUsage(logger, setting, page, "latest-usage.png")
         );
 
         // 毎月の電気料金の一覧ページに移動
@@ -49,7 +59,12 @@ export class ElectricityClient {
 
         // 電気料金を取得
         usages = usages.concat(
-          await this.fetchUsageHistory(logger, page, "usage-history.png")
+          await this.fetchUsageHistory(
+            logger,
+            setting,
+            page,
+            "usage-history.png"
+          )
         );
       });
     } finally {
@@ -58,7 +73,10 @@ export class ElectricityClient {
     return usages;
   }
 
-  async fetchDaily(parentLogger: Logger): Promise<DailyUsageModel[]> {
+  async fetchDaily(
+    parentLogger: Logger,
+    setting: FetchSettingModel
+  ): Promise<DailyUsageModel[]> {
     const logger = parentLogger.child({ term: "daily" });
 
     logger.info("fetch daily start");
@@ -74,7 +92,7 @@ export class ElectricityClient {
 
         try {
           // ログインしてトップページに移動
-          await this.login(logger, page);
+          await this.login(logger, setting, page);
 
           // 今月の電気料金のページに移動
           logger.info("click detail link");
@@ -91,6 +109,7 @@ export class ElectricityClient {
           // 電気料金を取得
           usages = await this.fetchDailyUsages(
             logger,
+            setting,
             page,
             "daily-usages.png"
           );
@@ -105,7 +124,14 @@ export class ElectricityClient {
     return usages;
   }
 
-  private async login(logger: Logger, page: BrowserPage): Promise<void> {
+  private async login(
+    logger: Logger,
+    setting: FetchSettingModel,
+    page: BrowserPage
+  ): Promise<void> {
+    const userName = setting.userName;
+    const password = setting.password;
+
     // ログインページに移動
     logger.info("goto login page");
     await page.instance.goto(this.env.loginUrl);
@@ -113,8 +139,8 @@ export class ElectricityClient {
 
     // ログイン
     logger.info("input id and password");
-    await page.instance.locator("#k_id").fill(this.env.user);
-    await page.instance.locator("#k_pw").fill(this.env.password.value());
+    await page.instance.locator("#k_id").fill(userName);
+    await page.instance.locator("#k_pw").fill(password.value());
     await page.screenshot("login-page-with-id-pw.png");
 
     logger.info("click login button");
@@ -130,6 +156,7 @@ export class ElectricityClient {
 
   private async fetchUsageHistory(
     logger: Logger,
+    setting: FetchSettingModel,
     page: BrowserPage,
     screenshotName: string
   ): Promise<MonthlyUsageModel[]> {
@@ -151,6 +178,7 @@ export class ElectricityClient {
       const columns = await rows.nth(i).locator("td");
       const yearMonth = (await columns.nth(0).innerText()).split("/");
       usages.push({
+        id: setting.id,
         year: Number(yearMonth[0]),
         month: Number(yearMonth[1]),
         dayCount: Number(await columns.nth(5).innerText()),
@@ -163,6 +191,7 @@ export class ElectricityClient {
 
   private async fetchLatestUsage(
     logger: Logger,
+    setting: FetchSettingModel,
     page: BrowserPage,
     screenshotName: string
   ): Promise<MonthlyUsageModel> {
@@ -201,6 +230,7 @@ export class ElectricityClient {
     );
 
     return {
+      id: setting.id,
       year: current.getFullYear(),
       month: current.getMonth() + 1,
       dayCount: dayCount,
@@ -211,6 +241,7 @@ export class ElectricityClient {
 
   private async fetchDailyUsages(
     logger: Logger,
+    setting: FetchSettingModel,
     page: BrowserPage,
     screenshotName: string
   ): Promise<DailyUsageModel[]> {
@@ -254,6 +285,7 @@ export class ElectricityClient {
       const amount = Number(amountStr);
 
       const usage: DailyUsageModel = {
+        id: setting.id,
         year: year,
         month: month,
         date: date,
