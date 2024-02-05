@@ -13,7 +13,7 @@ import { SecretString } from "lib/src/Secret";
 
 function makeMonthlyUsage(): MonthlyUsageModel {
   return {
-    id: 0n,
+    fetchSettingId: 0n,
     year: 0,
     month: 0,
     dayCount: 0,
@@ -24,7 +24,7 @@ function makeMonthlyUsage(): MonthlyUsageModel {
 
 function makeDailyUsage(): DailyUsageModel {
   return {
-    id: 0n,
+    fetchSettingId: 0n,
     year: 0,
     month: 0,
     date: 0,
