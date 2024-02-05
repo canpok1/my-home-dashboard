@@ -178,7 +178,7 @@ export class ElectricityClient implements UsageFetcher {
       const columns = await rows.nth(i).locator("td");
       const yearMonth = (await columns.nth(0).innerText()).split("/");
       usages.push({
-        id: setting.id,
+        fetchSettingId: setting.id,
         year: Number(yearMonth[0]),
         month: Number(yearMonth[1]),
         dayCount: Number(await columns.nth(5).innerText()),
@@ -230,7 +230,7 @@ export class ElectricityClient implements UsageFetcher {
     );
 
     return {
-      id: setting.id,
+      fetchSettingId: setting.id,
       year: current.getFullYear(),
       month: current.getMonth() + 1,
       dayCount: dayCount,
@@ -285,7 +285,7 @@ export class ElectricityClient implements UsageFetcher {
       const amount = Number(amountStr);
 
       const usage: DailyUsageModel = {
-        id: setting.id,
+        fetchSettingId: setting.id,
         year: year,
         month: month,
         date: date,

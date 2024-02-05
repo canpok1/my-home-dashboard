@@ -114,7 +114,7 @@ export class WaterClient {
       }
 
       usages.push({
-        id: setting.id,
+        fetchSettingId: setting.id,
         year: year,
         month: month,
         begin: null,

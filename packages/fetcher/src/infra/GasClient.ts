@@ -120,7 +120,7 @@ export class GasClient {
     );
 
     return {
-      id: setting.id,
+      fetchSettingId: setting.id,
       year: year,
       month: month,
       begin: beginAt,

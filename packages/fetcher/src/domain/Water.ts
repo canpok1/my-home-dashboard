@@ -10,7 +10,7 @@ export interface FetchSettingModel {
 }
 
 export interface MonthlyUsageModel {
-  id: bigint;
+  fetchSettingId: bigint;
   year: number;
   month: number;
   begin: string | null;

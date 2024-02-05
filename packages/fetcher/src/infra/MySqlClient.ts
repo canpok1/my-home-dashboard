@@ -76,12 +76,14 @@ export class MySqlClient
     for (const usage of usages) {
       await this.prisma.electricity_monthly_usages.upsert({
         where: {
-          usage_year_usage_month: {
+          electricity_fetch_setting_id_usage_year_usage_month: {
+            electricity_fetch_setting_id: usage.fetchSettingId,
             usage_year: usage.year,
             usage_month: usage.month,
           },
         },
         create: {
+          electricity_fetch_setting_id: usage.fetchSettingId,
           usage_year: usage.year,
           usage_month: usage.month,
           usage_day_count: usage.dayCount,
@@ -105,13 +107,15 @@ export class MySqlClient
     for (const usage of usages) {
       await this.prisma.electricity_daily_usages.upsert({
         where: {
-          usage_year_usage_month_usage_date: {
+          electricity_fetch_setting_id_usage_year_usage_month_usage_date: {
+            electricity_fetch_setting_id: usage.fetchSettingId,
             usage_year: usage.year,
             usage_month: usage.month,
             usage_date: usage.date,
           },
         },
         create: {
+          electricity_fetch_setting_id: usage.fetchSettingId,
           usage_year: usage.year,
           usage_month: usage.month,
           usage_date: usage.date,
@@ -132,12 +136,14 @@ export class MySqlClient
     for (const usage of usages) {
       await this.prisma.gas_monthly_usages.upsert({
         where: {
-          usage_year_usage_month: {
+          gas_fetch_setting_id_usage_year_usage_month: {
+            gas_fetch_setting_id: usage.fetchSettingId,
             usage_year: usage.year,
             usage_month: usage.month,
           },
         },
         create: {
+          gas_fetch_setting_id: usage.fetchSettingId,
           usage_year: usage.year,
           usage_month: usage.month,
           usage_begin_at: usage.begin,
@@ -167,12 +173,14 @@ export class MySqlClient
 
       await this.prisma.water_monthly_usages.upsert({
         where: {
-          usage_year_usage_month: {
+          water_fetch_setting_id_usage_year_usage_month: {
+            water_fetch_setting_id: usage.fetchSettingId,
             usage_year: usage.year,
             usage_month: usage.month,
           },
         },
         create: {
+          water_fetch_setting_id: usage.fetchSettingId,
           usage_year: usage.year,
           usage_month: usage.month,
           usage_begin_at: usage.begin,

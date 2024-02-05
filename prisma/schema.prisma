@@ -10,16 +10,17 @@ datasource db {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model electricity_monthly_usages {
-  electricity_fetch_setting_id BigInt?  @db.UnsignedBigInt
-  usage_year                   Int      @db.UnsignedInt
-  usage_month                  Int      @db.UnsignedInt
-  usage_day_count              Int      @db.UnsignedInt
-  usage_kwh                    Int      @db.UnsignedInt
-  usage_yen                    Int      @db.UnsignedInt
-  created_at                   DateTime @default(now()) @db.DateTime(0)
-  updated_at                   DateTime @default(now()) @db.DateTime(0)
+  electricity_fetch_setting_id BigInt                     @db.UnsignedBigInt
+  usage_year                   Int                        @db.UnsignedInt
+  usage_month                  Int                        @db.UnsignedInt
+  usage_day_count              Int                        @db.UnsignedInt
+  usage_kwh                    Int                        @db.UnsignedInt
+  usage_yen                    Int                        @db.UnsignedInt
+  created_at                   DateTime                   @default(now()) @db.DateTime(0)
+  updated_at                   DateTime                   @default(now()) @db.DateTime(0)
+  electricity_fetch_settings   electricity_fetch_settings @relation(fields: [electricity_fetch_setting_id], references: [id], onUpdate: Restrict, map: "fk_electricity_monthly_usages_electricity_fetch_setting_id")
 
-  @@id([usage_year, usage_month])
+  @@id([electricity_fetch_setting_id, usage_year, usage_month])
 }
 
 model schema_migrations {
@@ -29,45 +30,48 @@ model schema_migrations {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model gas_monthly_usages {
-  gas_fetch_setting_id BigInt?  @db.UnsignedBigInt
-  usage_year           Int      @db.UnsignedInt
-  usage_month          Int      @db.UnsignedInt
-  usage_begin_at       DateTime @db.Date
-  usage_end_at         DateTime @db.Date
-  usage_amount         Decimal  @db.Decimal(15, 5)
-  usage_yen            Int      @db.UnsignedInt
-  created_at           DateTime @default(now()) @db.DateTime(0)
-  updated_at           DateTime @default(now()) @db.DateTime(0)
+  gas_fetch_setting_id BigInt             @db.UnsignedBigInt
+  usage_year           Int                @db.UnsignedInt
+  usage_month          Int                @db.UnsignedInt
+  usage_begin_at       DateTime           @db.Date
+  usage_end_at         DateTime           @db.Date
+  usage_amount         Decimal            @db.Decimal(15, 5)
+  usage_yen            Int                @db.UnsignedInt
+  created_at           DateTime           @default(now()) @db.DateTime(0)
+  updated_at           DateTime           @default(now()) @db.DateTime(0)
+  gas_fetch_settings   gas_fetch_settings @relation(fields: [gas_fetch_setting_id], references: [id], onUpdate: Restrict, map: "fk_gas_monthly_usages_gas_fetch_setting_id")
 
-  @@id([usage_year, usage_month])
+  @@id([gas_fetch_setting_id, usage_year, usage_month])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model water_monthly_usages {
-  water_fetch_setting_id BigInt?  @db.UnsignedBigInt
-  usage_year             Int      @db.UnsignedInt
-  usage_month            Int      @db.UnsignedInt
-  usage_begin_at         DateTime @db.Date
-  usage_end_at           DateTime @db.Date
-  usage_amount           Decimal  @db.Decimal(15, 5)
-  usage_yen              Int      @db.UnsignedInt
-  created_at             DateTime @default(now()) @db.DateTime(0)
-  updated_at             DateTime @default(now()) @db.DateTime(0)
+  water_fetch_setting_id BigInt               @db.UnsignedBigInt
+  usage_year             Int                  @db.UnsignedInt
+  usage_month            Int                  @db.UnsignedInt
+  usage_begin_at         DateTime             @db.Date
+  usage_end_at           DateTime             @db.Date
+  usage_amount           Decimal              @db.Decimal(15, 5)
+  usage_yen              Int                  @db.UnsignedInt
+  created_at             DateTime             @default(now()) @db.DateTime(0)
+  updated_at             DateTime             @default(now()) @db.DateTime(0)
+  water_fetch_settings   water_fetch_settings @relation(fields: [water_fetch_setting_id], references: [id], onUpdate: Restrict, map: "fk_water_monthly_usages_water_fetch_setting_id")
 
-  @@id([usage_year, usage_month])
+  @@id([water_fetch_setting_id, usage_year, usage_month])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model electricity_daily_usages {
-  electricity_fetch_setting_id BigInt?  @db.UnsignedBigInt
-  usage_year                   Int      @db.UnsignedInt
-  usage_month                  Int      @db.UnsignedInt
-  usage_date                   Int      @db.UnsignedInt
-  usage_amount                 Decimal  @db.Decimal(15, 5)
-  created_at                   DateTime @default(now()) @db.DateTime(0)
-  updated_at                   DateTime @default(now()) @db.DateTime(0)
+  electricity_fetch_setting_id BigInt                     @db.UnsignedBigInt
+  usage_year                   Int                        @db.UnsignedInt
+  usage_month                  Int                        @db.UnsignedInt
+  usage_date                   Int                        @db.UnsignedInt
+  usage_amount                 Decimal                    @db.Decimal(15, 5)
+  created_at                   DateTime                   @default(now()) @db.DateTime(0)
+  updated_at                   DateTime                   @default(now()) @db.DateTime(0)
+  electricity_fetch_settings   electricity_fetch_settings @relation(fields: [electricity_fetch_setting_id], references: [id], onUpdate: Restrict, map: "fk_electricity_daily_usages_electricity_fetch_setting_id")
 
-  @@id([usage_year, usage_month, usage_date])
+  @@id([electricity_fetch_setting_id, usage_year, usage_month, usage_date])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -94,36 +98,40 @@ model monthly_costs {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model electricity_fetch_settings {
-  id                  BigInt   @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
-  electricity_site_id BigInt   @db.UnsignedBigInt
-  user_name           String   @db.VarChar(255)
-  encrypted_password  String   @db.VarChar(512)
-  created_at          DateTime @default(now()) @db.DateTime(0)
-  updated_at          DateTime @default(now()) @db.DateTime(0)
+  id                         BigInt                       @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  electricity_site_id        BigInt                       @db.UnsignedBigInt
+  user_name                  String                       @db.VarChar(255)
+  encrypted_password         String                       @db.VarChar(512)
+  created_at                 DateTime                     @default(now()) @db.DateTime(0)
+  updated_at                 DateTime                     @default(now()) @db.DateTime(0)
+  electricity_daily_usages   electricity_daily_usages[]
+  electricity_monthly_usages electricity_monthly_usages[]
 
   @@unique([electricity_site_id, user_name], map: "uk_electricity_fetch_settings_electricity_site_id_user_name")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model gas_fetch_settings {
-  id                 BigInt   @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
-  gas_site_id        BigInt   @db.UnsignedBigInt
-  user_name          String   @db.VarChar(255)
-  encrypted_password String   @db.VarChar(512)
-  created_at         DateTime @default(now()) @db.DateTime(0)
-  updated_at         DateTime @default(now()) @db.DateTime(0)
+  id                 BigInt               @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  gas_site_id        BigInt               @db.UnsignedBigInt
+  user_name          String               @db.VarChar(255)
+  encrypted_password String               @db.VarChar(512)
+  created_at         DateTime             @default(now()) @db.DateTime(0)
+  updated_at         DateTime             @default(now()) @db.DateTime(0)
+  gas_monthly_usages gas_monthly_usages[]
 
   @@unique([gas_site_id, user_name], map: "uk_gas_fetch_settings_gas_site_id_user_name")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model water_fetch_settings {
-  id                 BigInt   @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
-  water_site_id      BigInt   @db.UnsignedBigInt
-  user_name          String   @db.VarChar(255)
-  encrypted_password String   @db.VarChar(512)
-  created_at         DateTime @default(now()) @db.DateTime(0)
-  updated_at         DateTime @default(now()) @db.DateTime(0)
+  id                   BigInt                 @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  water_site_id        BigInt                 @db.UnsignedBigInt
+  user_name            String                 @db.VarChar(255)
+  encrypted_password   String                 @db.VarChar(512)
+  created_at           DateTime               @default(now()) @db.DateTime(0)
+  updated_at           DateTime               @default(now()) @db.DateTime(0)
+  water_monthly_usages water_monthly_usages[]
 
   @@unique([water_site_id, user_name], map: "uk_water_fetch_settings_water_site_id_user_name")
 }

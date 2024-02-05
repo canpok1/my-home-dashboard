@@ -10,7 +10,7 @@ export interface FetchSettingModel {
 }
 
 export interface MonthlyUsageModel {
-  id: bigint;
+  fetchSettingId: bigint;
   year: number;
   month: number;
   dayCount: number;
@@ -19,7 +19,7 @@ export interface MonthlyUsageModel {
 }
 
 export interface DailyUsageModel {
-  id: bigint;
+  fetchSettingId: bigint;
   year: number;
   month: number;
   date: number;
