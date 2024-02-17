@@ -1,4 +1,4 @@
-import vuetify from 'vite-plugin-vuetify'
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -9,31 +9,26 @@ export default defineNuxtConfig({
       },
     },
   },
+  build: {
+    transpile: ['vuetify'],
+  },
+  modules: [
+    (_options, nuxt) => {
+      nuxt.hooks.hook('vite:extendConfig', (config) => {
+        // @ts-expect-error
+        config.plugins.push(vuetify({ autoImport: true }))
+      })
+    },
+  ],
   typescript: {
     strict: true,
     typeCheck: true,
   },
-  build: {
-    transpile: ['vuetify'],
-  },
-  hooks: {
-    'vite:extendConfig': (config) => {
-      config.plugins?.push(vuetify())
-    },
-  },
   vite: {
-    ssr: {
-      noExternal: ['vuetify'],
-    },
-    define: {
-      'process.env.DEBUG': false,
+    vue: {
+      template: {
+        transformAssetUrls,
+      },
     },
   },
-  css: ['@/assets/main.scss', '@mdi/font/css/materialdesignicons.css'],
-  components: [
-    {
-      path: 'components',
-      pathPrefix: false,
-    },
-  ],
 })
