@@ -1,4 +1,4 @@
-name: CI for development
+name: code-build-deployment
 
 on:
   push:
