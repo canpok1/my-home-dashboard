@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/25</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/25</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
@@ -75,20 +75,7 @@
 <a name='L10'></a><a href='#L10'>10</a>
 <a name='L11'></a><a href='#L11'>11</a>
 <a name='L12'></a><a href='#L12'>12</a>
-<a name='L13'></a><a href='#L13'>13</a>
-<a name='L14'></a><a href='#L14'>14</a>
-<a name='L15'></a><a href='#L15'>15</a>
-<a name='L16'></a><a href='#L16'>16</a>
-<a name='L17'></a><a href='#L17'>17</a>
-<a name='L18'></a><a href='#L18'>18</a>
-<a name='L19'></a><a href='#L19'>19</a>
-<a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L13'></a><a href='#L13'>13</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -100,43 +87,17 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import { createVuetify } from 'vuetify'</span></span></span>
-<span class="cstat-no" title="statement not covered" >import { aliases, mdi } from 'vuetify/iconsets/mdi'</span>
-<span class="cstat-no" title="statement not covered" >import * as directives from 'vuetify/directives'</span>
-<span class="cstat-no" title="statement not covered" >import { VDataTable } from 'vuetify/labs/VDataTable'</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >// import this after install `@mdi/font` package</span></span></span>
+<span class="cstat-no" title="statement not covered" >import '@mdi/font/css/materialdesignicons.css'</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export default defineNuxtPlugin((nuxtApp) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >import 'vuetify/styles'</span>
+<span class="cstat-no" title="statement not covered" >import { createVuetify } from 'vuetify'</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export default defineNuxtPlugin((app) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >  const vuetify = createVuetify({</span>
-<span class="cstat-no" title="statement not covered" >    ssr: true,</span>
-<span class="cstat-no" title="statement not covered" >    components: {</span>
-<span class="cstat-no" title="statement not covered" >      VDataTable,</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    directives,</span>
-<span class="cstat-no" title="statement not covered" >    // 他の設定をここに記述していく</span>
-<span class="cstat-no" title="statement not covered" >    icons: {</span>
-<span class="cstat-no" title="statement not covered" >      defaultSet: 'mdi',</span>
-<span class="cstat-no" title="statement not covered" >      aliases,</span>
-<span class="cstat-no" title="statement not covered" >      sets: {</span>
-<span class="cstat-no" title="statement not covered" >        mdi,</span>
-<span class="cstat-no" title="statement not covered" >      },</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    // ... your configuration</span>
 <span class="cstat-no" title="statement not covered" >  })</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  // Vue.js で Vuetify を使用する</span>
-<span class="cstat-no" title="statement not covered" >  nuxtApp.vueApp.use(vuetify)</span>
+<span class="cstat-no" title="statement not covered" >  app.vueApp.use(vuetify)</span>
 <span class="cstat-no" title="statement not covered" >})</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -145,7 +106,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-17T03:22:16.468Z
+                at 2024-02-17T16:29:43.554Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
