@@ -4,6 +4,7 @@
   "description": "",
   "main": "output/Index.js",
   "devDependencies": {
+    "@types/bunyan": "^1.8.11",
     "typescript": "^5.3.3"
   },
   "scripts": {
