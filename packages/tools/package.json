@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "encrypt": "dotenv -e .env ts-node src/Encrypter.ts",
-    "decrypt": "dotenv -e .env ts-node src/Decrypter.ts"
+    "decrypt": "dotenv -e .env ts-node src/Decrypter.ts",
+    "hash": "ts-node src/Hash.ts"
   },
   "author": "",
   "license": "ISC"
