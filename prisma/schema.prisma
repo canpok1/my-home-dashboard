@@ -135,3 +135,12 @@ model water_fetch_settings {
 
   @@unique([water_site_id, user_name], map: "uk_water_fetch_settings_water_site_id_user_name")
 }
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model admin_users {
+  id            BigInt   @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  user_name     String   @unique(map: "uk_admin_users_user_name") @db.VarChar(255)
+  password_hash String   @db.VarChar(512)
+  created_at    DateTime @default(now()) @db.DateTime(0)
+  updated_at    DateTime @default(now()) @db.DateTime(0)
+}
