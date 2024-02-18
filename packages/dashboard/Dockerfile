@@ -2,12 +2,17 @@ FROM node:18 AS builder
 WORKDIR /src
 
 COPY ./package*.json ./
-COPY ./prisma/ ./prisma/
+COPY ./packages/lib/package*.json ./packages/lib/
 COPY ./packages/dashboard/package*.json ./packages/dashboard/
+COPY ./prisma/ ./prisma/
 RUN npm ci
 
+COPY ./tsconfig.json ./
+COPY ./packages/lib/ ./packages/lib/
 COPY ./packages/dashboard/ ./packages/dashboard/
+RUN npm run -w lib build
 RUN npm run -w dashboard build
+
 
 FROM node:18-slim
 WORKDIR /service
