@@ -9,6 +9,12 @@ export default defineNuxtConfig({
       },
     },
   },
+  auth: {
+    globalAppMiddleware: true,
+    provider: {
+      type: 'local',
+    },
+  },
   build: {
     transpile: ['vuetify'],
   },
@@ -19,6 +25,7 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
+    '@sidebase/nuxt-auth',
   ],
   typescript: {
     strict: true,

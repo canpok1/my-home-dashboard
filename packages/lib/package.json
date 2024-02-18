@@ -4,6 +4,7 @@
   "description": "",
   "main": "output/Index.js",
   "devDependencies": {
+    "@types/bunyan": "^1.8.11",
     "typescript": "^5.3.3"
   },
   "scripts": {
@@ -17,6 +18,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bunyan": "^1.8.15",
+    "bunyan-slack": "^1.0.0",
     "crypto": "^1.0.1"
   }
 }
