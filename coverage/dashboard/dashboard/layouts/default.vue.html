@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>0/31</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>0/31</span>
             </div>
         
             
@@ -81,7 +81,20 @@
 <a name='L16'></a><a href='#L16'>16</a>
 <a name='L17'></a><a href='#L17'>17</a>
 <a name='L18'></a><a href='#L18'>18</a>
-<a name='L19'></a><a href='#L19'>19</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -99,11 +112,41 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >&lt;template&gt;</span></span></span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >&lt;script setup lang="ts"&gt;</span></span></span>
+<span class="cstat-no" title="statement not covered" >const drawer = ref(false)</span>
+<span class="cstat-no" title="statement not covered" >const { status, signOut } = useAuth()</span>
+<span class="cstat-no" title="statement not covered" >const { path } = useRoute()</span>
+<span class="cstat-no" title="statement not covered" >&lt;/script&gt;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >&lt;template&gt;</span>
 <span class="cstat-no" title="statement not covered" >  &lt;v-app&gt;</span>
 <span class="cstat-no" title="statement not covered" >    &lt;v-app-bar color="green"&gt;</span>
 <span class="cstat-no" title="statement not covered" >      &lt;v-app-bar-nav-icon @click="drawer = !drawer"&gt;&lt;/v-app-bar-nav-icon&gt;</span>
 <span class="cstat-no" title="statement not covered" >      &lt;v-app-bar-title&gt;MyHomeDashboard&lt;/v-app-bar-title&gt;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      &lt;div v-show="status === 'unauthenticated' &amp;&amp; path !== '/login'"&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;v-btn to="/login"&gt;ログイン&lt;/v-btn&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;div v-show="status !== 'unauthenticated'"&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;v-btn</span>
+<span class="cstat-no" title="statement not covered" >          prepend-icon="mdi-logout"</span>
+<span class="cstat-no" title="statement not covered" >          @click="() =&gt; signOut({ callbackUrl: '/login' })"</span>
+<span class="cstat-no" title="statement not covered" >          &gt;ログアウト&lt;/v-btn</span>
+<span class="cstat-no" title="statement not covered" >        &gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
 <span class="cstat-no" title="statement not covered" >    &lt;/v-app-bar&gt;</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    &lt;v-navigation-drawer v-model="drawer"&gt; &lt;/v-navigation-drawer&gt;</span>
@@ -113,10 +156,6 @@
 <span class="cstat-no" title="statement not covered" >    &lt;/v-main&gt;</span>
 <span class="cstat-no" title="statement not covered" >  &lt;/v-app&gt;</span>
 <span class="cstat-no" title="statement not covered" >&lt;/template&gt;</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >&lt;script setup lang="ts"&gt;</span>
-<span class="cstat-no" title="statement not covered" >const drawer = ref(false)</span>
-<span class="cstat-no" title="statement not covered" >&lt;/script&gt;</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -124,7 +163,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-17T18:44:39.641Z
+                at 2024-02-18T14:04:51.781Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

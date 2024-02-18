@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for dashboard/server/api/gas/table.ts</title>
+    <title>Code coverage report for dashboard/server/api/auth/login.post.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">dashboard/server/api/gas</a> table.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">dashboard/server/api/auth</a> login.post.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/58</span>
+                <span class='fraction'>0/61</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/58</span>
+                <span class='fraction'>0/61</span>
             </div>
         
             
@@ -121,7 +121,10 @@
 <a name='L56'></a><a href='#L56'>56</a>
 <a name='L57'></a><a href='#L57'>57</a>
 <a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -179,62 +182,68 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import { PrismaClient } from '@prisma/client'</span></span></span>
-<span class="cstat-no" title="statement not covered" >import { formatDateJst } from '../../utils/format'</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import { createSecretKey } from 'crypto'</span></span></span>
+<span class="cstat-no" title="statement not covered" >import { z } from 'zod'</span>
+<span class="cstat-no" title="statement not covered" >import { PrismaClient } from '@prisma/client'</span>
+<span class="cstat-no" title="statement not covered" >import { HashValue } from 'lib/src/Hash'</span>
+<span class="cstat-no" title="statement not covered" >import * as jose from 'jose'</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export interface Response {</span>
-<span class="cstat-no" title="statement not covered" >  monthlyUsages: {</span>
-<span class="cstat-no" title="statement not covered" >    date: string</span>
-<span class="cstat-no" title="statement not covered" >    beginAt: string</span>
-<span class="cstat-no" title="statement not covered" >    endAt: string</span>
-<span class="cstat-no" title="statement not covered" >    yen: number</span>
-<span class="cstat-no" title="statement not covered" >    amount: number</span>
-<span class="cstat-no" title="statement not covered" >  }[]</span>
-<span class="cstat-no" title="statement not covered" >  lastUpdated: Date | null</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" >export const SECRET = 'dummy'</span>
+<span class="cstat-no" title="statement not covered" >const EXPIRES_HOUR = 6 * 60 * 60</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export default defineEventHandler(async (event): Promise&lt;Response&gt; =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  const query = getQuery(event)</span>
-<span class="cstat-no" title="statement not covered" >  const limit = Number(query.limit)</span>
-<span class="cstat-no" title="statement not covered" >  if (isNaN(limit)) {</span>
+<span class="cstat-no" title="statement not covered" >export default eventHandler(async (event) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const result = z</span>
+<span class="cstat-no" title="statement not covered" >    .object({</span>
+<span class="cstat-no" title="statement not covered" >      username: z.string().min(1),</span>
+<span class="cstat-no" title="statement not covered" >      password: z.string().min(1),</span>
+<span class="cstat-no" title="statement not covered" >    })</span>
+<span class="cstat-no" title="statement not covered" >    .safeParse(await readBody(event))</span>
+<span class="cstat-no" title="statement not covered" >  if (!result.success) {</span>
 <span class="cstat-no" title="statement not covered" >    throw createError({</span>
-<span class="cstat-no" title="statement not covered" >      statusCode: 400,</span>
-<span class="cstat-no" title="statement not covered" >      statusMessage: `required query param[limit] is not a number[${query.limit}]`,</span>
+<span class="cstat-no" title="statement not covered" >      statusCode: 403,</span>
+<span class="cstat-no" title="statement not covered" >      statusMessage: 'Unauthorized, validation error',</span>
+<span class="cstat-no" title="statement not covered" >    })</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  const { username, password } = result.data</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const prisma = new PrismaClient()</span>
+<span class="cstat-no" title="statement not covered" >  const adminUser = await prisma.admin_users.findUnique({</span>
+<span class="cstat-no" title="statement not covered" >    where: {</span>
+<span class="cstat-no" title="statement not covered" >      user_name: username,</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >  })</span>
+<span class="cstat-no" title="statement not covered" >  if (adminUser === null) {</span>
+<span class="cstat-no" title="statement not covered" >    throw createError({</span>
+<span class="cstat-no" title="statement not covered" >      statusCode: 403,</span>
+<span class="cstat-no" title="statement not covered" >      statusMessage: 'Unauthorized, admin user not found',</span>
 <span class="cstat-no" title="statement not covered" >    })</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  const prisma = new PrismaClient()</span>
-<span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    const usages = await prisma.gas_monthly_usages.findMany({</span>
-<span class="cstat-no" title="statement not covered" >      take: limit,</span>
-<span class="cstat-no" title="statement not covered" >      orderBy: [</span>
-<span class="cstat-no" title="statement not covered" >        {</span>
-<span class="cstat-no" title="statement not covered" >          usage_year: 'desc',</span>
-<span class="cstat-no" title="statement not covered" >        },</span>
-<span class="cstat-no" title="statement not covered" >        {</span>
-<span class="cstat-no" title="statement not covered" >          usage_month: 'desc',</span>
-<span class="cstat-no" title="statement not covered" >        },</span>
-<span class="cstat-no" title="statement not covered" >      ],</span>
+<span class="cstat-no" title="statement not covered" >  const hash = HashValue.makeFromSerializedText(adminUser.password_hash)</span>
+<span class="cstat-no" title="statement not covered" >  if (!hash.isMatch(password)) {</span>
+<span class="cstat-no" title="statement not covered" >    throw createError({</span>
+<span class="cstat-no" title="statement not covered" >      statusCode: 403,</span>
+<span class="cstat-no" title="statement not covered" >      statusMessage: 'Unauthorized, password is not match',</span>
 <span class="cstat-no" title="statement not covered" >    })</span>
-<span class="cstat-no" title="statement not covered" >    const lastUpdated = await prisma.gas_monthly_usages.aggregate({</span>
-<span class="cstat-no" title="statement not covered" >      _max: {</span>
-<span class="cstat-no" title="statement not covered" >        updated_at: true,</span>
-<span class="cstat-no" title="statement not covered" >      },</span>
-<span class="cstat-no" title="statement not covered" >    })</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      monthlyUsages: usages.map((v) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        return {</span>
-<span class="cstat-no" title="statement not covered" >          date: formatMonthlyLabel(v.usage_year, v.usage_month),</span>
-<span class="cstat-no" title="statement not covered" >          beginAt: formatDateJst(v.usage_begin_at, 'YYYY/MM/DD'),</span>
-<span class="cstat-no" title="statement not covered" >          endAt: formatDateJst(v.usage_end_at, 'YYYY/MM/DD'),</span>
-<span class="cstat-no" title="statement not covered" >          yen: v.usage_yen,</span>
-<span class="cstat-no" title="statement not covered" >          amount: Number(v.usage_amount),</span>
-<span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }),</span>
-<span class="cstat-no" title="statement not covered" >      lastUpdated: lastUpdated._max.updated_at,</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  } finally {</span>
-<span class="cstat-no" title="statement not covered" >    prisma.$disconnect()</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const user = {</span>
+<span class="cstat-no" title="statement not covered" >    username,</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const accessToken = await new jose.SignJWT(user)</span>
+<span class="cstat-no" title="statement not covered" >    .setProtectedHeader({ alg: 'HS256' })</span>
+<span class="cstat-no" title="statement not covered" >    .setIssuedAt()</span>
+<span class="cstat-no" title="statement not covered" >    .setIssuer('urn:example:issuer')</span>
+<span class="cstat-no" title="statement not covered" >    .setAudience('urn:example:audience')</span>
+<span class="cstat-no" title="statement not covered" >    .setExpirationTime(EXPIRES_HOUR + 'h')</span>
+<span class="cstat-no" title="statement not covered" >    .sign(createSecretKey(SECRET, 'utf-8'))</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  return {</span>
+<span class="cstat-no" title="statement not covered" >    token: accessToken,</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >})</span>
 &nbsp;</pre></td></tr></table></pre>

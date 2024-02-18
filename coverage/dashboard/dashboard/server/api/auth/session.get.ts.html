@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for dashboard/server/api/gas/table.ts</title>
+    <title>Code coverage report for dashboard/server/api/auth/session.get.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">dashboard/server/api/gas</a> table.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">dashboard/server/api/auth</a> session.get.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/58</span>
+                <span class='fraction'>0/38</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/58</span>
+                <span class='fraction'>0/38</span>
             </div>
         
             
@@ -101,27 +101,7 @@
 <a name='L36'></a><a href='#L36'>36</a>
 <a name='L37'></a><a href='#L37'>37</a>
 <a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a>
-<a name='L40'></a><a href='#L40'>40</a>
-<a name='L41'></a><a href='#L41'>41</a>
-<a name='L42'></a><a href='#L42'>42</a>
-<a name='L43'></a><a href='#L43'>43</a>
-<a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -159,83 +139,43 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import { PrismaClient } from '@prisma/client'</span></span></span>
-<span class="cstat-no" title="statement not covered" >import { formatDateJst } from '../../utils/format'</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import { createSecretKey } from 'crypto'</span></span></span>
+<span class="cstat-no" title="statement not covered" >import { H3Event } from 'h3'</span>
+<span class="cstat-no" title="statement not covered" >import { jwtVerify } from 'jose'</span>
+<span class="cstat-no" title="statement not covered" >import { SECRET } from './login.post'</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export interface Response {</span>
-<span class="cstat-no" title="statement not covered" >  monthlyUsages: {</span>
-<span class="cstat-no" title="statement not covered" >    date: string</span>
-<span class="cstat-no" title="statement not covered" >    beginAt: string</span>
-<span class="cstat-no" title="statement not covered" >    endAt: string</span>
-<span class="cstat-no" title="statement not covered" >    yen: number</span>
-<span class="cstat-no" title="statement not covered" >    amount: number</span>
-<span class="cstat-no" title="statement not covered" >  }[]</span>
-<span class="cstat-no" title="statement not covered" >  lastUpdated: Date | null</span>
+<span class="cstat-no" title="statement not covered" >const TOKEN_TYPE = 'Bearer'</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >const extractToken = (authHeaderValue: string) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const [, token] = authHeaderValue.split(`${TOKEN_TYPE} `)</span>
+<span class="cstat-no" title="statement not covered" >  return token</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export default defineEventHandler(async (event): Promise&lt;Response&gt; =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  const query = getQuery(event)</span>
-<span class="cstat-no" title="statement not covered" >  const limit = Number(query.limit)</span>
-<span class="cstat-no" title="statement not covered" >  if (isNaN(limit)) {</span>
+<span class="cstat-no" title="statement not covered" >const ensureAuth = (event: H3Event) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const authHeaderValue = getRequestHeader(event, 'authorization')</span>
+<span class="cstat-no" title="statement not covered" >  if (typeof authHeaderValue === 'undefined') {</span>
 <span class="cstat-no" title="statement not covered" >    throw createError({</span>
-<span class="cstat-no" title="statement not covered" >      statusCode: 400,</span>
-<span class="cstat-no" title="statement not covered" >      statusMessage: `required query param[limit] is not a number[${query.limit}]`,</span>
+<span class="cstat-no" title="statement not covered" >      statusCode: 403,</span>
+<span class="cstat-no" title="statement not covered" >      statusMessage:</span>
+<span class="cstat-no" title="statement not covered" >        'Need to pass valid Bearer-authorization header to access this endpoint',</span>
 <span class="cstat-no" title="statement not covered" >    })</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  const prisma = new PrismaClient()</span>
+<span class="cstat-no" title="statement not covered" >  const extractedToken = extractToken(authHeaderValue)</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    const usages = await prisma.gas_monthly_usages.findMany({</span>
-<span class="cstat-no" title="statement not covered" >      take: limit,</span>
-<span class="cstat-no" title="statement not covered" >      orderBy: [</span>
-<span class="cstat-no" title="statement not covered" >        {</span>
-<span class="cstat-no" title="statement not covered" >          usage_year: 'desc',</span>
-<span class="cstat-no" title="statement not covered" >        },</span>
-<span class="cstat-no" title="statement not covered" >        {</span>
-<span class="cstat-no" title="statement not covered" >          usage_month: 'desc',</span>
-<span class="cstat-no" title="statement not covered" >        },</span>
-<span class="cstat-no" title="statement not covered" >      ],</span>
+<span class="cstat-no" title="statement not covered" >    return jwtVerify(extractedToken, createSecretKey(SECRET, 'utf-8'))</span>
+<span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >    console.error("Login failed. Here's the raw error:", error)</span>
+<span class="cstat-no" title="statement not covered" >    throw createError({</span>
+<span class="cstat-no" title="statement not covered" >      statusCode: 403,</span>
+<span class="cstat-no" title="statement not covered" >      statusMessage: 'You must be logged in to use this endpoint',</span>
 <span class="cstat-no" title="statement not covered" >    })</span>
-<span class="cstat-no" title="statement not covered" >    const lastUpdated = await prisma.gas_monthly_usages.aggregate({</span>
-<span class="cstat-no" title="statement not covered" >      _max: {</span>
-<span class="cstat-no" title="statement not covered" >        updated_at: true,</span>
-<span class="cstat-no" title="statement not covered" >      },</span>
-<span class="cstat-no" title="statement not covered" >    })</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      monthlyUsages: usages.map((v) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        return {</span>
-<span class="cstat-no" title="statement not covered" >          date: formatMonthlyLabel(v.usage_year, v.usage_month),</span>
-<span class="cstat-no" title="statement not covered" >          beginAt: formatDateJst(v.usage_begin_at, 'YYYY/MM/DD'),</span>
-<span class="cstat-no" title="statement not covered" >          endAt: formatDateJst(v.usage_end_at, 'YYYY/MM/DD'),</span>
-<span class="cstat-no" title="statement not covered" >          yen: v.usage_yen,</span>
-<span class="cstat-no" title="statement not covered" >          amount: Number(v.usage_amount),</span>
-<span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }),</span>
-<span class="cstat-no" title="statement not covered" >      lastUpdated: lastUpdated._max.updated_at,</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  } finally {</span>
-<span class="cstat-no" title="statement not covered" >    prisma.$disconnect()</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export default eventHandler((event) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const data = ensureAuth(event)</span>
+<span class="cstat-no" title="statement not covered" >  return data</span>
 <span class="cstat-no" title="statement not covered" >})</span>
 &nbsp;</pre></td></tr></table></pre>
 
