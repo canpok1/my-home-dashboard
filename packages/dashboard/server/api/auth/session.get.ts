@@ -1,5 +1,6 @@
+import { createSecretKey } from 'crypto'
 import { H3Event } from 'h3'
-import jwt from 'jsonwebtoken'
+import { jwtVerify } from 'jose'
 import { SECRET } from './login.post'
 
 const TOKEN_TYPE = 'Bearer'
@@ -21,7 +22,7 @@ const ensureAuth = (event: H3Event) => {
 
   const extractedToken = extractToken(authHeaderValue)
   try {
-    return jwt.verify(extractedToken, SECRET)
+    return jwtVerify(extractedToken, createSecretKey(SECRET, 'utf-8'))
   } catch (error) {
     console.error("Login failed. Here's the raw error:", error)
     throw createError({

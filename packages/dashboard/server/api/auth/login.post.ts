@@ -1,16 +1,17 @@
-import zod from 'zod'
-import jwt from 'jsonwebtoken'
+import { createSecretKey } from 'crypto'
+import { z } from 'zod'
 import { PrismaClient } from '@prisma/client'
 import { HashValue } from 'lib/src/Hash'
+import * as jose from 'jose'
 
 export const SECRET = 'dummy'
-const EXPIRES_SEC = 6 * 60 * 60
+const EXPIRES_HOUR = 6 * 60 * 60
 
 export default eventHandler(async (event) => {
-  const result = zod
+  const result = z
     .object({
-      username: zod.string().min(1),
-      password: zod.string().min(1),
+      username: z.string().min(1),
+      password: z.string().min(1),
     })
     .safeParse(await readBody(event))
   if (!result.success) {
@@ -46,9 +47,13 @@ export default eventHandler(async (event) => {
     username,
   }
 
-  const accessToken = jwt.sign(user, SECRET, {
-    expiresIn: EXPIRES_SEC,
-  })
+  const accessToken = await new jose.SignJWT(user)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setIssuer('urn:example:issuer')
+    .setAudience('urn:example:audience')
+    .setExpirationTime(EXPIRES_HOUR + 'h')
+    .sign(createSecretKey(SECRET, 'utf-8'))
 
   return {
     token: accessToken,
