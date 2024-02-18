@@ -17,14 +17,14 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const expiresIn = 15
+  const expiresSec = 6 * 60 * 60
   const { username } = result.data
   const user = {
     username,
   }
 
   const accessToken = jwt.sign(user, SECRET, {
-    expiresIn,
+    expiresIn: expiresSec,
   })
 
   return {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ auth: false })
+definePageMeta({ auth: true })
 const { status } = useAuth()
 </script>
 
