@@ -20,8 +20,8 @@ export class FetchApplication {
   readonly electricityEnv: Env;
   readonly gasEnv: Env;
   readonly waterEnv: Env;
-  readonly prisma: PrismaClient;
   readonly params: Params;
+  readonly mysqlClient: MySqlClient;
 
   constructor(
     commonEnv: CommonEnv,
@@ -35,78 +35,99 @@ export class FetchApplication {
     this.electricityEnv = electricityEnv;
     this.gasEnv = gasEnv;
     this.waterEnv = waterEnv;
-    this.prisma = prisma;
     this.params = params;
+
+    this.mysqlClient = new MySqlClient(
+      prisma,
+      this.commonEnv.encryptionPassword
+    );
   }
 
   async run(logger: Logger): Promise<void> {
-    if (this.params.enableElectricity) {
-      await this.runElectricity(logger);
-    } else {
-      logger.info("skip electricity");
-    }
+    try {
+      await this.mysqlClient.upsertRunning(this.commonEnv.appName, new Date());
 
-    if (this.params.enableGas) {
-      await this.runGas(logger);
-    } else {
-      logger.info("skip gas");
-    }
+      let success = true;
+      if (this.params.enableElectricity) {
+        const result = await this.runElectricity(logger);
+        if (!result) {
+          success = false;
+        }
+      } else {
+        logger.info("skip electricity");
+      }
 
-    if (this.params.enableWater) {
-      await this.runWater(logger);
-    } else {
-      logger.info("skip water");
+      if (this.params.enableGas) {
+        const result = await this.runGas(logger);
+        if (!result) {
+          success = false;
+        }
+      } else {
+        logger.info("skip gas");
+      }
+
+      if (this.params.enableWater) {
+        const result = await this.runWater(logger);
+        if (!result) {
+          success = false;
+        }
+      } else {
+        logger.info("skip water");
+      }
+
+      if (success) {
+        await this.mysqlClient.upsertStopped(
+          this.commonEnv.appName,
+          new Date()
+        );
+      } else {
+        await this.mysqlClient.upsertError(this.commonEnv.appName, new Date());
+      }
+    } catch (err) {
+      await this.mysqlClient.upsertError(this.commonEnv.appName, new Date());
+      throw err;
     }
   }
 
-  private async runElectricity(parentLogger: Logger): Promise<void> {
-    const mysqlClient = new MySqlClient(
-      this.prisma,
-      this.commonEnv.encryptionPassword
-    );
+  private async runElectricity(parentLogger: Logger): Promise<boolean> {
     const service = new electricity.UsageService(
       this.electricityEnv,
       new ElectricityClient(this.commonEnv, this.electricityEnv),
-      mysqlClient,
-      mysqlClient
+      this.mysqlClient,
+      this.mysqlClient
     );
 
     const logger = parentLogger.child({ usage_type: "electricity" });
 
-    await service.run(logger);
+    const result = await service.run(logger);
+    return result.failureCount === 0;
   }
 
-  private async runGas(parentLogger: Logger): Promise<void> {
-    const mysqlClient = new MySqlClient(
-      this.prisma,
-      this.commonEnv.encryptionPassword
-    );
+  private async runGas(parentLogger: Logger): Promise<boolean> {
     const service = new gas.UsageService(
       this.gasEnv,
       new GasClient(this.commonEnv, this.gasEnv),
-      mysqlClient,
-      mysqlClient
+      this.mysqlClient,
+      this.mysqlClient
     );
 
     const logger = parentLogger.child({ usage_type: "gas" });
 
-    await service.run(logger);
+    const result = await service.run(logger);
+    return result.failureCount === 0;
   }
 
-  private async runWater(parentLogger: Logger): Promise<void> {
-    const mysqlClient = new MySqlClient(
-      this.prisma,
-      this.commonEnv.encryptionPassword
-    );
+  private async runWater(parentLogger: Logger): Promise<boolean> {
     const service = new water.UsageService(
       this.waterEnv,
       new WaterClient(this.commonEnv, this.waterEnv),
-      mysqlClient,
-      mysqlClient
+      this.mysqlClient,
+      this.mysqlClient
     );
 
     const logger = parentLogger.child({ usage_type: "water" });
 
-    await service.run(logger);
+    const result = await service.run(logger);
+    return result.failureCount === 0;
   }
 }
