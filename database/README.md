@@ -5,6 +5,8 @@
 | Name | Columns | Comment | Type |
 | ---- | ------- | ------- | ---- |
 | [admin_users](admin_users.md) | 5 | 管理者ユーザー | BASE TABLE |
+| [app_statuses](app_statuses.md) | 7 | アプリステータス | BASE TABLE |
+| [app_status_types](app_status_types.md) | 4 | アプリステータス種別 | BASE TABLE |
 | [cost_types](cost_types.md) | 4 | 費用種別 | BASE TABLE |
 | [electricity_daily_usages](electricity_daily_usages.md) | 7 | 日間電気使用状況 | BASE TABLE |
 | [electricity_fetch_settings](electricity_fetch_settings.md) | 6 | 電気料金の取得設定 | BASE TABLE |
