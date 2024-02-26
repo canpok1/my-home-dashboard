@@ -34,6 +34,11 @@ export interface UsageRepository {
   saveWaterMonthlyUsages(usages: MonthlyUsageModel[], now: Date): Promise<void>;
 }
 
+export interface RunResult {
+  successfulCount: number;
+  failureCount: number;
+}
+
 export class UsageService {
   readonly env: Env;
   readonly fetcher: UsageFetcher;
@@ -52,10 +57,15 @@ export class UsageService {
     this.usageRepo = usageRepo;
   }
 
-  async run(parentLogger: Logger): Promise<void> {
+  async run(parentLogger: Logger): Promise<RunResult> {
     const now = new Date();
     const settings = await this.fetchSettingRepo.findAllWaterFetchSettings();
     parentLogger.info("loaded water_fetch_settings, count %d", settings.length);
+
+    const result = {
+      successfulCount: 0,
+      failureCount: 0,
+    };
 
     for (const setting of settings) {
       const logger = parentLogger.child({
@@ -70,8 +80,10 @@ export class UsageService {
       );
       try {
         await this.fetchAndSave(logger, now, setting);
+        result.successfulCount++;
       } catch (err) {
         logger.error({ err }, "fetch water failed");
+        result.failureCount++;
       } finally {
         logger.info(
           "fetch water end by setting[%s, %s]",
@@ -80,6 +92,8 @@ export class UsageService {
         );
       }
     }
+
+    return result;
   }
 
   private async fetchAndSave(

@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import * as electricity from "../domain/Electricity";
 import * as gas from "../domain/Gas";
 import * as water from "../domain/Water";
+import * as app from "../domain/AppStatus";
 import { SecretString } from "lib/src/Secret";
 import { EncryptedValue } from "lib/src/Encrypt";
 
@@ -12,7 +13,8 @@ export class MySqlClient
     gas.UsageRepository,
     gas.FetchSettingRepository,
     water.UsageRepository,
-    water.FetchSettingRepository
+    water.FetchSettingRepository,
+    app.AppStatusRepository
 {
   readonly prisma: PrismaClient;
   readonly encryptionPassword: SecretString;
@@ -21,7 +23,6 @@ export class MySqlClient
     this.prisma = prisma;
     this.encryptionPassword = encryptionPassword;
   }
-
   async findAllElectricityFetchSettings(): Promise<
     electricity.FetchSettingModel[]
   > {
@@ -197,5 +198,79 @@ export class MySqlClient
         },
       });
     }
+  }
+
+  async upsertStopped(appName: string, now: Date): Promise<void> {
+    await this.prisma.app_statuses.upsert({
+      where: {
+        app_name: appName,
+      },
+      create: {
+        app_name: appName,
+        app_status_types: {
+          connect: {
+            type_name: "stopped",
+          },
+        },
+        last_successful_at: now,
+      },
+      update: {
+        app_status_types: {
+          connect: {
+            type_name: "stopped",
+          },
+        },
+        last_successful_at: now,
+        updated_at: now,
+      },
+    });
+  }
+  async upsertRunning(appName: string, now: Date): Promise<void> {
+    await this.prisma.app_statuses.upsert({
+      where: {
+        app_name: appName,
+      },
+      create: {
+        app_name: appName,
+        app_status_types: {
+          connect: {
+            type_name: "running",
+          },
+        },
+      },
+      update: {
+        app_status_types: {
+          connect: {
+            type_name: "running",
+          },
+        },
+        updated_at: now,
+      },
+    });
+  }
+  async upsertError(appName: string, now: Date): Promise<void> {
+    await this.prisma.app_statuses.upsert({
+      where: {
+        app_name: appName,
+      },
+      create: {
+        app_name: appName,
+        app_status_types: {
+          connect: {
+            type_name: "error",
+          },
+        },
+        last_failure_at: now,
+      },
+      update: {
+        app_status_types: {
+          connect: {
+            type_name: "error",
+          },
+        },
+        last_failure_at: now,
+        updated_at: now,
+      },
+    });
   }
 }
