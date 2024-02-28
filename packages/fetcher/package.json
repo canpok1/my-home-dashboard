@@ -23,7 +23,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@playwright/test": "^1.41.2",
+    "@playwright/test": "^1.42.0",
     "@prisma/client": "^5.10.2",
     "bunyan": "^1.8.15",
     "bunyan-slack": "^1.0.0"
