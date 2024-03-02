@@ -13,6 +13,7 @@ export class MySqlClient
     electricity.FetchStatusRepository,
     gas.UsageRepository,
     gas.FetchSettingRepository,
+    gas.FetchStatusRepository,
     water.UsageRepository,
     water.FetchSettingRepository,
     app.AppStatusRepository
@@ -318,6 +319,72 @@ export class MySqlClient
       },
       create: {
         electricity_fetch_settings: {
+          connect: {
+            id: fetchSettingId,
+          },
+        },
+        fetch_status_types: {
+          connect: {
+            type_name: "failure",
+          },
+        },
+        last_failure_at: now,
+      },
+      update: {
+        fetch_status_types: {
+          connect: {
+            type_name: "failure",
+          },
+        },
+        last_failure_at: now,
+        updated_at: now,
+      },
+    });
+  }
+
+  async upsertGasFetchStatusSuccess(
+    fetchSettingId: bigint,
+    now: Date
+  ): Promise<void> {
+    await this.prisma.gas_fetch_statuses.upsert({
+      where: {
+        gas_fetch_setting_id: fetchSettingId,
+      },
+      create: {
+        gas_fetch_settings: {
+          connect: {
+            id: fetchSettingId,
+          },
+        },
+        fetch_status_types: {
+          connect: {
+            type_name: "success",
+          },
+        },
+        last_successful_at: now,
+      },
+      update: {
+        fetch_status_types: {
+          connect: {
+            type_name: "success",
+          },
+        },
+        last_successful_at: now,
+        updated_at: now,
+      },
+    });
+  }
+
+  async upsertGasFetchStatusFailure(
+    fetchSettingId: bigint,
+    now: Date
+  ): Promise<void> {
+    await this.prisma.gas_fetch_statuses.upsert({
+      where: {
+        gas_fetch_setting_id: fetchSettingId,
+      },
+      create: {
+        gas_fetch_settings: {
           connect: {
             id: fetchSettingId,
           },

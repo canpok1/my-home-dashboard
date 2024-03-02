@@ -109,6 +109,7 @@ export class FetchApplication {
       this.gasEnv,
       new GasClient(this.commonEnv, this.gasEnv),
       this.mysqlClient,
+      this.mysqlClient,
       this.mysqlClient
     );
 

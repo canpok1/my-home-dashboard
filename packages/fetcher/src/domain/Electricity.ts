@@ -145,12 +145,12 @@ export class UsageService {
       const dailyUsages = await this.fetcher.fetchDaily(logger, setting);
       await this.usageRepo.saveElectricityDailyUsages(dailyUsages, now);
 
-      this.fetchStatusRepo.upsertElectricityFetchStatusSuccess(
+      await this.fetchStatusRepo.upsertElectricityFetchStatusSuccess(
         setting.id,
         new Date()
       );
     } catch (err) {
-      this.fetchStatusRepo.upsertElectricityFetchStatusFailure(
+      await this.fetchStatusRepo.upsertElectricityFetchStatusFailure(
         setting.id,
         new Date()
       );
