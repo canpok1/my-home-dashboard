@@ -53,6 +53,17 @@ export interface UsageRepository {
   ): Promise<void>;
 }
 
+export interface FetchStatusRepository {
+  upsertElectricityFetchStatusSuccess(
+    fetchSettingId: bigint,
+    now: Date
+  ): Promise<void>;
+  upsertElectricityFetchStatusFailure(
+    fetchSettingId: bigint,
+    now: Date
+  ): Promise<void>;
+}
+
 export interface RunResult {
   successfulCount: number;
   failureCount: number;
@@ -63,17 +74,20 @@ export class UsageService {
   readonly fetcher: UsageFetcher;
   readonly fetchSettingRepo: FetchSettingRepository;
   readonly usageRepo: UsageRepository;
+  readonly fetchStatusRepo: FetchStatusRepository;
 
   constructor(
     env: Env,
     fetcher: UsageFetcher,
     fetchSettingRepo: FetchSettingRepository,
-    usageRepo: UsageRepository
+    usageRepo: UsageRepository,
+    fetchStatusRepo: FetchStatusRepository
   ) {
     this.env = env;
     this.fetcher = fetcher;
     this.fetchSettingRepo = fetchSettingRepo;
     this.usageRepo = usageRepo;
+    this.fetchStatusRepo = fetchStatusRepo;
   }
 
   async run(parentLogger: Logger): Promise<RunResult> {
@@ -124,10 +138,23 @@ export class UsageService {
     now: Date,
     setting: FetchSettingModel
   ): Promise<void> {
-    const monthlyUsages = await this.fetcher.fetchMonthly(logger, setting);
-    await this.usageRepo.saveElectricityMonthlyUsages(monthlyUsages, now);
+    try {
+      const monthlyUsages = await this.fetcher.fetchMonthly(logger, setting);
+      await this.usageRepo.saveElectricityMonthlyUsages(monthlyUsages, now);
 
-    const dailyUsages = await this.fetcher.fetchDaily(logger, setting);
-    await this.usageRepo.saveElectricityDailyUsages(dailyUsages, now);
+      const dailyUsages = await this.fetcher.fetchDaily(logger, setting);
+      await this.usageRepo.saveElectricityDailyUsages(dailyUsages, now);
+
+      this.fetchStatusRepo.upsertElectricityFetchStatusSuccess(
+        setting.id,
+        new Date()
+      );
+    } catch (err) {
+      this.fetchStatusRepo.upsertElectricityFetchStatusFailure(
+        setting.id,
+        new Date()
+      );
+      throw err;
+    }
   }
 }

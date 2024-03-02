@@ -94,6 +94,7 @@ export class FetchApplication {
       this.electricityEnv,
       new ElectricityClient(this.commonEnv, this.electricityEnv),
       this.mysqlClient,
+      this.mysqlClient,
       this.mysqlClient
     );
 
