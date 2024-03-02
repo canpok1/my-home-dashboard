@@ -94,6 +94,7 @@ export class FetchApplication {
       this.electricityEnv,
       new ElectricityClient(this.commonEnv, this.electricityEnv),
       this.mysqlClient,
+      this.mysqlClient,
       this.mysqlClient
     );
 
@@ -108,6 +109,7 @@ export class FetchApplication {
       this.gasEnv,
       new GasClient(this.commonEnv, this.gasEnv),
       this.mysqlClient,
+      this.mysqlClient,
       this.mysqlClient
     );
 
@@ -121,6 +123,7 @@ export class FetchApplication {
     const service = new water.UsageService(
       this.waterEnv,
       new WaterClient(this.commonEnv, this.waterEnv),
+      this.mysqlClient,
       this.mysqlClient,
       this.mysqlClient
     );

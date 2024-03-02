@@ -10,10 +10,13 @@ export class MySqlClient
   implements
     electricity.UsageRepository,
     electricity.FetchSettingRepository,
+    electricity.FetchStatusRepository,
     gas.UsageRepository,
     gas.FetchSettingRepository,
+    gas.FetchStatusRepository,
     water.UsageRepository,
     water.FetchSettingRepository,
+    water.FetchStatusRepository,
     app.AppStatusRepository
 {
   readonly prisma: PrismaClient;
@@ -266,6 +269,204 @@ export class MySqlClient
         app_status_types: {
           connect: {
             type_name: "error",
+          },
+        },
+        last_failure_at: now,
+        updated_at: now,
+      },
+    });
+  }
+
+  async upsertElectricityFetchStatusSuccess(
+    fetchSettingId: bigint,
+    now: Date
+  ): Promise<void> {
+    await this.prisma.electricity_fetch_statuses.upsert({
+      where: {
+        electricity_fetch_setting_id: fetchSettingId,
+      },
+      create: {
+        electricity_fetch_settings: {
+          connect: {
+            id: fetchSettingId,
+          },
+        },
+        fetch_status_types: {
+          connect: {
+            type_name: "success",
+          },
+        },
+        last_successful_at: now,
+      },
+      update: {
+        fetch_status_types: {
+          connect: {
+            type_name: "success",
+          },
+        },
+        last_successful_at: now,
+        updated_at: now,
+      },
+    });
+  }
+
+  async upsertElectricityFetchStatusFailure(
+    fetchSettingId: bigint,
+    now: Date
+  ): Promise<void> {
+    await this.prisma.electricity_fetch_statuses.upsert({
+      where: {
+        electricity_fetch_setting_id: fetchSettingId,
+      },
+      create: {
+        electricity_fetch_settings: {
+          connect: {
+            id: fetchSettingId,
+          },
+        },
+        fetch_status_types: {
+          connect: {
+            type_name: "failure",
+          },
+        },
+        last_failure_at: now,
+      },
+      update: {
+        fetch_status_types: {
+          connect: {
+            type_name: "failure",
+          },
+        },
+        last_failure_at: now,
+        updated_at: now,
+      },
+    });
+  }
+
+  async upsertGasFetchStatusSuccess(
+    fetchSettingId: bigint,
+    now: Date
+  ): Promise<void> {
+    await this.prisma.gas_fetch_statuses.upsert({
+      where: {
+        gas_fetch_setting_id: fetchSettingId,
+      },
+      create: {
+        gas_fetch_settings: {
+          connect: {
+            id: fetchSettingId,
+          },
+        },
+        fetch_status_types: {
+          connect: {
+            type_name: "success",
+          },
+        },
+        last_successful_at: now,
+      },
+      update: {
+        fetch_status_types: {
+          connect: {
+            type_name: "success",
+          },
+        },
+        last_successful_at: now,
+        updated_at: now,
+      },
+    });
+  }
+
+  async upsertGasFetchStatusFailure(
+    fetchSettingId: bigint,
+    now: Date
+  ): Promise<void> {
+    await this.prisma.gas_fetch_statuses.upsert({
+      where: {
+        gas_fetch_setting_id: fetchSettingId,
+      },
+      create: {
+        gas_fetch_settings: {
+          connect: {
+            id: fetchSettingId,
+          },
+        },
+        fetch_status_types: {
+          connect: {
+            type_name: "failure",
+          },
+        },
+        last_failure_at: now,
+      },
+      update: {
+        fetch_status_types: {
+          connect: {
+            type_name: "failure",
+          },
+        },
+        last_failure_at: now,
+        updated_at: now,
+      },
+    });
+  }
+
+  async upsertWaterFetchStatusSuccess(
+    fetchSettingId: bigint,
+    now: Date
+  ): Promise<void> {
+    await this.prisma.water_fetch_statuses.upsert({
+      where: {
+        water_fetch_setting_id: fetchSettingId,
+      },
+      create: {
+        water_fetch_settings: {
+          connect: {
+            id: fetchSettingId,
+          },
+        },
+        fetch_status_types: {
+          connect: {
+            type_name: "success",
+          },
+        },
+        last_successful_at: now,
+      },
+      update: {
+        fetch_status_types: {
+          connect: {
+            type_name: "success",
+          },
+        },
+        last_successful_at: now,
+        updated_at: now,
+      },
+    });
+  }
+
+  async upsertWaterFetchStatusFailure(
+    fetchSettingId: bigint,
+    now: Date
+  ): Promise<void> {
+    await this.prisma.water_fetch_statuses.upsert({
+      where: {
+        water_fetch_setting_id: fetchSettingId,
+      },
+      create: {
+        water_fetch_settings: {
+          connect: {
+            id: fetchSettingId,
+          },
+        },
+        fetch_status_types: {
+          connect: {
+            type_name: "failure",
+          },
+        },
+        last_failure_at: now,
+      },
+      update: {
+        fetch_status_types: {
+          connect: {
+            type_name: "failure",
           },
         },
         last_failure_at: now,

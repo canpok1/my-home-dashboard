@@ -2,6 +2,7 @@ import { mock } from "jest-mock-extended";
 import {
   DailyUsageModel,
   FetchSettingRepository,
+  FetchStatusRepository,
   MonthlyUsageModel,
   UsageFetcher,
   UsageRepository,
@@ -38,6 +39,7 @@ describe("UsageServiceクラス", () => {
       const fetcher = mock<UsageFetcher>();
       const fetchSettingRepo = mock<FetchSettingRepository>();
       const usageRepo = mock<UsageRepository>();
+      const fetchStatusRepo = mock<FetchStatusRepository>();
 
       const monthlyUsages: MonthlyUsageModel[] = [makeMonthlyUsage()];
       const dailyUsages: DailyUsageModel[] = [makeDailyUsage()];
@@ -55,6 +57,10 @@ describe("UsageServiceクラス", () => {
         ])
       );
 
+      fetchStatusRepo.upsertElectricityFetchStatusSuccess.mockReturnValue(
+        Promise.resolve()
+      );
+
       const logger = mock<Logger>();
       logger.info.mockReturnValue();
       logger.child.mockReturnValue(logger);
@@ -64,7 +70,8 @@ describe("UsageServiceクラス", () => {
         mock<Env>(),
         fetcher,
         fetchSettingRepo,
-        usageRepo
+        usageRepo,
+        fetchStatusRepo
       );
       await service.run(logger);
 

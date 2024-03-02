@@ -34,6 +34,11 @@ export interface UsageRepository {
   saveGasMonthlyUsages(usages: MonthlyUsageModel[], now: Date): Promise<void>;
 }
 
+export interface FetchStatusRepository {
+  upsertGasFetchStatusSuccess(fetchSettingId: bigint, now: Date): Promise<void>;
+  upsertGasFetchStatusFailure(fetchSettingId: bigint, now: Date): Promise<void>;
+}
+
 export interface RunResult {
   successfulCount: number;
   failureCount: number;
@@ -44,17 +49,20 @@ export class UsageService {
   readonly fetcher: UsageFetcher;
   readonly fetchSettingRepo: FetchSettingRepository;
   readonly usageRepo: UsageRepository;
+  readonly fetchStatusRepo: FetchStatusRepository;
 
   constructor(
     env: Env,
     fetcher: UsageFetcher,
     fetchSettingRepo: FetchSettingRepository,
-    usageRepo: UsageRepository
+    usageRepo: UsageRepository,
+    fetchStatusRepo: FetchStatusRepository
   ) {
     this.env = env;
     this.fetcher = fetcher;
     this.fetchSettingRepo = fetchSettingRepo;
     this.usageRepo = usageRepo;
+    this.fetchStatusRepo = fetchStatusRepo;
   }
 
   async run(parentLogger: Logger): Promise<RunResult> {
@@ -101,7 +109,19 @@ export class UsageService {
     now: Date,
     setting: FetchSettingModel
   ): Promise<void> {
-    const models = await this.fetcher.fetchMonthly(logger, setting);
-    await this.usageRepo.saveGasMonthlyUsages(models, now);
+    try {
+      const models = await this.fetcher.fetchMonthly(logger, setting);
+      await this.usageRepo.saveGasMonthlyUsages(models, now);
+
+      await this.fetchStatusRepo.upsertGasFetchStatusSuccess(
+        setting.id,
+        new Date()
+      );
+    } catch (err) {
+      await this.fetchStatusRepo.upsertGasFetchStatusFailure(
+        setting.id,
+        new Date()
+      );
+    }
   }
 }
