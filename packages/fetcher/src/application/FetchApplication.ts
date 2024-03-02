@@ -124,6 +124,7 @@ export class FetchApplication {
       this.waterEnv,
       new WaterClient(this.commonEnv, this.waterEnv),
       this.mysqlClient,
+      this.mysqlClient,
       this.mysqlClient
     );
 
