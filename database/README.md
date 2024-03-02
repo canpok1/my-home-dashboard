@@ -10,11 +10,15 @@
 | [cost_types](cost_types.md) | 4 | 費用種別 | BASE TABLE |
 | [electricity_daily_usages](electricity_daily_usages.md) | 7 | 日間電気使用状況 | BASE TABLE |
 | [electricity_fetch_settings](electricity_fetch_settings.md) | 6 | 電気料金の取得設定 | BASE TABLE |
+| [electricity_fetch_statuses](electricity_fetch_statuses.md) | 7 | 電気料金取得ステータス | BASE TABLE |
 | [electricity_monthly_usages](electricity_monthly_usages.md) | 8 | 月間電気使用状況 | BASE TABLE |
+| [fetch_status_types](fetch_status_types.md) | 4 | 取得ステータス種別 | BASE TABLE |
 | [gas_fetch_settings](gas_fetch_settings.md) | 6 | ガス料金の取得設定 | BASE TABLE |
+| [gas_fetch_statuses](gas_fetch_statuses.md) | 7 | ガス料金取得ステータス | BASE TABLE |
 | [gas_monthly_usages](gas_monthly_usages.md) | 9 | 月間ガス使用状況 | BASE TABLE |
 | [monthly_costs](monthly_costs.md) | 6 | 月間費用 | BASE TABLE |
 | [water_fetch_settings](water_fetch_settings.md) | 6 | 水道料金の取得設定 | BASE TABLE |
+| [water_fetch_statuses](water_fetch_statuses.md) | 7 | 水道料金取得ステータス | BASE TABLE |
 | [water_monthly_usages](water_monthly_usages.md) | 9 | 月間水道使用状況 | BASE TABLE |
 
 ## Relations

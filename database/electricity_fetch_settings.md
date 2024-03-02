@@ -27,7 +27,7 @@ CREATE TABLE `electricity_fetch_settings` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
-| id | bigint(20) unsigned |  | false | auto_increment | [electricity_daily_usages](electricity_daily_usages.md) [electricity_monthly_usages](electricity_monthly_usages.md) |  | ID |
+| id | bigint(20) unsigned |  | false | auto_increment | [electricity_daily_usages](electricity_daily_usages.md) [electricity_fetch_statuses](electricity_fetch_statuses.md) [electricity_monthly_usages](electricity_monthly_usages.md) |  | ID |
 | electricity_site_id | bigint(20) unsigned |  | false |  |  |  | 電気料金サイトID |
 | user_name | varchar(255) |  | false |  |  |  | ユーザー名 |
 | encrypted_password | varchar(512) |  | false |  |  |  | 暗号化済パスワード |
