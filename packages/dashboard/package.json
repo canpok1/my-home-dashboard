@@ -22,7 +22,7 @@
     "@nuxt/devtools": "^1.2.0",
     "@sidebase/nuxt-auth": "^0.7.2",
     "@types/node": "^20",
-    "@vitest/coverage-v8": "^1.5.1",
+    "@vitest/coverage-v8": "^1.5.2",
     "jose": "^5.2.4",
     "nuxt": "~3.6",
     "sass": "^1.75.0",
