@@ -11,7 +11,7 @@ spec:
           containers:
             - name: my-home-dashboard-migrate
               image: ghcr.io/canpok1/my-home-dashboard/migrate:latest
-              command: ["migrate-up"]
+              args: ["migrate-up"]
               env:
                 - name: MYSQL_DATABASE
                   valueFrom:
