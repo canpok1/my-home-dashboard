@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1709374735461" clover="3.2.0">
-  <project timestamp="1709374735461" name="All files">
+<coverage generated="1715432046421" clover="3.2.0">
+  <project timestamp="1715432046422" name="All files">
     <metrics statements="498" coveredstatements="75" conditionals="42" coveredconditionals="2" methods="75" coveredmethods="10" elements="615" coveredelements="87" complexity="0" loc="498" ncloc="498" packages="4" files="14" classes="14"/>
     <package name="src">
       <metrics statements="85" coveredstatements="0" conditionals="16" coveredconditionals="0" methods="12" coveredmethods="0"/>
@@ -458,36 +458,36 @@
         <line num="26" count="0" type="stmt"/>
         <line num="27" count="0" type="stmt"/>
         <line num="32" count="0" type="stmt"/>
-        <line num="33" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
         <line num="37" count="0" type="stmt"/>
-        <line num="47" count="0" type="stmt"/>
-        <line num="48" count="0" type="stmt"/>
-        <line num="49" count="0" type="stmt"/>
-        <line num="52" count="0" type="stmt"/>
-        <line num="62" count="0" type="stmt"/>
-        <line num="63" count="0" type="stmt"/>
-        <line num="64" count="0" type="stmt"/>
-        <line num="67" count="0" type="stmt"/>
-        <line num="80" count="0" type="stmt"/>
-        <line num="81" count="0" type="stmt"/>
-        <line num="111" count="0" type="stmt"/>
-        <line num="112" count="0" type="stmt"/>
-        <line num="140" count="0" type="stmt"/>
-        <line num="141" count="0" type="stmt"/>
-        <line num="173" count="0" type="stmt"/>
-        <line num="174" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="175" count="0" type="stmt"/>
-        <line num="178" count="0" type="stmt"/>
-        <line num="207" count="0" type="stmt"/>
-        <line num="232" count="0" type="stmt"/>
-        <line num="255" count="0" type="stmt"/>
-        <line num="284" count="0" type="stmt"/>
-        <line num="317" count="0" type="stmt"/>
-        <line num="350" count="0" type="stmt"/>
-        <line num="383" count="0" type="stmt"/>
-        <line num="416" count="0" type="stmt"/>
-        <line num="449" count="0" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="56" count="0" type="stmt"/>
+        <line num="57" count="0" type="stmt"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="70" count="0" type="stmt"/>
+        <line num="75" count="0" type="stmt"/>
+        <line num="76" count="0" type="stmt"/>
+        <line num="79" count="0" type="stmt"/>
+        <line num="92" count="0" type="stmt"/>
+        <line num="93" count="0" type="stmt"/>
+        <line num="123" count="0" type="stmt"/>
+        <line num="124" count="0" type="stmt"/>
+        <line num="152" count="0" type="stmt"/>
+        <line num="153" count="0" type="stmt"/>
+        <line num="185" count="0" type="stmt"/>
+        <line num="186" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="187" count="0" type="stmt"/>
+        <line num="190" count="0" type="stmt"/>
+        <line num="219" count="0" type="stmt"/>
+        <line num="244" count="0" type="stmt"/>
+        <line num="267" count="0" type="stmt"/>
+        <line num="296" count="0" type="stmt"/>
+        <line num="329" count="0" type="stmt"/>
+        <line num="362" count="0" type="stmt"/>
+        <line num="395" count="0" type="stmt"/>
+        <line num="428" count="0" type="stmt"/>
+        <line num="461" count="0" type="stmt"/>
       </file>
       <file name="ScrapeUtils.ts" path="/home/runner/work/my-home-dashboard/my-home-dashboard/packages/fetcher/src/infra/ScrapeUtils.ts">
         <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>

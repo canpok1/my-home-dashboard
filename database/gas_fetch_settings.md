@@ -13,6 +13,7 @@ CREATE TABLE `gas_fetch_settings` (
   `gas_site_id` bigint(20) unsigned NOT NULL COMMENT 'ガス料金サイトID',
   `user_name` varchar(255) NOT NULL COMMENT 'ユーザー名',
   `encrypted_password` varchar(512) NOT NULL COMMENT '暗号化済パスワード',
+  `fetch_enable` tinyint(1) NOT NULL DEFAULT 1 COMMENT '取得処理の有効化',
   `created_at` datetime NOT NULL DEFAULT current_timestamp() COMMENT '作成日時(UTC)',
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新日時(UTC)',
   PRIMARY KEY (`id`),
@@ -31,6 +32,7 @@ CREATE TABLE `gas_fetch_settings` (
 | gas_site_id | bigint(20) unsigned |  | false |  |  |  | ガス料金サイトID |
 | user_name | varchar(255) |  | false |  |  |  | ユーザー名 |
 | encrypted_password | varchar(512) |  | false |  |  |  | 暗号化済パスワード |
+| fetch_enable | tinyint(1) | 1 | false |  |  |  | 取得処理の有効化 |
 | created_at | datetime | current_timestamp() | false |  |  |  | 作成日時(UTC) |
 | updated_at | datetime | current_timestamp() | false | on update current_timestamp() |  |  | 更新日時(UTC) |
 

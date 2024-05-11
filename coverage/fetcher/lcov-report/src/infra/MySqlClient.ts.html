@@ -540,7 +540,19 @@
 <a name='L475'></a><a href='#L475'>475</a>
 <a name='L476'></a><a href='#L476'>476</a>
 <a name='L477'></a><a href='#L477'>477</a>
-<a name='L478'></a><a href='#L478'>478</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L478'></a><a href='#L478'>478</a>
+<a name='L479'></a><a href='#L479'>479</a>
+<a name='L480'></a><a href='#L480'>480</a>
+<a name='L481'></a><a href='#L481'>481</a>
+<a name='L482'></a><a href='#L482'>482</a>
+<a name='L483'></a><a href='#L483'>483</a>
+<a name='L484'></a><a href='#L484'>484</a>
+<a name='L485'></a><a href='#L485'>485</a>
+<a name='L486'></a><a href='#L486'>486</a>
+<a name='L487'></a><a href='#L487'>487</a>
+<a name='L488'></a><a href='#L488'>488</a>
+<a name='L489'></a><a href='#L489'>489</a>
+<a name='L490'></a><a href='#L490'>490</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -572,21 +584,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -602,6 +603,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1048,7 +1072,11 @@ import { SecretString } from "lib/src/Secret";
 <span class="fstat-no" title="function not covered" >  async </span>findAllElectricityFetchSettings(): Promise&lt;
     electricity.FetchSettingModel[]
   &gt; {
-    const settings = <span class="cstat-no" title="statement not covered" >await this.prisma.electricity_fetch_settings.findMany();</span>
+    const settings = <span class="cstat-no" title="statement not covered" >await this.prisma.electricity_fetch_settings.findMany({</span>
+      where: {
+        fetch_enable: true,
+      },
+    });
 <span class="cstat-no" title="statement not covered" >    return settings.map(<span class="fstat-no" title="function not covered" >(v</span>) =&gt; {</span>
       const password = <span class="cstat-no" title="statement not covered" >EncryptedValue.makeFromSerializedText(</span>
         v.encrypted_password
@@ -1063,7 +1091,11 @@ import { SecretString } from "lib/src/Secret";
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  async </span>findAllGasFetchSettings(): Promise&lt;gas.FetchSettingModel[]&gt; {
-    const settings = <span class="cstat-no" title="statement not covered" >await this.prisma.gas_fetch_settings.findMany();</span>
+    const settings = <span class="cstat-no" title="statement not covered" >await this.prisma.gas_fetch_settings.findMany({</span>
+      where: {
+        fetch_enable: true,
+      },
+    });
 <span class="cstat-no" title="statement not covered" >    return settings.map(<span class="fstat-no" title="function not covered" >(v</span>) =&gt; {</span>
       const password = <span class="cstat-no" title="statement not covered" >EncryptedValue.makeFromSerializedText(</span>
         v.encrypted_password
@@ -1078,7 +1110,11 @@ import { SecretString } from "lib/src/Secret";
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  async </span>findAllWaterFetchSettings(): Promise&lt;water.FetchSettingModel[]&gt; {
-    const settings = <span class="cstat-no" title="statement not covered" >await this.prisma.water_fetch_settings.findMany();</span>
+    const settings = <span class="cstat-no" title="statement not covered" >await this.prisma.water_fetch_settings.findMany({</span>
+      where: {
+        fetch_enable: true,
+      },
+    });
 <span class="cstat-no" title="statement not covered" >    return settings.map(<span class="fstat-no" title="function not covered" >(v</span>) =&gt; {</span>
       const password = <span class="cstat-no" title="statement not covered" >EncryptedValue.makeFromSerializedText(</span>
         v.encrypted_password
@@ -1501,7 +1537,7 @@ import { SecretString } from "lib/src/Secret";
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-03-02T10:18:55.440Z
+                at 2024-05-11T12:54:06.401Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
