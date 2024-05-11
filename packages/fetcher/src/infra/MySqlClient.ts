@@ -29,7 +29,11 @@ export class MySqlClient
   async findAllElectricityFetchSettings(): Promise<
     electricity.FetchSettingModel[]
   > {
-    const settings = await this.prisma.electricity_fetch_settings.findMany();
+    const settings = await this.prisma.electricity_fetch_settings.findMany({
+      where: {
+        fetch_enable: true,
+      },
+    });
     return settings.map((v) => {
       const password = EncryptedValue.makeFromSerializedText(
         v.encrypted_password
@@ -44,7 +48,11 @@ export class MySqlClient
   }
 
   async findAllGasFetchSettings(): Promise<gas.FetchSettingModel[]> {
-    const settings = await this.prisma.gas_fetch_settings.findMany();
+    const settings = await this.prisma.gas_fetch_settings.findMany({
+      where: {
+        fetch_enable: true,
+      },
+    });
     return settings.map((v) => {
       const password = EncryptedValue.makeFromSerializedText(
         v.encrypted_password
@@ -59,7 +67,11 @@ export class MySqlClient
   }
 
   async findAllWaterFetchSettings(): Promise<water.FetchSettingModel[]> {
-    const settings = await this.prisma.water_fetch_settings.findMany();
+    const settings = await this.prisma.water_fetch_settings.findMany({
+      where: {
+        fetch_enable: true,
+      },
+    });
     return settings.map((v) => {
       const password = EncryptedValue.makeFromSerializedText(
         v.encrypted_password
