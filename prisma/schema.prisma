@@ -99,6 +99,7 @@ model monthly_costs {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model electricity_fetch_settings {
   id                         BigInt                       @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  setting_name               String                       @default("取得設定") @db.VarChar(255)
   electricity_site_id        BigInt                       @db.UnsignedBigInt
   user_name                  String                       @db.VarChar(255)
   encrypted_password         String                       @db.VarChar(512)
@@ -115,6 +116,7 @@ model electricity_fetch_settings {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model gas_fetch_settings {
   id                 BigInt               @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  setting_name       String               @default("取得設定") @db.VarChar(255)
   gas_site_id        BigInt               @db.UnsignedBigInt
   user_name          String               @db.VarChar(255)
   encrypted_password String               @db.VarChar(512)
@@ -130,6 +132,7 @@ model gas_fetch_settings {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model water_fetch_settings {
   id                   BigInt                 @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  setting_name         String                 @default("取得設定") @db.VarChar(255)
   water_site_id        BigInt                 @db.UnsignedBigInt
   user_name            String                 @db.VarChar(255)
   encrypted_password   String                 @db.VarChar(512)
