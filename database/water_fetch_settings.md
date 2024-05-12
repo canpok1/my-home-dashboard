@@ -10,6 +10,7 @@
 ```sql
 CREATE TABLE `water_fetch_settings` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `setting_name` varchar(255) NOT NULL DEFAULT '取得設定' COMMENT '設定名',
   `water_site_id` bigint(20) unsigned NOT NULL COMMENT '水道料金サイトID',
   `user_name` varchar(255) NOT NULL COMMENT 'ユーザー名',
   `encrypted_password` varchar(512) NOT NULL COMMENT '暗号化済パスワード',
@@ -29,6 +30,7 @@ CREATE TABLE `water_fetch_settings` (
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
 | id | bigint(20) unsigned |  | false | auto_increment | [water_fetch_statuses](water_fetch_statuses.md) [water_monthly_usages](water_monthly_usages.md) |  | ID |
+| setting_name | varchar(255) | '取得設定' | false |  |  |  | 設定名 |
 | water_site_id | bigint(20) unsigned |  | false |  |  |  | 水道料金サイトID |
 | user_name | varchar(255) |  | false |  |  |  | ユーザー名 |
 | encrypted_password | varchar(512) |  | false |  |  |  | 暗号化済パスワード |
