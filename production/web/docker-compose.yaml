@@ -29,10 +29,15 @@ services:
       - ".env"
     restart: always
 
+  admin:
+    image: ghcr.io/canpok1/my-home-dashboard/admin:latest
+    env_file:
+      - ".env"
+    restart: always
+
 volumes:
   db-store:
 
 networks:
   default:
     name: my-home-dashboard-network
-
