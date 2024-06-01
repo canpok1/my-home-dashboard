@@ -19,6 +19,7 @@
   },
   "private": true,
   "workspaces": [
+    "packages/admin",
     "packages/dashboard",
     "packages/fetcher",
     "packages/lib",
