@@ -17,14 +17,14 @@
   "license": "ISC",
   "devDependencies": {
     "@types/bunyan": "^1.8.11",
-    "@types/node": "^20.13.0",
+    "@types/node": "^20.14.7",
     "@types/node-cron": "^3.0.11",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {
     "@playwright/test": "^1.44.1",
-    "@prisma/client": "^5.14.0",
+    "@prisma/client": "^5.15.1",
     "bunyan": "^1.8.15",
     "bunyan-slack": "^1.0.0"
   }
