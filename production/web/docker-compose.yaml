@@ -1,22 +1,5 @@
 version: "3.9"
 services:
-  db:
-    image: "mariadb:10.11"
-    environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-    env_file:
-      - ".env"
-    volumes:
-      - "db-store:/var/lib/mysql"
-    ports:
-      - "23306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping"]
-      start_period: "10s"
-      interval: "10s"
-      retries: 30
-    restart: always
-
   migrate:
     image: ghcr.io/canpok1/my-home-dashboard/migrate:latest
     env_file:
@@ -35,9 +18,7 @@ services:
       - ".env"
     restart: always
 
-volumes:
-  db-store:
-
 networks:
   default:
-    name: my-home-dashboard-network
+    external:
+      name: common-database-network
