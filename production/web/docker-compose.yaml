@@ -5,27 +5,20 @@ services:
     env_file:
       - ".env"
     command: ["migrate-up"]
-    networks:
-      - common-database-network
 
   dashboard:
     image: ghcr.io/canpok1/my-home-dashboard/dashboard:latest
     env_file:
       - ".env"
     restart: always
-    networks:
-      - common-database-network
 
   admin:
     image: ghcr.io/canpok1/my-home-dashboard/admin:latest
     env_file:
       - ".env"
     restart: always
-    networks:
-      - common-database-network
 
 networks:
   default:
-    name: my-home-dashboard-network
-  common-database-network:
-    external: true
+    external:
+      name: common-database-network
