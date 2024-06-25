@@ -39,6 +39,6 @@
     "ts-jest": "^29.1.5"
   },
   "dependencies": {
-    "@prisma/client": "^5.15.1"
+    "@prisma/client": "^5.16.0"
   }
 }
