@@ -1,5 +1,5 @@
 import { LogLevel } from "bunyan";
-import { SecretString } from "lib/src/Index";
+import { SecretString } from "lib";
 import { toLogLevel } from "./Logger";
 
 export class CommonEnv {
