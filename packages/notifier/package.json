@@ -1,0 +1,18 @@
+{
+  "name": "notifier",
+  "version": "1.0.0",
+  "main": "src/App.ts",
+  "devDependencies": {},
+  "scripts": {
+    "build": "tsc",
+    "start": "dotenv -e ../../.devcontainer/db.env -e .env ts-node src/App.ts",
+    "clean": "rm -rf output && rm -rf tmp && rm -f tsconfig.tsbuildinfo",
+    "lint": "echo \"Warn: no lint specified\"",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:coverage": "echo \"Warn: no test specified\""
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
