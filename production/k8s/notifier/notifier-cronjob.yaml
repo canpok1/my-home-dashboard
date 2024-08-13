@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: my-home-dashboard-notifier
+spec:
+  schedule: 0 12 3 * *
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: my-home-dashboard-notifier
+              image: ghcr.io/canpok1/my-home-dashboard/notifier:latest
+              env:
+                - name: APP_NAME
+                  value: "notifier_mini_pc"
+                - name: LOG_LEVEL
+                  value: "info"
+                - name: SLACK_LOG_LEVEL
+                  value: "error"
+                - name: SLACK_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: my-home-dashboard-slack
+                      key: webhook-url
+                - name: DB_URL_FOR_PRISMA
+                  valueFrom:
+                    secretKeyRef:
+                      name: my-home-dashboard-db
+                      key: prisma-url
+          restartPolicy: OnFailure
