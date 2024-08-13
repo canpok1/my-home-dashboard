@@ -10,7 +10,7 @@ import {
 } from "./Electricity";
 import { Env } from "../Env";
 import Logger from "bunyan";
-import { SecretString } from "lib/src/Secret";
+import { SecretString } from "lib";
 
 function makeMonthlyUsage(): MonthlyUsageModel {
   return {

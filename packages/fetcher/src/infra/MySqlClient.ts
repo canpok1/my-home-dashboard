@@ -3,8 +3,7 @@ import * as electricity from "../domain/Electricity";
 import * as gas from "../domain/Gas";
 import * as water from "../domain/Water";
 import * as app from "../domain/AppStatus";
-import { SecretString } from "lib/src/Secret";
-import { EncryptedValue } from "lib/src/Encrypt";
+import { SecretString, EncryptedValue } from "lib";
 
 export class MySqlClient
   implements

@@ -1,5 +1,4 @@
-import { EncryptedValue } from "lib/src/Encrypt";
-import { SecretString } from "lib/src/Secret";
+import { EncryptedValue, SecretString } from "lib";
 
 const plainText = process.argv[2];
 const password = new SecretString(process.env.ENCRYPTION_PASSWORD || "");
