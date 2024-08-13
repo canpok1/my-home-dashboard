@@ -1,4 +1,4 @@
-import { HashValue } from "lib/src/Hash";
+import { HashValue } from "lib";
 
 const plainText = process.argv[2];
 

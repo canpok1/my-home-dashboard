@@ -1,4 +1,4 @@
-import { SecretString } from "lib/src/Secret";
+import { SecretString } from "lib";
 import { Env } from "../Env";
 import Logger from "bunyan";
 

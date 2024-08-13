@@ -2,7 +2,7 @@ import { CommonEnv, Env } from "./Env";
 import { PrismaClient } from "@prisma/client";
 import { FetchApplication, Params } from "./application/FetchApplication";
 import { createLogger } from "./Logger";
-import { findValueStrings } from "lib/src/Arrays";
+import { findValueStrings } from "lib";
 
 function makeAppParams(args: string[]): Params {
   const appParams = {

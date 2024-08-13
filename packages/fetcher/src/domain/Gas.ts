@@ -1,6 +1,6 @@
 import Logger from "bunyan";
 import { Env } from "../Env";
-import { SecretString } from "lib/src/Secret";
+import { SecretString } from "lib";
 
 export interface FetchSettingModel {
   id: bigint;
