@@ -84,7 +84,7 @@ export class WaterClient {
       // 日付取得
       const dateStrOrg = await tables.nth(i).locator("td").nth(0).innerText();
       const splited = dateStrOrg.split("/");
-      const year = Number(splited[0].replace("R", "")) + 2018;
+      const year = Number(splited[0]?.replace("R", "")) + 2018;
       const month = Number(splited[1]);
       const day = Number(splited[2]);
       const datetimeStr = `${year}-${splited[1]}-${splited[2]}T00:00:00.000Z`;

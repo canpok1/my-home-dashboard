@@ -5,9 +5,9 @@ import { SECRET } from './login.post'
 
 const TOKEN_TYPE = 'Bearer'
 
-const extractToken = (authHeaderValue: string) => {
+const extractToken = (authHeaderValue: string): string => {
   const [, token] = authHeaderValue.split(`${TOKEN_TYPE} `)
-  return token
+  return token || ''
 }
 
 const ensureAuth = (event: H3Event) => {
