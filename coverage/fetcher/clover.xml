@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1719138246893" clover="3.2.0">
-  <project timestamp="1719138246893" name="All files">
+<coverage generated="1723534816361" clover="3.2.0">
+  <project timestamp="1723534816361" name="All files">
     <metrics statements="498" coveredstatements="75" conditionals="42" coveredconditionals="2" methods="75" coveredmethods="10" elements="615" coveredelements="87" complexity="0" loc="498" ncloc="498" packages="4" files="14" classes="14"/>
     <package name="src">
       <metrics statements="85" coveredstatements="0" conditionals="16" coveredconditionals="0" methods="12" coveredmethods="0"/>
@@ -453,41 +453,41 @@
       </file>
       <file name="MySqlClient.ts" path="/home/runner/work/my-home-dashboard/my-home-dashboard/packages/fetcher/src/infra/MySqlClient.ts">
         <metrics statements="35" coveredstatements="0" conditionals="1" coveredconditionals="0" methods="20" coveredmethods="0"/>
-        <line num="7" count="0" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
         <line num="26" count="0" type="stmt"/>
-        <line num="27" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
         <line num="37" count="0" type="stmt"/>
-        <line num="38" count="0" type="stmt"/>
-        <line num="41" count="0" type="stmt"/>
-        <line num="51" count="0" type="stmt"/>
+        <line num="40" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="55" count="0" type="stmt"/>
         <line num="56" count="0" type="stmt"/>
-        <line num="57" count="0" type="stmt"/>
-        <line num="60" count="0" type="stmt"/>
-        <line num="70" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="69" count="0" type="stmt"/>
+        <line num="74" count="0" type="stmt"/>
         <line num="75" count="0" type="stmt"/>
-        <line num="76" count="0" type="stmt"/>
-        <line num="79" count="0" type="stmt"/>
+        <line num="78" count="0" type="stmt"/>
+        <line num="91" count="0" type="stmt"/>
         <line num="92" count="0" type="stmt"/>
-        <line num="93" count="0" type="stmt"/>
+        <line num="122" count="0" type="stmt"/>
         <line num="123" count="0" type="stmt"/>
-        <line num="124" count="0" type="stmt"/>
+        <line num="151" count="0" type="stmt"/>
         <line num="152" count="0" type="stmt"/>
-        <line num="153" count="0" type="stmt"/>
-        <line num="185" count="0" type="stmt"/>
-        <line num="186" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="187" count="0" type="stmt"/>
-        <line num="190" count="0" type="stmt"/>
-        <line num="219" count="0" type="stmt"/>
-        <line num="244" count="0" type="stmt"/>
-        <line num="267" count="0" type="stmt"/>
-        <line num="296" count="0" type="stmt"/>
-        <line num="329" count="0" type="stmt"/>
-        <line num="362" count="0" type="stmt"/>
-        <line num="395" count="0" type="stmt"/>
-        <line num="428" count="0" type="stmt"/>
-        <line num="461" count="0" type="stmt"/>
+        <line num="184" count="0" type="stmt"/>
+        <line num="185" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="186" count="0" type="stmt"/>
+        <line num="189" count="0" type="stmt"/>
+        <line num="218" count="0" type="stmt"/>
+        <line num="243" count="0" type="stmt"/>
+        <line num="266" count="0" type="stmt"/>
+        <line num="295" count="0" type="stmt"/>
+        <line num="328" count="0" type="stmt"/>
+        <line num="361" count="0" type="stmt"/>
+        <line num="394" count="0" type="stmt"/>
+        <line num="427" count="0" type="stmt"/>
+        <line num="460" count="0" type="stmt"/>
       </file>
       <file name="ScrapeUtils.ts" path="/home/runner/work/my-home-dashboard/my-home-dashboard/packages/fetcher/src/infra/ScrapeUtils.ts">
         <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
