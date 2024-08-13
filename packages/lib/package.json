@@ -2,8 +2,7 @@
   "name": "lib",
   "version": "1.0.0",
   "description": "",
-  "main": "src/Index.ts",
-  "types": "src/Index.ts",
+  "main": "./src/Index",
   "devDependencies": {
     "@types/bunyan": "^1.8.11",
     "typescript": "^5.4.5"
