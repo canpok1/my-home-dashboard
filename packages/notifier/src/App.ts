@@ -8,10 +8,10 @@ import Logger from "bunyan";
   const logger = createLogger(env);
 
   try {
+    logger.info({ env: env }, "loaded env");
+
     const prisma = new PrismaClient();
     await prisma.$queryRaw`SELECT 1`; // DB接続チェック
-
-    logger.info({ env: env }, "loaded env");
 
     const today = new Date();
     await notifyElectricityMonthlyUsage(today, logger, prisma);

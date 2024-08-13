@@ -10,8 +10,8 @@ RUN npm ci
 COPY ./tsconfig.json ./
 COPY ./packages/lib/ ./packages/lib/
 COPY ./packages/notifier/ ./packages/notifier/
-RUN npm run -w lib build
-RUN npm run -w notifier build
+RUN npm run -w packages/lib build
+RUN npm run -w packages/notifier build
  
 
 FROM node:18-slim
@@ -26,11 +26,10 @@ COPY --from=builder /src/packages/notifier/output ./packages/notifier/src/
 COPY --from=builder /src/prisma/ ./prisma/
 
 RUN apt-get update && apt-get install -y \
-  fonts-ipafont-gothic \
-  fonts-ipafont-mincho \
+    openssl \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && npm ci --omit=dev \
  && npx prisma generate
 
-ENTRYPOINT ["node packages/notifier/src/App.js"]
+ENTRYPOINT ["node", "packages/notifier/src/App.js"]

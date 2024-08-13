@@ -1,8 +1,7 @@
 {
   "name": "notifier",
   "version": "1.0.0",
-  "main": "src/App.ts",
-  "devDependencies": {},
+  "main": "output/App.js",
   "scripts": {
     "build": "tsc",
     "start": "dotenv -e ../../.devcontainer/db.env -e .env ts-node src/App.ts",
