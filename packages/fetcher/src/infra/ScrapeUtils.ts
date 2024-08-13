@@ -15,5 +15,5 @@ export function nthMatch(text: string, p: RegExp, n: number): string {
       `n[${n}] is out of bounds, text[${text}], pattern[${p}], matched[${matched}]`
     );
   }
-  return matched[n];
+  return matched[n] || "";
 }

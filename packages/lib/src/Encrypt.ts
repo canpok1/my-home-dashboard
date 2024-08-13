@@ -34,10 +34,10 @@ export class EncryptedValue {
       );
     }
 
-    const iv = Buffer.from(splited[0], "hex");
-    const salt = Buffer.from(splited[1], "hex");
+    const iv = Buffer.from(splited[0] || "", "hex");
+    const salt = Buffer.from(splited[1] || "", "hex");
     const cipherText = splited[2];
-    return new EncryptedValue(cipherText, iv, salt);
+    return new EncryptedValue(cipherText || "", iv, salt);
   }
 
   constructor(cipherText: string, iv: Buffer, salt: Buffer) {

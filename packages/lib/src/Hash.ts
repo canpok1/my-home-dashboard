@@ -15,7 +15,7 @@ export class HashValue {
 
   static makeFromSerializedText(serializedText: string): HashValue {
     const splited = serializedText.split(DELIMITER);
-    return new HashValue(splited[0], splited[1]);
+    return new HashValue(splited[0] || "", splited[1] || "");
   }
 
   constructor(salt: string, hash: string) {
