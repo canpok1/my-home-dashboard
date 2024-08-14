@@ -1,21 +1,21 @@
 import createClient from "openapi-fetch";
 import { components, paths } from "./MessagingGateway.gen";
 import { messagingApi } from "@line/bot-sdk";
+import { MessageRepository } from "../domain/types/Message";
 
 export type SentMessageObject = components["schemas"]["SentMessageObject"];
 
-export class MessagingGatewayClient {
-  readonly channelId: string;
+export class MessagingGatewayClient implements MessageRepository {
   readonly client;
 
-  constructor(channelId: string, origin?: string) {
-    this.channelId = channelId;
+  constructor(origin?: string) {
     this.client = createClient<paths>({
       baseUrl: origin || "https://messaging-gateway.ktnet.info",
     });
   }
 
   async sendMessage(
+    channelId: string,
     to: string,
     messages: messagingApi.Message[]
   ): Promise<SentMessageObject[]> {
@@ -24,7 +24,7 @@ export class MessagingGatewayClient {
       {
         params: {
           header: {
-            "X-MessagingGateway-Line-Channel-Id": this.channelId,
+            "X-MessagingGateway-Line-Channel-Id": channelId,
           },
         },
         body: {
@@ -46,12 +46,13 @@ export class MessagingGatewayClient {
   }
 
   async bulkSendMessage(
+    channelId: string,
     tos: string[],
     messages: messagingApi.Message[]
   ): Promise<void> {
     const promises = [];
     for (const to of tos) {
-      promises.push(this.sendMessage(to, messages));
+      promises.push(this.sendMessage(channelId, to, messages));
     }
     await Promise.all(promises);
   }
