@@ -15,7 +15,9 @@
     "migrate-up-all": "npm run -w migrate migrate-up-all",
     "migrate-up-one": "npm run -w migrate migrate-up-one",
     "migrate-down-one": "npm run -w migrate migrate-down-one",
-    "migrate-force-v": "npm run -w migrate migrate-force-v"
+    "migrate-goto-v": "npm run -w migrate migrate-goto-v",
+    "migrate-force-v": "npm run -w migrate migrate-force-v",
+    "migrate-create": "npm run -w migrate migrate-create"
   },
   "private": true,
   "workspaces": [
