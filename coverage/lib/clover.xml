@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1723559177465" clover="3.2.0">
-  <project timestamp="1723559177465" name="All files">
+<coverage generated="1723628612693" clover="3.2.0">
+  <project timestamp="1723628612693" name="All files">
     <metrics statements="115" coveredstatements="68" conditionals="28" coveredconditionals="9" methods="29" coveredmethods="21" elements="172" coveredelements="98" complexity="0" loc="115" ncloc="115" packages="1" files="6" classes="6"/>
     <file name="Arrays.ts" path="/home/runner/work/my-home-dashboard/my-home-dashboard/packages/lib/src/Arrays.ts">
       <metrics statements="13" coveredstatements="13" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
