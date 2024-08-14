@@ -11,7 +11,7 @@
     "migrate-force-v": "dotenv -e ../../.devcontainer/db.env make migrate-force-v",
     "migrate-create": "make migrate-create",
     "generate:doc": "dotenv -e ../../.devcontainer/db.env make doc",
-    "lint": "dotenv -e ../../.devcontainer/db.env make lint"
+    "lint:db": "dotenv -e ../../.devcontainer/db.env make lint"
   },
   "author": "",
   "license": "ISC"
