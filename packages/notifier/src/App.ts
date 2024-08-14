@@ -5,6 +5,14 @@ import { MessagingGatewayClient } from "./infra/MessagingGateway";
 import { MySqlClient } from "./infra/MySQLClient";
 import { ElectricityNotifyService } from "./domain/Electricity";
 
+// BigIntをログ出力できるようにする
+Object.defineProperty(BigInt.prototype, "toJSON", {
+  get() {
+    "use strict";
+    return () => String(this);
+  },
+});
+
 (async () => {
   const env = new Env(process.env);
   const logger = createLogger(env);

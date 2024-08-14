@@ -2,6 +2,7 @@ export interface NotifySetting {
   id: bigint;
   fetchSettingId: bigint;
   lineChannelId: string;
+  template: string;
   notifyDistIds: string[];
 }
 

@@ -27,6 +27,7 @@ export class MySqlClient
         id: true,
         electricity_fetch_setting_id: true,
         line_channel_id: true,
+        template: true,
         electricity_notify_dest_line_users: {
           select: {
             line_user_id: true,
@@ -42,6 +43,7 @@ export class MySqlClient
       id: setting.id,
       fetchSettingId: setting.electricity_fetch_setting_id,
       lineChannelId: setting.line_channel_id,
+      template: setting.template,
       notifyDistIds: setting.electricity_notify_dest_line_users.map(
         (user) => user.line_user_id
       ),
@@ -101,8 +103,11 @@ export class MySqlClient
   private async upsertElectricityNotifyStatuses(
     notifySettingId: bigint,
     now: Date,
-    status: string
+    status: "success" | "failure"
   ): Promise<void> {
+    const lastSuccessfulAt = status === "success" ? now : null;
+    const lastFailureAt = status === "failure" ? now : null;
+
     await this.prisma.electricity_notify_statuses.upsert({
       where: {
         electricity_notify_setting_id: notifySettingId,
@@ -118,7 +123,8 @@ export class MySqlClient
             type_name: status,
           },
         },
-        last_successful_at: now,
+        last_successful_at: lastSuccessfulAt,
+        last_failure_at: lastFailureAt,
       },
       update: {
         notify_status_types: {
@@ -126,7 +132,8 @@ export class MySqlClient
             type_name: status,
           },
         },
-        last_successful_at: now,
+        last_successful_at: lastSuccessfulAt,
+        last_failure_at: lastFailureAt,
       },
     });
   }

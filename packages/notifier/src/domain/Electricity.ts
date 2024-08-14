@@ -1,11 +1,14 @@
 import Logger from "bunyan";
 import { MessagingGatewayClient } from "../infra/MessagingGateway";
 import {
+  MonthlyUsage,
   MonthlyUsageRepository,
+  NotifySetting,
   NotifySettingRepository,
   NotifyStatusRepository,
 } from "./types/Electricity";
 import { MessageRepository } from "./types/Message";
+import Handlebars from "handlebars";
 
 export class ElectricityNotifyService {
   readonly notifySettingRepo: NotifySettingRepository;
@@ -25,33 +28,38 @@ export class ElectricityNotifyService {
     this.messageRepo = messageRepo;
   }
 
-  async notify(today: Date, logger: Logger) {
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
-    const date = today.getDate();
+  async notify(targetDate: Date, parentLogger: Logger) {
+    const logger = parentLogger.child({ targetDate });
+
+    const year = targetDate.getFullYear();
+    const month = targetDate.getMonth() + 1;
+    const date = targetDate.getDate();
 
     const settings =
       await this.notifySettingRepo.findElectricityNotifySettings(date);
+    logger.debug(`${settings.length} settings were find`);
+
     if (settings.length === 0) {
-      logger.info({ year, month }, "skip notify, notify settings is not found");
+      logger.info("skip notify, notify settings is not found");
       return;
     }
 
     for (const setting of settings) {
       const now = new Date();
       try {
-        await this.notifyBySetting(
-          setting.fetchSettingId,
-          setting.lineChannelId,
-          setting.notifyDistIds,
-          today,
+        const notified = await this.notifyBySetting(
+          setting,
+          targetDate,
           logger
         );
-        await this.notifyStatusRepo.upsertElectricityNotifyStatusesSuccess(
-          setting.id,
-          now
-        );
+        if (notified) {
+          await this.notifyStatusRepo.upsertElectricityNotifyStatusesSuccess(
+            setting.id,
+            now
+          );
+        }
       } catch (err) {
+        logger.error(err, "failed to notify by setting");
         await this.notifyStatusRepo.upsertElectricityNotifyStatusesFailure(
           setting.id,
           now
@@ -61,44 +69,64 @@ export class ElectricityNotifyService {
   }
 
   private async notifyBySetting(
-    fetchSettingId: bigint,
-    lineChannelId: string,
-    tos: string[],
-    today: Date,
-    logger: Logger
-  ): Promise<void> {
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
-    const date = today.getDate();
+    setting: NotifySetting,
+    targetDate: Date,
+    parentLogger: Logger
+  ): Promise<boolean> {
+    const logger = parentLogger.child({ notifySettingId: setting.id });
+    if (setting.notifyDistIds.length === 0) {
+      logger.warn("skip notify, notify dest LINE user is not found");
+      return false;
+    }
+    if (setting.template === "") {
+      logger.warn("skip notify, notify message template is empty");
+      return false;
+    }
+
+    const year = targetDate.getFullYear();
+    const month = targetDate.getMonth() + 1;
 
     const usages = await this.monthlyUsageRepo.findElectricityMonthlyUsages(
-      fetchSettingId,
+      setting.fetchSettingId,
       year,
       month
     );
+    logger.debug(
+      { condition: { fetchSettingId: setting.fetchSettingId, year, month } },
+      `${usages.length} usages were found`
+    );
 
-    if (usages.length === 0) {
-      const message = `${year}年${month}月請求分の電気料金: データなし`;
-      logger.info(message);
-      await this.messageRepo.bulkSendMessage(lineChannelId, tos, [
+    const message = this.makeMessage(setting, targetDate, usages);
+    logger.debug({ message }, "made a message");
+
+    await this.messageRepo.bulkSendMessage(
+      setting.lineChannelId,
+      setting.notifyDistIds,
+      [
         {
           type: "text",
           text: message,
         },
-      ]);
-      return;
-    }
+      ]
+    );
+    logger.info(
+      { lineChannelId: setting.lineChannelId, to: setting.notifyDistIds },
+      "success to send message"
+    );
+    return true;
+  }
 
-    const messages: string[] = [`${year}年${month}月請求分の電気料金`];
-    for (const usage of usages) {
-      messages.push(`${usage.settingName}: ${usage.yen}円（${usage.kwh}kWh）`);
-    }
-    logger.info(messages.join("\n"));
-    await this.messageRepo.bulkSendMessage(lineChannelId, tos, [
-      {
-        type: "text",
-        text: messages.join("\n"),
-      },
-    ]);
+  private makeMessage(
+    setting: NotifySetting,
+    today: Date,
+    usages: MonthlyUsage[]
+  ): string {
+    const make = Handlebars.compile(setting.template);
+    return make({
+      year: today.getFullYear(),
+      month: today.getMonth() + 1,
+      date: today.getDate(),
+      usages: usages,
+    });
   }
 }

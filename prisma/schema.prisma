@@ -254,6 +254,7 @@ model electricity_notify_settings {
   line_channel_id                    String                               @db.VarChar(256)
   notify_date                        Int                                  @db.UnsignedTinyInt
   notify_enable                      Boolean                              @default(true)
+  template                           String                               @default("") @db.Text
   created_at                         DateTime                             @default(now()) @db.DateTime(0)
   updated_at                         DateTime                             @default(now()) @db.DateTime(0)
   electricity_notify_dest_line_users electricity_notify_dest_line_users[]
