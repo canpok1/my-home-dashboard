@@ -18,7 +18,7 @@ Object.defineProperty(BigInt.prototype, "toJSON", {
   const logger = createLogger(env);
 
   try {
-    logger.info({ env: env }, "loaded env");
+    logger.info({ env: env }, "start notifier");
 
     const prisma = new PrismaClient();
     await prisma.$queryRaw`SELECT 1`; // DB接続チェック
@@ -33,9 +33,12 @@ Object.defineProperty(BigInt.prototype, "toJSON", {
       messagingClient
     );
 
-    const today = new Date();
-    await electricityService.notify(today, logger);
+    const targetDate = new Date();
+    const childLogger = logger.child({ targetDate });
+    await electricityService.notify(targetDate, childLogger);
   } catch (err) {
-    logger.error(err);
+    logger.error(err, "error occured");
+  } finally {
+    logger.info("end notifier");
   }
 })();

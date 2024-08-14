@@ -50,12 +50,12 @@ export class MySqlClient
     }));
   }
 
-  async findElectricityMonthlyUsages(
+  async findElectricityMonthlyUsage(
     fetchSettingId: bigint,
     year: number,
     month: number
-  ): Promise<MonthlyUsage[]> {
-    const usages = await this.prisma.electricity_monthly_usages.findMany({
+  ): Promise<MonthlyUsage | null> {
+    const usage = await this.prisma.electricity_monthly_usages.findUnique({
       select: {
         usage_yen: true,
         usage_kwh: true,
@@ -66,16 +66,22 @@ export class MySqlClient
         },
       },
       where: {
-        electricity_fetch_setting_id: fetchSettingId,
-        usage_year: year,
-        usage_month: month,
+        electricity_fetch_setting_id_usage_year_usage_month: {
+          electricity_fetch_setting_id: fetchSettingId,
+          usage_year: year,
+          usage_month: month,
+        },
       },
     });
-    return usages.map((usage) => ({
-      yen: usage.usage_yen,
-      kwh: usage.usage_kwh,
-      settingName: usage.electricity_fetch_settings.setting_name,
-    }));
+    if (usage) {
+      return {
+        yen: usage.usage_yen,
+        kwh: usage.usage_kwh,
+        settingName: usage.electricity_fetch_settings.setting_name,
+      };
+    } else {
+      return null;
+    }
   }
 
   async upsertElectricityNotifyStatusesSuccess(

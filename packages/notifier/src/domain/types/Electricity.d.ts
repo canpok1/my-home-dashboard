@@ -17,11 +17,11 @@ export interface NotifySettingRepository {
 }
 
 export interface MonthlyUsageRepository {
-  findElectricityMonthlyUsages(
+  findElectricityMonthlyUsage(
     fetchSettingId: bigint,
     year: number,
     month: number
-  ): Promise<MonthlyUsage[]>;
+  ): Promise<MonthlyUsage | null>;
 }
 
 export interface NotifyStatusRepository {

@@ -28,16 +28,12 @@ export class ElectricityNotifyService {
     this.messageRepo = messageRepo;
   }
 
-  async notify(targetDate: Date, parentLogger: Logger) {
-    const logger = parentLogger.child({ targetDate });
-
-    const year = targetDate.getFullYear();
-    const month = targetDate.getMonth() + 1;
+  async notify(targetDate: Date, logger: Logger) {
     const date = targetDate.getDate();
 
     const settings =
       await this.notifySettingRepo.findElectricityNotifySettings(date);
-    logger.debug(`${settings.length} settings were find`);
+    logger.info(`${settings.length} settings were find`);
 
     if (settings.length === 0) {
       logger.info("skip notify, notify settings is not found");
@@ -45,12 +41,13 @@ export class ElectricityNotifyService {
     }
 
     for (const setting of settings) {
+      const childLogger = logger.child({ notifySettingId: setting.id });
       const now = new Date();
       try {
         const notified = await this.notifyBySetting(
           setting,
           targetDate,
-          logger
+          childLogger
         );
         if (notified) {
           await this.notifyStatusRepo.upsertElectricityNotifyStatusesSuccess(
@@ -59,7 +56,10 @@ export class ElectricityNotifyService {
           );
         }
       } catch (err) {
-        logger.error(err, "failed to notify by setting");
+        childLogger.error(
+          err,
+          `failed to notify by electricity_notify_setting_id = ${setting.id}`
+        );
         await this.notifyStatusRepo.upsertElectricityNotifyStatusesFailure(
           setting.id,
           now
@@ -71,9 +71,8 @@ export class ElectricityNotifyService {
   private async notifyBySetting(
     setting: NotifySetting,
     targetDate: Date,
-    parentLogger: Logger
+    logger: Logger
   ): Promise<boolean> {
-    const logger = parentLogger.child({ notifySettingId: setting.id });
     if (setting.notifyDistIds.length === 0) {
       logger.warn("skip notify, notify dest LINE user is not found");
       return false;
@@ -86,17 +85,24 @@ export class ElectricityNotifyService {
     const year = targetDate.getFullYear();
     const month = targetDate.getMonth() + 1;
 
-    const usages = await this.monthlyUsageRepo.findElectricityMonthlyUsages(
+    const usage = await this.monthlyUsageRepo.findElectricityMonthlyUsage(
       setting.fetchSettingId,
       year,
       month
     );
-    logger.debug(
-      { condition: { fetchSettingId: setting.fetchSettingId, year, month } },
-      `${usages.length} usages were found`
-    );
+    if (usage) {
+      logger.debug(
+        { condition: { fetchSettingId: setting.fetchSettingId, year, month } },
+        `usage is found`
+      );
+    } else {
+      logger.debug(
+        { condition: { fetchSettingId: setting.fetchSettingId, year, month } },
+        `usage is not found`
+      );
+    }
 
-    const message = this.makeMessage(setting, targetDate, usages);
+    const message = this.makeMessage(setting, targetDate, usage);
     logger.debug({ message }, "made a message");
 
     await this.messageRepo.bulkSendMessage(
@@ -111,7 +117,7 @@ export class ElectricityNotifyService {
     );
     logger.info(
       { lineChannelId: setting.lineChannelId, to: setting.notifyDistIds },
-      "success to send message"
+      "notified to LINE"
     );
     return true;
   }
@@ -119,14 +125,14 @@ export class ElectricityNotifyService {
   private makeMessage(
     setting: NotifySetting,
     today: Date,
-    usages: MonthlyUsage[]
+    usage: MonthlyUsage | null
   ): string {
     const make = Handlebars.compile(setting.template);
     return make({
       year: today.getFullYear(),
       month: today.getMonth() + 1,
       date: today.getDate(),
-      usages: usages,
+      usage: usage,
     });
   }
 }
