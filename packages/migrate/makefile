@@ -34,6 +34,10 @@ migrate-down-one:
 migrate-force-v:
 	@${MIGRATE_COMMAND} force ${v}
 
+.PHONY: migrate-goto-v
+migrate-goto-v:
+	@${MIGRATE_COMMAND} goto ${v}
+
 .PHONY: migrate-create
 migrate-create:
 	@${MIGRATE_COMMAND} create -ext sql -dir "${DB_DDL_DIR}" -seq ${name}

@@ -9,9 +9,19 @@
     "lint": "echo \"Warn: no lint specified\"",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
-    "test:coverage": "echo \"Warn: no test specified\""
+    "test:coverage": "echo \"Warn: no test specified\"",
+    "download:messaging-gateway-yml": "curl https://raw.githubusercontent.com/canpok1/messaging-gateway/main/packages/server/openapi.yml > ./open_api/messaging-gateway.yml",
+    "generate:messaging-gateway-client": "npx openapi-typescript ./open_api/messaging-gateway.yml -o ./src/infra/MessagingGateway.gen.ts"
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "openapi-typescript": "^7.3.0"
+  },
+  "dependencies": {
+    "@line/bot-sdk": "^9.2.2",
+    "handlebars": "^4.7.8",
+    "openapi-fetch": "^0.11.1"
+  }
 }

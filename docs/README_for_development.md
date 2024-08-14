@@ -70,32 +70,35 @@ flowchart TB
 
 スキーマ操作は以下の手順を参考に dev コンテナ内で行うこと。
 
-1. ターミナル上で [makefile](../db/makefile) の配置ディレクトリを開く
-2. make コマンドを使用して DB 操作を行う
+1. npm コマンドを使用して DB 操作を行う
    ```
-   # スキーマの最新化
-   make migrate-up
-   # スキーマのバージョンアップ
-   make migrate-up-one
-   # スキーマのバージョンダウン
-   make migrate-down-one
    # スキーマのバージョン確認
-   make migrate-version
+   npm run migrate-version
+   # スキーマの最新化
+   npm run migrate-up-all
+   # スキーマのバージョンアップ
+   npm run migrate-up-one
+   # スキーマのバージョンダウン
+   npm run migrate-down-one
+   # スキーマの指定バージョンへのバージョンアップ/ダウン
+   npm run migrate-goto-v v={バージョン}
+   # スキーマの現在バージョンの上書き
+   npm run migrate-force-v v={バージョン}
    ```
 
 ### DDL の追加
 
-1. ターミナル上で [makefile](../db/makefile) の配置ディレクトリを開く
-2. make コマンドを使用して DDL のテンプレートを生成（ `{name}` は DDL の名称に置き換えること）
+1. npm コマンドを使用して DDL のテンプレートを生成（ `{name}` は DDL の名称に置き換えること）
    ```
-   make name={name} migrate-create
+   npm run migrate-create name={name}
    ```
-3. [ddl フォルダ](../db/ddl/)に生成されたテンプレートに DDL を記載する
+2. [ddl フォルダ](../db/ddl/)に生成されたテンプレートに DDL を記載する
 
    - バージョンアップ用とバージョンダウン用の 2 種類のファイルが生成されるため、それぞれに記載すること
 
-4. make コマンドを使用してテーブル定義書を更新する
+3. make コマンドを使用してテーブル定義書を更新する
    ```
+   cd packages/migrate
    make doc
    ```
 

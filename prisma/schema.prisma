@@ -98,17 +98,18 @@ model monthly_costs {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model electricity_fetch_settings {
-  id                         BigInt                       @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
-  setting_name               String                       @default("取得設定") @db.VarChar(255)
-  electricity_site_id        BigInt                       @db.UnsignedBigInt
-  user_name                  String                       @db.VarChar(255)
-  encrypted_password         String                       @db.VarChar(512)
-  fetch_enable               Boolean                      @default(true)
-  created_at                 DateTime                     @default(now()) @db.DateTime(0)
-  updated_at                 DateTime                     @default(now()) @db.DateTime(0)
-  electricity_daily_usages   electricity_daily_usages[]
-  electricity_fetch_statuses electricity_fetch_statuses?
-  electricity_monthly_usages electricity_monthly_usages[]
+  id                          BigInt                        @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  setting_name                String                        @default("取得設定") @db.VarChar(255)
+  electricity_site_id         BigInt                        @db.UnsignedBigInt
+  user_name                   String                        @db.VarChar(255)
+  encrypted_password          String                        @db.VarChar(512)
+  fetch_enable                Boolean                       @default(true)
+  created_at                  DateTime                      @default(now()) @db.DateTime(0)
+  updated_at                  DateTime                      @default(now()) @db.DateTime(0)
+  electricity_daily_usages    electricity_daily_usages[]
+  electricity_fetch_statuses  electricity_fetch_statuses?
+  electricity_monthly_usages  electricity_monthly_usages[]
+  electricity_notify_settings electricity_notify_settings[]
 
   @@unique([electricity_site_id, user_name], map: "uk_electricity_fetch_settings_electricity_site_id_user_name")
 }
@@ -231,4 +232,78 @@ model water_fetch_statuses {
   water_fetch_settings   water_fetch_settings @relation(fields: [water_fetch_setting_id], references: [id], onUpdate: Restrict, map: "fk_water_fetch_statuses_water_fetch_setting_id")
 
   @@index([status_type_id], map: "fk_water_fetch_statuses_status_type_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model electricity_notify_dest_line_users {
+  electricity_notify_setting_id BigInt                      @db.UnsignedBigInt
+  line_user_id                  String                      @db.VarChar(256)
+  created_at                    DateTime                    @default(now()) @db.DateTime(0)
+  updated_at                    DateTime                    @default(now()) @db.DateTime(0)
+  line_users                    line_users                  @relation(fields: [line_user_id], references: [id], onUpdate: Restrict, map: "fk_electricity_notify_dest_line_users_line_user_id")
+  electricity_notify_settings   electricity_notify_settings @relation(fields: [electricity_notify_setting_id], references: [id], onUpdate: Restrict, map: "fk_electricity_notify_dest_line_users_notify_setting_id")
+
+  @@id([electricity_notify_setting_id, line_user_id])
+  @@index([line_user_id], map: "fk_electricity_notify_dest_line_users_line_user_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model electricity_notify_settings {
+  id                                 BigInt                               @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  electricity_fetch_setting_id       BigInt                               @db.UnsignedBigInt
+  line_channel_id                    String                               @db.VarChar(256)
+  notify_date                        Int                                  @db.UnsignedTinyInt
+  notify_enable                      Boolean                              @default(true)
+  template                           String                               @default("") @db.Text
+  created_at                         DateTime                             @default(now()) @db.DateTime(0)
+  updated_at                         DateTime                             @default(now()) @db.DateTime(0)
+  electricity_notify_dest_line_users electricity_notify_dest_line_users[]
+  electricity_fetch_settings         electricity_fetch_settings           @relation(fields: [electricity_fetch_setting_id], references: [id], onUpdate: Restrict, map: "fk_electricity_notify_settings_electricity_fetch_setting_id")
+  line_channels                      line_channels                        @relation(fields: [line_channel_id], references: [id], onUpdate: Restrict, map: "fk_electricity_notify_settings_line_channel_id")
+  electricity_notify_statuses        electricity_notify_statuses?
+
+  @@index([electricity_fetch_setting_id], map: "fk_electricity_notify_settings_electricity_fetch_setting_id")
+  @@index([line_channel_id], map: "fk_electricity_notify_settings_line_channel_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model line_channels {
+  id                          String                        @id @db.VarChar(256)
+  memo                        String?                       @db.Text
+  created_at                  DateTime                      @default(now()) @db.DateTime(0)
+  updated_at                  DateTime                      @default(now()) @db.DateTime(0)
+  electricity_notify_settings electricity_notify_settings[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model line_users {
+  id                                 String                               @id @db.VarChar(256)
+  memo                               String?                              @db.Text
+  created_at                         DateTime                             @default(now()) @db.DateTime(0)
+  updated_at                         DateTime                             @default(now()) @db.DateTime(0)
+  electricity_notify_dest_line_users electricity_notify_dest_line_users[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model electricity_notify_statuses {
+  id                            BigInt                      @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  electricity_notify_setting_id BigInt                      @unique(map: "uk_electricity_notify_statuses_electricity_notify_setting_id") @db.UnsignedBigInt
+  status_type_id                Int                         @db.UnsignedTinyInt
+  last_successful_at            DateTime?                   @db.DateTime(0)
+  last_failure_at               DateTime?                   @db.DateTime(0)
+  created_at                    DateTime                    @default(now()) @db.DateTime(0)
+  updated_at                    DateTime                    @default(now()) @db.DateTime(0)
+  electricity_notify_settings   electricity_notify_settings @relation(fields: [electricity_notify_setting_id], references: [id], onUpdate: Restrict, map: "fk_electricity_notify_statuses_electricity_notify_setting_id")
+  notify_status_types           notify_status_types         @relation(fields: [status_type_id], references: [id], onUpdate: Restrict, map: "fk_electricity_notify_statuses_status_type_id")
+
+  @@index([status_type_id], map: "fk_electricity_notify_statuses_status_type_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model notify_status_types {
+  id                          Int                           @id @db.UnsignedTinyInt
+  type_name                   String                        @unique(map: "uk_notify_status_types_type_name") @db.VarChar(255)
+  created_at                  DateTime                      @default(now()) @db.DateTime(0)
+  updated_at                  DateTime                      @default(now()) @db.DateTime(0)
+  electricity_notify_statuses electricity_notify_statuses[]
 }
