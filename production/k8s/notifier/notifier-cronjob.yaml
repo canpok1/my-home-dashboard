@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: my-home-dashboard-notifier
 spec:
-  schedule: 0 12 * * *
+  schedule: 0 3 * * *
   jobTemplate:
     spec:
       template:
