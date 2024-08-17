@@ -3,7 +3,8 @@ kind: CronJob
 metadata:
   name: my-home-dashboard-notifier
 spec:
-  schedule: 0 3 * * *
+  timeZone: "Asia/Tokyo"
+  schedule: 0 12 * * *
   jobTemplate:
     spec:
       template:
