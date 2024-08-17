@@ -1,14 +1,60 @@
 import Logger from "bunyan";
-import { MessagingGatewayClient } from "../infra/MessagingGateway";
-import {
-  MonthlyUsage,
-  MonthlyUsageRepository,
-  NotifySetting,
-  NotifySettingRepository,
-  NotifyStatusRepository,
-} from "./types/Electricity";
 import { MessageRepository } from "./types/Message";
 import Handlebars from "handlebars";
+
+export interface NotifySetting {
+  id: bigint;
+  fetchSettingId: bigint;
+  lineChannelId: string;
+  notifyDate: number;
+  template: string;
+  notifyDistIds: string[];
+}
+
+export interface MonthlyUsage {
+  yen: number;
+  kwh: number;
+  settingName: string;
+}
+
+const notifyStatuses = ["success", "failure"] as const;
+export type NotifyStatus = (typeof notifyStatuses)[number];
+
+export function isNotifyStatus(value: string): value is NotifyStatus {
+  return notifyStatuses.some((status) => status === value);
+}
+
+export interface ElectricityNotifyStatus {
+  status: NotifyStatus;
+  lastSuccessfulAt?: Date;
+  lastFailureAt?: Date;
+}
+
+export interface NotifySettingRepository {
+  findElectricityNotifySettings(): Promise<NotifySetting[]>;
+}
+
+export interface MonthlyUsageRepository {
+  findElectricityMonthlyUsage(
+    fetchSettingId: bigint,
+    year: number,
+    month: number
+  ): Promise<MonthlyUsage | undefined>;
+}
+
+export interface NotifyStatusRepository {
+  findElectricityNotifyStatus(
+    notifySettingId: bigint
+  ): Promise<ElectricityNotifyStatus | undefined>;
+  upsertElectricityNotifyStatusesSuccess(
+    notifySettingId: bigint,
+    now: Date
+  ): Promise<void>;
+  upsertElectricityNotifyStatusesFailure(
+    notifySettingId: bigint,
+    now: Date
+  ): Promise<void>;
+}
 
 export class ElectricityNotifyService {
   readonly notifySettingRepo: NotifySettingRepository;
@@ -29,10 +75,8 @@ export class ElectricityNotifyService {
   }
 
   async notify(targetDate: Date, logger: Logger) {
-    const date = targetDate.getDate();
-
     const settings =
-      await this.notifySettingRepo.findElectricityNotifySettings(date);
+      await this.notifySettingRepo.findElectricityNotifySettings();
     logger.info(`${settings.length} settings were find`);
 
     if (settings.length === 0) {
@@ -73,14 +117,13 @@ export class ElectricityNotifyService {
     targetDate: Date,
     logger: Logger
   ): Promise<boolean> {
-    if (setting.notifyDistIds.length === 0) {
-      logger.warn("skip notify, notify dest LINE user is not found");
-      return false;
-    }
-    if (setting.template === "") {
-      logger.warn("skip notify, notify message template is empty");
-      return false;
-    }
+    const status = await this.notifyStatusRepo.findElectricityNotifyStatus(
+      setting.id
+    );
+    logger.debug(
+      { notifySettingId: setting.id, status },
+      "find electricity_notify_status"
+    );
 
     const year = targetDate.getFullYear();
     const month = targetDate.getMonth() + 1;
@@ -90,16 +133,13 @@ export class ElectricityNotifyService {
       year,
       month
     );
-    if (usage) {
-      logger.debug(
-        { condition: { fetchSettingId: setting.fetchSettingId, year, month } },
-        `usage is found`
-      );
-    } else {
-      logger.debug(
-        { condition: { fetchSettingId: setting.fetchSettingId, year, month } },
-        `usage is not found`
-      );
+    logger.debug(
+      { fetchSettingId: setting.fetchSettingId, year, month, usage },
+      "find electricity_monthly_usage"
+    );
+
+    if (this.shouldSkipNotify(setting, targetDate, status, usage, logger)) {
+      return false;
     }
 
     const message = this.makeMessage(setting, targetDate, usage);
@@ -122,10 +162,64 @@ export class ElectricityNotifyService {
     return true;
   }
 
+  private shouldSkipNotify(
+    setting: NotifySetting,
+    targetDate: Date,
+    status: ElectricityNotifyStatus | undefined,
+    usage: MonthlyUsage | undefined,
+    logger: Logger
+  ): boolean {
+    if (setting.notifyDistIds.length === 0) {
+      logger.warn("skip notify, notify dest LINE user is not found");
+      return true;
+    }
+    if (setting.template === "") {
+      logger.warn("skip notify, notify message template is empty");
+      return true;
+    }
+
+    const targetYear = targetDate.getFullYear();
+    const targetMonth = targetDate.getMonth() + 1;
+    if (this.isMonthlyNotificationCompleted(targetDate, status)) {
+      logger.info(
+        { targetYear, targetMonth },
+        "skip notify, monthly notification completed"
+      );
+      return true;
+    }
+    if (!usage) {
+      logger.info(
+        { fetchSettingId: setting.fetchSettingId, targetYear, targetMonth },
+        `skip notify, usage is not found`
+      );
+      return true;
+    }
+
+    return false;
+  }
+
+  private isMonthlyNotificationCompleted(
+    targetDate: Date,
+    status?: ElectricityNotifyStatus
+  ): boolean {
+    if (!status?.lastSuccessfulAt) {
+      return false;
+    }
+    if (status.lastSuccessfulAt.getFullYear() !== targetDate.getFullYear()) {
+      return false;
+    }
+
+    if (status.lastSuccessfulAt.getMonth() !== targetDate.getMonth()) {
+      return false;
+    }
+
+    return true;
+  }
+
   private makeMessage(
     setting: NotifySetting,
     today: Date,
-    usage: MonthlyUsage | null
+    usage: MonthlyUsage | undefined
   ): string {
     const make = Handlebars.compile(setting.template);
     return make({
