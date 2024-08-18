@@ -5,7 +5,7 @@ services:
     container_name: my-home-dashboard_dev
     build:
       context: .
-      dockerfile: Dockerfile-dev
+      dockerfile: Dockerfile
     environment:
       NODE_OPTIONS: "--enable-source-maps"
 
