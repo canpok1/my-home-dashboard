@@ -1,4 +1,4 @@
-FROM node:18 AS builder
+FROM node:22 AS builder
 WORKDIR /src
 
 COPY ./package*.json ./
@@ -14,7 +14,7 @@ RUN npm run -w packages/lib build
 RUN npm run -w packages/notifier build
  
 
-FROM node:18-slim
+FROM node:22-slim
 WORKDIR /service
 ENV TZ=Asia/Tokyo
 
