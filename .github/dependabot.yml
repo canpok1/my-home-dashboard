@@ -16,7 +16,7 @@ updates:
         update-types:
           ["version-update:semver-major", "version-update:semver-minor"]
   - package-ecosystem: "docker"
-    directory: "/**/*"
+    directories: "/**/*"
     schedule:
       interval: "daily"
   - package-ecosystem: "github-actions"
