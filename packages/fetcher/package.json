@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@playwright/test": "^1.46.1",
-    "@prisma/client": "^5.18.0",
+    "@prisma/client": "^5.19.0",
     "bunyan": "^1.8.15",
     "bunyan-slack": "^1.0.0"
   }
