@@ -12,6 +12,7 @@ CREATE TABLE `electricity_notify_settings` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '通知設定ID',
   `electricity_fetch_setting_id` bigint(20) unsigned NOT NULL COMMENT '取得設定ID',
   `line_channel_id` varchar(256) NOT NULL COMMENT '通知用LINEチャンネルID',
+  `advisor_id` bigint(20) unsigned DEFAULT NULL COMMENT 'アドバイザーID',
   `notify_date` tinyint(3) unsigned NOT NULL COMMENT '通知日（1〜31）',
   `notify_enable` tinyint(1) NOT NULL DEFAULT 1 COMMENT '通知処理の有効化',
   `template` text NOT NULL DEFAULT '' COMMENT '通知メッセージのテンプレート',
@@ -21,6 +22,8 @@ CREATE TABLE `electricity_notify_settings` (
   UNIQUE KEY `id` (`id`),
   KEY `fk_electricity_notify_settings_electricity_fetch_setting_id` (`electricity_fetch_setting_id`),
   KEY `fk_electricity_notify_settings_line_channel_id` (`line_channel_id`),
+  KEY `fk_electricity_notify_settings_advisor_id` (`advisor_id`),
+  CONSTRAINT `fk_electricity_notify_settings_advisor_id` FOREIGN KEY (`advisor_id`) REFERENCES `advisors` (`id`),
   CONSTRAINT `fk_electricity_notify_settings_electricity_fetch_setting_id` FOREIGN KEY (`electricity_fetch_setting_id`) REFERENCES `electricity_fetch_settings` (`id`),
   CONSTRAINT `fk_electricity_notify_settings_line_channel_id` FOREIGN KEY (`line_channel_id`) REFERENCES `line_channels` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='電気料金の通知設定'
@@ -35,6 +38,7 @@ CREATE TABLE `electricity_notify_settings` (
 | id | bigint(20) unsigned |  | false | auto_increment | [electricity_notify_dest_line_users](electricity_notify_dest_line_users.md) [electricity_notify_statuses](electricity_notify_statuses.md) |  | 通知設定ID |
 | electricity_fetch_setting_id | bigint(20) unsigned |  | false |  |  | [electricity_fetch_settings](electricity_fetch_settings.md) | 取得設定ID |
 | line_channel_id | varchar(256) |  | false |  |  | [line_channels](line_channels.md) | 通知用LINEチャンネルID |
+| advisor_id | bigint(20) unsigned | NULL | true |  |  | [advisors](advisors.md) | アドバイザーID |
 | notify_date | tinyint(3) unsigned |  | false |  |  |  | 通知日（1〜31） |
 | notify_enable | tinyint(1) | 1 | false |  |  |  | 通知処理の有効化 |
 | template | text | '' | false |  |  |  | 通知メッセージのテンプレート |
@@ -45,6 +49,7 @@ CREATE TABLE `electricity_notify_settings` (
 
 | Name | Type | Definition |
 | ---- | ---- | ---------- |
+| fk_electricity_notify_settings_advisor_id | FOREIGN KEY | FOREIGN KEY (advisor_id) REFERENCES advisors (id) |
 | fk_electricity_notify_settings_electricity_fetch_setting_id | FOREIGN KEY | FOREIGN KEY (electricity_fetch_setting_id) REFERENCES electricity_fetch_settings (id) |
 | fk_electricity_notify_settings_line_channel_id | FOREIGN KEY | FOREIGN KEY (line_channel_id) REFERENCES line_channels (id) |
 | id | UNIQUE | UNIQUE KEY id (id) |
@@ -54,6 +59,7 @@ CREATE TABLE `electricity_notify_settings` (
 
 | Name | Definition |
 | ---- | ---------- |
+| fk_electricity_notify_settings_advisor_id | KEY fk_electricity_notify_settings_advisor_id (advisor_id) USING BTREE |
 | fk_electricity_notify_settings_electricity_fetch_setting_id | KEY fk_electricity_notify_settings_electricity_fetch_setting_id (electricity_fetch_setting_id) USING BTREE |
 | fk_electricity_notify_settings_line_channel_id | KEY fk_electricity_notify_settings_line_channel_id (line_channel_id) USING BTREE |
 | PRIMARY | PRIMARY KEY (id) USING BTREE |
