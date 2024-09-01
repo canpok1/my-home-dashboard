@@ -1,7 +1,10 @@
+import { EncryptedValue } from "lib";
+
 export interface NotifySetting {
   id: bigint;
   fetchSettingId: bigint;
   lineChannelId: string;
+  encryptedAdvisorApiKey?: EncryptedValue;
   notifyDate: number;
   template: string;
   notifyDistUserIds: string[];
@@ -11,6 +14,13 @@ export interface MonthlyUsage {
   yen: number;
   kwh: number;
   settingName: string;
+}
+
+export interface DailyUsage {
+  year: number;
+  month: number;
+  date: number;
+  kwh: number;
 }
 
 const notifyStatuses = ["success", "failure"] as const;
@@ -36,6 +46,14 @@ export interface MonthlyUsageRepository {
     year: number,
     month: number
   ): Promise<MonthlyUsage | undefined>;
+}
+
+export interface DailyUsageRepository {
+  findDailyUsages(
+    fetchSettingId: bigint,
+    year: number,
+    month: number
+  ): Promise<DailyUsage[]>;
 }
 
 export interface NotifyStatusRepository {

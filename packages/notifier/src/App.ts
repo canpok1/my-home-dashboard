@@ -6,6 +6,7 @@ import { MySqlCommonClient, MySqlElectricityClient } from "./infra/MySqlClient";
 import { ElectricityNotifyService } from "./domain/Electricity";
 import { BatchSearvice } from "./domain/Batch";
 import Logger from "bunyan";
+import { DifyClient } from "./infra/DifyClient";
 
 // BigIntをログ出力できるようにする
 Object.defineProperty(BigInt.prototype, "toJSON", {
@@ -29,13 +30,17 @@ Object.defineProperty(BigInt.prototype, "toJSON", {
 
   await batchService.run(logger, async (logger: Logger) => {
     const messagingClient = new MessagingGatewayClient();
+    const difyClient = new DifyClient(env.appName);
 
     const electricityService = new ElectricityNotifyService(
       mysqlElectricityClient,
       mysqlElectricityClient,
       mysqlElectricityClient,
       mysqlElectricityClient,
-      messagingClient
+      mysqlElectricityClient,
+      messagingClient,
+      difyClient,
+      env.encryptionPassword
     );
 
     const targetDate = new Date();
