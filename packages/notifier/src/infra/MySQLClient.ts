@@ -12,12 +12,95 @@ import {
 } from "../domain/types/Electricity";
 import { AppStatusRepository } from "../domain/types/AppStatus";
 
-export class MySqlClient
+export class MySqlCommonClient implements AppStatusRepository {
+  readonly prisma: PrismaClient;
+
+  constructor(prisma: PrismaClient) {
+    this.prisma = prisma;
+  }
+
+  async upsertAppStatusStopped(appName: string, now: Date): Promise<void> {
+    await this.prisma.app_statuses.upsert({
+      where: {
+        app_name: appName,
+      },
+      create: {
+        app_name: appName,
+        app_status_types: {
+          connect: {
+            type_name: "stopped",
+          },
+        },
+        last_successful_at: now,
+      },
+      update: {
+        app_status_types: {
+          connect: {
+            type_name: "stopped",
+          },
+        },
+        last_successful_at: now,
+        updated_at: now,
+      },
+    });
+  }
+
+  async upsertAppStatusRunning(appName: string, now: Date): Promise<void> {
+    await this.prisma.app_statuses.upsert({
+      where: {
+        app_name: appName,
+      },
+      create: {
+        app_name: appName,
+        app_status_types: {
+          connect: {
+            type_name: "running",
+          },
+        },
+      },
+      update: {
+        app_status_types: {
+          connect: {
+            type_name: "running",
+          },
+        },
+        updated_at: now,
+      },
+    });
+  }
+
+  async upsertAppStatusError(appName: string, now: Date): Promise<void> {
+    await this.prisma.app_statuses.upsert({
+      where: {
+        app_name: appName,
+      },
+      create: {
+        app_name: appName,
+        app_status_types: {
+          connect: {
+            type_name: "error",
+          },
+        },
+        last_failure_at: now,
+      },
+      update: {
+        app_status_types: {
+          connect: {
+            type_name: "error",
+          },
+        },
+        last_failure_at: now,
+        updated_at: now,
+      },
+    });
+  }
+}
+
+export class MySqlElectricityClient
   implements
     NotifySettingRepository,
     MonthlyUsageRepository,
     NotifyStatusRepository,
-    AppStatusRepository,
     NotifyDestLineUserRepository
 {
   readonly prisma: PrismaClient;
@@ -25,9 +108,8 @@ export class MySqlClient
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
-  async findElectricityNotifySettings(
-    targetDate: Date
-  ): Promise<NotifySetting[]> {
+
+  async findNotifySettings(targetDate: Date): Promise<NotifySetting[]> {
     const borderDate = new Date(
       targetDate.getFullYear(),
       targetDate.getMonth(),
@@ -86,7 +168,7 @@ export class MySqlClient
     }));
   }
 
-  async findElectricityMonthlyUsage(
+  async findMonthlyUsage(
     fetchSettingId: bigint,
     year: number,
     month: number
@@ -119,7 +201,7 @@ export class MySqlClient
     };
   }
 
-  async findElectricityNotifyStatus(
+  async findNotifyStatus(
     notifySettingId: bigint
   ): Promise<ElectricityNotifyStatus | undefined> {
     const record = await this.prisma.electricity_notify_statuses.findUnique({
@@ -152,29 +234,21 @@ export class MySqlClient
     };
   }
 
-  async upsertElectricityNotifyStatusesSuccess(
+  async upsertNotifyStatusesSuccess(
     notifySettingId: bigint,
     now: Date
   ): Promise<void> {
-    return this.upsertElectricityNotifyStatuses(
-      notifySettingId,
-      now,
-      "success"
-    );
+    return this.upsertNotifyStatuses(notifySettingId, now, "success");
   }
 
-  async upsertElectricityNotifyStatusesFailure(
+  async upsertNotifyStatusesFailure(
     notifySettingId: bigint,
     now: Date
   ): Promise<void> {
-    return this.upsertElectricityNotifyStatuses(
-      notifySettingId,
-      now,
-      "failure"
-    );
+    return this.upsertNotifyStatuses(notifySettingId, now, "failure");
   }
 
-  private async upsertElectricityNotifyStatuses(
+  private async upsertNotifyStatuses(
     notifySettingId: bigint,
     now: Date,
     status: NotifyStatus
@@ -212,81 +286,7 @@ export class MySqlClient
     });
   }
 
-  async upsertAppStatusStopped(appName: string, now: Date): Promise<void> {
-    await this.prisma.app_statuses.upsert({
-      where: {
-        app_name: appName,
-      },
-      create: {
-        app_name: appName,
-        app_status_types: {
-          connect: {
-            type_name: "stopped",
-          },
-        },
-        last_successful_at: now,
-      },
-      update: {
-        app_status_types: {
-          connect: {
-            type_name: "stopped",
-          },
-        },
-        last_successful_at: now,
-        updated_at: now,
-      },
-    });
-  }
-  async upsertAppStatusRunning(appName: string, now: Date): Promise<void> {
-    await this.prisma.app_statuses.upsert({
-      where: {
-        app_name: appName,
-      },
-      create: {
-        app_name: appName,
-        app_status_types: {
-          connect: {
-            type_name: "running",
-          },
-        },
-      },
-      update: {
-        app_status_types: {
-          connect: {
-            type_name: "running",
-          },
-        },
-        updated_at: now,
-      },
-    });
-  }
-  async upsertAppStatusError(appName: string, now: Date): Promise<void> {
-    await this.prisma.app_statuses.upsert({
-      where: {
-        app_name: appName,
-      },
-      create: {
-        app_name: appName,
-        app_status_types: {
-          connect: {
-            type_name: "error",
-          },
-        },
-        last_failure_at: now,
-      },
-      update: {
-        app_status_types: {
-          connect: {
-            type_name: "error",
-          },
-        },
-        last_failure_at: now,
-        updated_at: now,
-      },
-    });
-  }
-
-  async updateElectricityNotifyDestLineUsersLastNotifiedAt(
+  async updateNotifyDestLineUsersLastNotifiedAt(
     notifySettingId: bigint,
     lineUserId: string,
     now: Date
