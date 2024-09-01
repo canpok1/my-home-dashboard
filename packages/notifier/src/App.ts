@@ -30,7 +30,7 @@ Object.defineProperty(BigInt.prototype, "toJSON", {
 
   await batchService.run(logger, async (logger: Logger) => {
     const messagingClient = new MessagingGatewayClient();
-    const difyClient = new DifyClient("my-home-dashboard-notifier");
+    const difyClient = new DifyClient(env.appName);
 
     const electricityService = new ElectricityNotifyService(
       mysqlElectricityClient,
