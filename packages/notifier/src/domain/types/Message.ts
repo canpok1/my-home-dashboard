@@ -3,15 +3,19 @@ import { messagingApi } from "@line/bot-sdk";
 export type Message = messagingApi.Message;
 
 export interface MessageRepository {
-  async sendMessage(
+  sendMessage(
     channelId: string,
     to: string,
     messages: Message[]
-  ): Promise<SentMessageObject[]>
+  ): Promise<messagingApi.SentMessage[]>;
 
-  async bulkSendMessage(
+  bulkSendMessage(
     channelId: string,
     tos: string[],
-    messages: Message[]
+    messages: Message[],
+    onEachMessageSent?: (
+      to: string,
+      sentMessages: messagingApi.SentMessage[]
+    ) => Promise<void>
   ): Promise<void>;
 }

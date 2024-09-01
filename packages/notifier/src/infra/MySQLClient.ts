@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import {
   isNotifyStatus,
+  NotifyDestLineUserRepository,
   type ElectricityNotifyStatus,
   type MonthlyUsage,
   type MonthlyUsageRepository,
@@ -8,7 +9,7 @@ import {
   type NotifySettingRepository,
   type NotifyStatus,
   type NotifyStatusRepository,
-} from "../domain/Electricity";
+} from "../domain/types/Electricity";
 import { AppStatusRepository } from "../domain/types/AppStatus";
 
 export class MySqlClient
@@ -16,15 +17,23 @@ export class MySqlClient
     NotifySettingRepository,
     MonthlyUsageRepository,
     NotifyStatusRepository,
-    AppStatusRepository
+    AppStatusRepository,
+    NotifyDestLineUserRepository
 {
   readonly prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
+  async findElectricityNotifySettings(
+    targetDate: Date
+  ): Promise<NotifySetting[]> {
+    const borderDate = new Date(
+      targetDate.getFullYear(),
+      targetDate.getMonth(),
+      1
+    );
 
-  async findElectricityNotifySettings(): Promise<NotifySetting[]> {
     const settings = await this.prisma.electricity_notify_settings.findMany({
       select: {
         id: true,
@@ -39,7 +48,30 @@ export class MySqlClient
         },
       },
       where: {
-        notify_enable: true,
+        OR: [
+          {
+            // 今月まだ通知してないユーザー
+            notify_enable: true,
+            electricity_notify_dest_line_users: {
+              every: {
+                notify_enable: true,
+                last_notified_at: {
+                  lte: borderDate,
+                },
+              },
+            },
+          },
+          {
+            // 一度も通知してないユーザー
+            notify_enable: true,
+            electricity_notify_dest_line_users: {
+              every: {
+                notify_enable: true,
+                last_notified_at: null,
+              },
+            },
+          },
+        ],
       },
     });
     return settings.map((setting) => ({
@@ -48,7 +80,7 @@ export class MySqlClient
       lineChannelId: setting.line_channel_id,
       notifyDate: setting.notify_date,
       template: setting.template,
-      notifyDistIds: setting.electricity_notify_dest_line_users.map(
+      notifyDistUserIds: setting.electricity_notify_dest_line_users.map(
         (user) => user.line_user_id
       ),
     }));
@@ -250,6 +282,24 @@ export class MySqlClient
         },
         last_failure_at: now,
         updated_at: now,
+      },
+    });
+  }
+
+  async updateElectricityNotifyDestLineUsersLastNotifiedAt(
+    notifySettingId: bigint,
+    lineUserId: string,
+    now: Date
+  ): Promise<void> {
+    await this.prisma.electricity_notify_dest_line_users.update({
+      where: {
+        electricity_notify_setting_id_line_user_id: {
+          electricity_notify_setting_id: notifySettingId,
+          line_user_id: lineUserId,
+        },
+      },
+      data: {
+        last_notified_at: now,
       },
     });
   }

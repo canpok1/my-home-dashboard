@@ -1,82 +1,41 @@
 import Logger from "bunyan";
 import { MessageRepository } from "./types/Message";
 import Handlebars from "handlebars";
-
-export interface NotifySetting {
-  id: bigint;
-  fetchSettingId: bigint;
-  lineChannelId: string;
-  notifyDate: number;
-  template: string;
-  notifyDistIds: string[];
-}
-
-export interface MonthlyUsage {
-  yen: number;
-  kwh: number;
-  settingName: string;
-}
-
-const notifyStatuses = ["success", "failure"] as const;
-export type NotifyStatus = (typeof notifyStatuses)[number];
-
-export function isNotifyStatus(value: string): value is NotifyStatus {
-  return notifyStatuses.some((status) => status === value);
-}
-
-export interface ElectricityNotifyStatus {
-  status: NotifyStatus;
-  lastSuccessfulAt?: Date;
-  lastFailureAt?: Date;
-}
-
-export interface NotifySettingRepository {
-  findElectricityNotifySettings(): Promise<NotifySetting[]>;
-}
-
-export interface MonthlyUsageRepository {
-  findElectricityMonthlyUsage(
-    fetchSettingId: bigint,
-    year: number,
-    month: number
-  ): Promise<MonthlyUsage | undefined>;
-}
-
-export interface NotifyStatusRepository {
-  findElectricityNotifyStatus(
-    notifySettingId: bigint
-  ): Promise<ElectricityNotifyStatus | undefined>;
-  upsertElectricityNotifyStatusesSuccess(
-    notifySettingId: bigint,
-    now: Date
-  ): Promise<void>;
-  upsertElectricityNotifyStatusesFailure(
-    notifySettingId: bigint,
-    now: Date
-  ): Promise<void>;
-}
+import type {
+  ElectricityNotifyStatus,
+  MonthlyUsage,
+  MonthlyUsageRepository,
+  NotifyDestLineUserRepository,
+  NotifySetting,
+  NotifySettingRepository,
+  NotifyStatusRepository,
+} from "./types/Electricity";
+import { messagingApi } from "@line/bot-sdk";
 
 export class ElectricityNotifyService {
   readonly notifySettingRepo: NotifySettingRepository;
   readonly monthlyUsageRepo: MonthlyUsageRepository;
   readonly notifyStatusRepo: NotifyStatusRepository;
   readonly messageRepo: MessageRepository;
+  readonly notifyDestLineUserRepo: NotifyDestLineUserRepository;
 
   constructor(
     notifySettingRepo: NotifySettingRepository,
     monthlyUsageRepo: MonthlyUsageRepository,
     notifyStatusRepo: NotifyStatusRepository,
+    notifyDestLineUserRepo: NotifyDestLineUserRepository,
     messageRepo: MessageRepository
   ) {
     this.notifySettingRepo = notifySettingRepo;
     this.monthlyUsageRepo = monthlyUsageRepo;
     this.notifyStatusRepo = notifyStatusRepo;
+    this.notifyDestLineUserRepo = notifyDestLineUserRepo;
     this.messageRepo = messageRepo;
   }
 
   async notify(targetDate: Date, logger: Logger) {
     const settings =
-      await this.notifySettingRepo.findElectricityNotifySettings();
+      await this.notifySettingRepo.findElectricityNotifySettings(targetDate);
     logger.info(`${settings.length} settings were find`);
 
     if (settings.length === 0) {
@@ -125,39 +84,69 @@ export class ElectricityNotifyService {
       "find electricity_notify_status"
     );
 
-    const year = targetDate.getFullYear();
-    const month = targetDate.getMonth() + 1;
-
-    const usage = await this.monthlyUsageRepo.findElectricityMonthlyUsage(
+    const { year, month } = this.getYearMonth(targetDate);
+    const targetUsage = await this.monthlyUsageRepo.findElectricityMonthlyUsage(
       setting.fetchSettingId,
       year,
       month
     );
     logger.debug(
-      { fetchSettingId: setting.fetchSettingId, year, month, usage },
-      "find electricity_monthly_usage"
+      { fetchSettingId: setting.fetchSettingId, year, month, targetUsage },
+      "find electricity_monthly_usage for targetDate"
     );
 
-    if (this.shouldSkipNotify(setting, targetDate, status, usage, logger)) {
+    const nextDate = this.getNextMonthFirst(targetDate);
+    const { year: nextYear, month: nextMonth } = this.getYearMonth(nextDate);
+    const nextUsage = await this.monthlyUsageRepo.findElectricityMonthlyUsage(
+      setting.fetchSettingId,
+      nextYear,
+      nextMonth
+    );
+    logger.debug(
+      {
+        fetchSettingId: setting.fetchSettingId,
+        nextYear,
+        nextMonth,
+        nextUsage,
+      },
+      "find electricity_monthly_usage for nextDate"
+    );
+
+    if (
+      this.shouldSkipNotify(setting, targetDate, targetUsage, nextUsage, logger)
+    ) {
       return false;
     }
 
-    const message = this.makeMessage(setting, targetDate, usage);
+    const message = this.makeMessage(setting, targetDate, targetUsage);
     logger.debug({ message }, "made a message");
+
+    const handleEachMessageSent = async (
+      to: string,
+      sentMessages: messagingApi.SentMessage[]
+    ) => {
+      const now = new Date();
+      await this.notifyDestLineUserRepo.updateElectricityNotifyDestLineUsersLastNotifiedAt(
+        setting.id,
+        to,
+        new Date()
+      );
+      logger.info(
+        { lineChannelId: setting.lineChannelId, to },
+        "notified to LINE"
+      );
+    };
 
     await this.messageRepo.bulkSendMessage(
       setting.lineChannelId,
-      setting.notifyDistIds,
+      setting.notifyDistUserIds,
       [
         {
           type: "text",
           text: message,
         },
-      ]
-    );
-    logger.info(
-      { lineChannelId: setting.lineChannelId, to: setting.notifyDistIds },
-      "notified to LINE"
+      ],
+      handleEachMessageSent
     );
     return true;
   }
@@ -165,11 +154,11 @@ export class ElectricityNotifyService {
   private shouldSkipNotify(
     setting: NotifySetting,
     targetDate: Date,
-    status: ElectricityNotifyStatus | undefined,
-    usage: MonthlyUsage | undefined,
+    targetUsage: MonthlyUsage | undefined,
+    nextUsage: MonthlyUsage | undefined,
     logger: Logger
   ): boolean {
-    if (setting.notifyDistIds.length === 0) {
+    if (setting.notifyDistUserIds.length === 0) {
       logger.warn("skip notify, notify dest LINE user is not found");
       return true;
     }
@@ -180,17 +169,17 @@ export class ElectricityNotifyService {
 
     const targetYear = targetDate.getFullYear();
     const targetMonth = targetDate.getMonth() + 1;
-    if (this.isMonthlyNotificationCompleted(targetDate, status)) {
-      logger.info(
-        { targetYear, targetMonth },
-        "skip notify, monthly notification completed"
-      );
-      return true;
-    }
-    if (!usage) {
+    if (!targetUsage) {
       logger.info(
         { fetchSettingId: setting.fetchSettingId, targetYear, targetMonth },
         `skip notify, usage is not found`
+      );
+      return true;
+    }
+    if (!nextUsage) {
+      logger.info(
+        { fetchSettingId: setting.fetchSettingId, targetYear, targetMonth },
+        `skip notify, usage is not determined`
       );
       return true;
     }
@@ -198,22 +187,15 @@ export class ElectricityNotifyService {
     return false;
   }
 
-  private isMonthlyNotificationCompleted(
-    targetDate: Date,
-    status?: ElectricityNotifyStatus
-  ): boolean {
-    if (!status?.lastSuccessfulAt) {
-      return false;
-    }
-    if (status.lastSuccessfulAt.getFullYear() !== targetDate.getFullYear()) {
-      return false;
-    }
+  private getNextMonthFirst(base: Date): Date {
+    return new Date(base.getFullYear(), base.getMonth() + 1, 1);
+  }
 
-    if (status.lastSuccessfulAt.getMonth() !== targetDate.getMonth()) {
-      return false;
-    }
-
-    return true;
+  private getYearMonth(base: Date): { year: number; month: number } {
+    return {
+      year: base.getFullYear(),
+      month: base.getMonth() + 1,
+    };
   }
 
   private makeMessage(
