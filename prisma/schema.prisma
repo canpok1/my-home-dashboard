@@ -254,18 +254,21 @@ model electricity_notify_settings {
   id                                 BigInt                               @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
   electricity_fetch_setting_id       BigInt                               @db.UnsignedBigInt
   line_channel_id                    String                               @db.VarChar(256)
+  advisor_id                         BigInt?                              @db.UnsignedBigInt
   notify_date                        Int                                  @db.UnsignedTinyInt
   notify_enable                      Boolean                              @default(true)
   template                           String                               @default("") @db.Text
   created_at                         DateTime                             @default(now()) @db.DateTime(0)
   updated_at                         DateTime                             @default(now()) @db.DateTime(0)
   electricity_notify_dest_line_users electricity_notify_dest_line_users[]
+  advisors                           advisors?                            @relation(fields: [advisor_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_electricity_notify_settings_advisor_id")
   electricity_fetch_settings         electricity_fetch_settings           @relation(fields: [electricity_fetch_setting_id], references: [id], onUpdate: Restrict, map: "fk_electricity_notify_settings_electricity_fetch_setting_id")
   line_channels                      line_channels                        @relation(fields: [line_channel_id], references: [id], onUpdate: Restrict, map: "fk_electricity_notify_settings_line_channel_id")
   electricity_notify_statuses        electricity_notify_statuses?
 
   @@index([electricity_fetch_setting_id], map: "fk_electricity_notify_settings_electricity_fetch_setting_id")
   @@index([line_channel_id], map: "fk_electricity_notify_settings_line_channel_id")
+  @@index([advisor_id], map: "fk_electricity_notify_settings_advisor_id")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -308,4 +311,27 @@ model notify_status_types {
   created_at                  DateTime                      @default(now()) @db.DateTime(0)
   updated_at                  DateTime                      @default(now()) @db.DateTime(0)
   electricity_notify_statuses electricity_notify_statuses[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model advisor_types {
+  id         Int        @id @db.UnsignedTinyInt
+  type_name  String     @unique(map: "uk_advisor_types_type_name") @db.VarChar(255)
+  created_at DateTime   @default(now()) @db.DateTime(0)
+  updated_at DateTime   @default(now()) @db.DateTime(0)
+  advisors   advisors[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model advisors {
+  id                          BigInt                        @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  advisor_type_id             Int                           @db.UnsignedTinyInt
+  encrypted_apikey            String                        @db.VarChar(512)
+  memo                        String?                       @db.Text
+  created_at                  DateTime                      @default(now()) @db.DateTime(0)
+  updated_at                  DateTime                      @default(now()) @db.DateTime(0)
+  advisor_types               advisor_types                 @relation(fields: [advisor_type_id], references: [id], onUpdate: Restrict, map: "fk_advisors_advisor_type_id")
+  electricity_notify_settings electricity_notify_settings[]
+
+  @@index([advisor_type_id], map: "fk_advisors_advisor_type_id")
 }
