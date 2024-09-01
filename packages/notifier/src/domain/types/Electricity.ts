@@ -27,11 +27,11 @@ export interface ElectricityNotifyStatus {
 }
 
 export interface NotifySettingRepository {
-  findElectricityNotifySettings(targetDate: Date): Promise<NotifySetting[]>;
+  findNotifySettings(targetDate: Date): Promise<NotifySetting[]>;
 }
 
 export interface MonthlyUsageRepository {
-  findElectricityMonthlyUsage(
+  findMonthlyUsage(
     fetchSettingId: bigint,
     year: number,
     month: number
@@ -39,21 +39,21 @@ export interface MonthlyUsageRepository {
 }
 
 export interface NotifyStatusRepository {
-  findElectricityNotifyStatus(
+  findNotifyStatus(
     notifySettingId: bigint
   ): Promise<ElectricityNotifyStatus | undefined>;
-  upsertElectricityNotifyStatusesSuccess(
+  upsertNotifyStatusesSuccess(
     notifySettingId: bigint,
     now: Date
   ): Promise<void>;
-  upsertElectricityNotifyStatusesFailure(
+  upsertNotifyStatusesFailure(
     notifySettingId: bigint,
     now: Date
   ): Promise<void>;
 }
 
 export interface NotifyDestLineUserRepository {
-  updateElectricityNotifyDestLineUsersLastNotifiedAt(
+  updateNotifyDestLineUsersLastNotifiedAt(
     notifySettingId: bigint,
     lineUserId: string,
     now: Date

@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Env } from "./Env";
 import { createLogger } from "lib";
 import { MessagingGatewayClient } from "./infra/MessagingGateway";
-import { MySqlClient } from "./infra/MySQLClient";
+import { MySqlCommonClient, MySqlElectricityClient } from "./infra/MySqlClient";
 import { ElectricityNotifyService } from "./domain/Electricity";
 import { BatchSearvice } from "./domain/Batch";
 import Logger from "bunyan";
@@ -22,18 +22,19 @@ Object.defineProperty(BigInt.prototype, "toJSON", {
   const prisma = new PrismaClient();
   await prisma.$queryRaw`SELECT 1`; // DB接続チェック
 
-  const mysqlClient = new MySqlClient(prisma);
+  const mysqlCommonClient = new MySqlCommonClient(prisma);
+  const mysqlElectricityClient = new MySqlElectricityClient(prisma);
 
-  const batchService = new BatchSearvice(env.appName, mysqlClient);
+  const batchService = new BatchSearvice(env.appName, mysqlCommonClient);
 
   await batchService.run(logger, async (logger: Logger) => {
     const messagingClient = new MessagingGatewayClient();
 
     const electricityService = new ElectricityNotifyService(
-      mysqlClient,
-      mysqlClient,
-      mysqlClient,
-      mysqlClient,
+      mysqlElectricityClient,
+      mysqlElectricityClient,
+      mysqlElectricityClient,
+      mysqlElectricityClient,
       messagingClient
     );
 

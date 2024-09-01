@@ -2,7 +2,6 @@ import Logger from "bunyan";
 import { MessageRepository } from "./types/Message";
 import Handlebars from "handlebars";
 import type {
-  ElectricityNotifyStatus,
   MonthlyUsage,
   MonthlyUsageRepository,
   NotifyDestLineUserRepository,
@@ -35,7 +34,7 @@ export class ElectricityNotifyService {
 
   async notify(targetDate: Date, logger: Logger) {
     const settings =
-      await this.notifySettingRepo.findElectricityNotifySettings(targetDate);
+      await this.notifySettingRepo.findNotifySettings(targetDate);
     logger.info(`${settings.length} settings were find`);
 
     if (settings.length === 0) {
@@ -53,7 +52,7 @@ export class ElectricityNotifyService {
           childLogger
         );
         if (notified) {
-          await this.notifyStatusRepo.upsertElectricityNotifyStatusesSuccess(
+          await this.notifyStatusRepo.upsertNotifyStatusesSuccess(
             setting.id,
             now
           );
@@ -63,7 +62,7 @@ export class ElectricityNotifyService {
           err,
           `failed to notify by electricity_notify_setting_id = ${setting.id}`
         );
-        await this.notifyStatusRepo.upsertElectricityNotifyStatusesFailure(
+        await this.notifyStatusRepo.upsertNotifyStatusesFailure(
           setting.id,
           now
         );
@@ -76,16 +75,14 @@ export class ElectricityNotifyService {
     targetDate: Date,
     logger: Logger
   ): Promise<boolean> {
-    const status = await this.notifyStatusRepo.findElectricityNotifyStatus(
-      setting.id
-    );
+    const status = await this.notifyStatusRepo.findNotifyStatus(setting.id);
     logger.debug(
       { notifySettingId: setting.id, status },
       "find electricity_notify_status"
     );
 
     const { year, month } = this.getYearMonth(targetDate);
-    const targetUsage = await this.monthlyUsageRepo.findElectricityMonthlyUsage(
+    const targetUsage = await this.monthlyUsageRepo.findMonthlyUsage(
       setting.fetchSettingId,
       year,
       month
@@ -97,7 +94,7 @@ export class ElectricityNotifyService {
 
     const nextDate = this.getNextMonthFirst(targetDate);
     const { year: nextYear, month: nextMonth } = this.getYearMonth(nextDate);
-    const nextUsage = await this.monthlyUsageRepo.findElectricityMonthlyUsage(
+    const nextUsage = await this.monthlyUsageRepo.findMonthlyUsage(
       setting.fetchSettingId,
       nextYear,
       nextMonth
@@ -126,7 +123,7 @@ export class ElectricityNotifyService {
       sentMessages: messagingApi.SentMessage[]
     ) => {
       const now = new Date();
-      await this.notifyDestLineUserRepo.updateElectricityNotifyDestLineUsersLastNotifiedAt(
+      await this.notifyDestLineUserRepo.updateNotifyDestLineUsersLastNotifiedAt(
         setting.id,
         to,
         new Date()
