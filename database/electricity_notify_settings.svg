@@ -114,30 +114,36 @@
 <!-- electricity_notify_dest_line_users -->
 <g id="node2" class="node">
 <title>electricity_notify_dest_line_users</title>
-<polygon fill="#efefef" stroke="transparent" points="138,-1007.5 138,-1042.5 543,-1042.5 543,-1007.5 138,-1007.5"/>
-<polygon fill="none" stroke="#000000" points="138,-1007.5 138,-1042.5 543,-1042.5 543,-1007.5 138,-1007.5"/>
-<text text-anchor="start" x="144.6923" y="-1020.3" font-family="Arial Bold" font-size="18.00" fill="#000000">electricity_notify_dest_line_users</text>
-<text text-anchor="start" x="408.7397" y="-1020.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
-<text text-anchor="start" x="442.9445" y="-1020.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
+<polygon fill="#efefef" stroke="transparent" points="138,-1037.5 138,-1072.5 543,-1072.5 543,-1037.5 138,-1037.5"/>
+<polygon fill="none" stroke="#000000" points="138,-1037.5 138,-1072.5 543,-1072.5 543,-1037.5 138,-1037.5"/>
+<text text-anchor="start" x="144.6923" y="-1050.3" font-family="Arial Bold" font-size="18.00" fill="#000000">electricity_notify_dest_line_users</text>
+<text text-anchor="start" x="408.7397" y="-1050.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
+<text text-anchor="start" x="442.9445" y="-1050.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
+<polygon fill="none" stroke="#000000" points="138,-1007.5 138,-1037.5 543,-1037.5 543,-1007.5 138,-1007.5"/>
+<text text-anchor="start" x="145" y="-1018.9" font-family="Arial" font-size="14.00" fill="#000000">electricity_notify_setting_id    </text>
+<text text-anchor="start" x="346.4572" y="-1018.9" font-family="Arial" font-size="14.00" fill="#666666">[bigint(20) unsigned]</text>
 <polygon fill="none" stroke="#000000" points="138,-977.5 138,-1007.5 543,-1007.5 543,-977.5 138,-977.5"/>
-<text text-anchor="start" x="145" y="-988.9" font-family="Arial" font-size="14.00" fill="#000000">electricity_notify_setting_id    </text>
-<text text-anchor="start" x="346.4572" y="-988.9" font-family="Arial" font-size="14.00" fill="#666666">[bigint(20) unsigned]</text>
+<text text-anchor="start" x="145" y="-988.9" font-family="Arial" font-size="14.00" fill="#000000">line_user_id    </text>
+<text text-anchor="start" x="254.6634" y="-988.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(256)]</text>
 <polygon fill="none" stroke="#000000" points="138,-947.5 138,-977.5 543,-977.5 543,-947.5 138,-947.5"/>
-<text text-anchor="start" x="145" y="-958.9" font-family="Arial" font-size="14.00" fill="#000000">line_user_id    </text>
-<text text-anchor="start" x="254.6634" y="-958.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(256)]</text>
+<text text-anchor="start" x="145" y="-958.9" font-family="Arial" font-size="14.00" fill="#000000">notify_enable    </text>
+<text text-anchor="start" x="262.46" y="-958.9" font-family="Arial" font-size="14.00" fill="#666666">[tinyint(1)]</text>
 <polygon fill="none" stroke="#000000" points="138,-917.5 138,-947.5 543,-947.5 543,-917.5 138,-917.5"/>
-<text text-anchor="start" x="145" y="-928.9" font-family="Arial" font-size="14.00" fill="#000000">created_at    </text>
-<text text-anchor="start" x="245.3422" y="-928.9" font-family="Arial" font-size="14.00" fill="#666666">[datetime]</text>
+<text text-anchor="start" x="145" y="-928.9" font-family="Arial" font-size="14.00" fill="#000000">last_notified_at    </text>
+<text text-anchor="start" x="273.3478" y="-928.9" font-family="Arial" font-size="14.00" fill="#666666">[datetime]</text>
 <polygon fill="none" stroke="#000000" points="138,-887.5 138,-917.5 543,-917.5 543,-887.5 138,-887.5"/>
-<text text-anchor="start" x="145" y="-898.9" font-family="Arial" font-size="14.00" fill="#000000">updated_at    </text>
-<text text-anchor="start" x="249.2468" y="-898.9" font-family="Arial" font-size="14.00" fill="#666666">[datetime]</text>
+<text text-anchor="start" x="145" y="-898.9" font-family="Arial" font-size="14.00" fill="#000000">created_at    </text>
+<text text-anchor="start" x="245.3422" y="-898.9" font-family="Arial" font-size="14.00" fill="#666666">[datetime]</text>
+<polygon fill="none" stroke="#000000" points="138,-857.5 138,-887.5 543,-887.5 543,-857.5 138,-857.5"/>
+<text text-anchor="start" x="145" y="-868.9" font-family="Arial" font-size="14.00" fill="#000000">updated_at    </text>
+<text text-anchor="start" x="249.2468" y="-868.9" font-family="Arial" font-size="14.00" fill="#666666">[datetime]</text>
 </g>
 <!-- electricity_notify_dest_line_users&#45;&gt;electricity_notify_settings -->
 <g id="edge1" class="edge">
 <title>electricity_notify_dest_line_users:electricity_notify_setting_id&#45;&gt;electricity_notify_settings:id</title>
-<path fill="none" stroke="#000000" d="M553.2056,-991.6524C604.7813,-982.3661 573.3812,-898.8653 543,-845 508.8123,-784.3859 443.1877,-824.6141 409,-764 387.93,-726.6434 366.1111,-667.5 409,-667.5"/>
-<polygon fill="#000000" stroke="#000000" points="552.9657,-991.6723 542.6275,-988.0154 547.9828,-992.0861 543,-992.5 543,-992.5 543,-992.5 547.9828,-992.0861 543.3725,-996.9846 552.9657,-991.6723 552.9657,-991.6723"/>
-<text text-anchor="start" x="550.263" y="-1002.5" font-family="Arial" font-size="10.00" fill="#000000">FOREIGN KEY (electricity_notify_setting_id) REFERENCES electricity_notify_settings (id)</text>
+<path fill="none" stroke="#000000" d="M552.6264,-1019.5393C585.9575,-996.8131 567.1271,-849.9982 543,-815 506.832,-762.5356 445.168,-816.4644 409,-764 384.6571,-728.6888 366.1111,-667.5 409,-667.5"/>
+<polygon fill="#000000" stroke="#000000" points="552.5581,-1019.5602 541.6771,-1018.1988 547.7791,-1021.0301 543,-1022.5 543,-1022.5 543,-1022.5 547.7791,-1021.0301 544.3229,-1026.8012 552.5581,-1019.5602 552.5581,-1019.5602"/>
+<text text-anchor="start" x="550.263" y="-1032.5" font-family="Arial" font-size="10.00" fill="#000000">FOREIGN KEY (electricity_notify_setting_id) REFERENCES electricity_notify_settings (id)</text>
 </g>
 <!-- electricity_notify_statuses -->
 <g id="node3" class="node">
@@ -174,7 +180,7 @@
 <title>electricity_notify_statuses:electricity_notify_setting_id&#45;&gt;electricity_notify_settings:id</title>
 <path fill="none" stroke="#000000" d="M637.3649,-1004.5332C603.9678,-981.7609 622.3953,-834.664 647,-800 675.0688,-760.4557 721.9312,-803.5443 750,-764 774.8248,-729.0259 792.8889,-667.5 750,-667.5"/>
 <polygon fill="#000000" stroke="#000000" points="637.4428,-1004.5571 645.6757,-1011.8007 642.2214,-1006.0286 647,-1007.5 647,-1007.5 647,-1007.5 642.2214,-1006.0286 648.3243,-1003.1993 637.4428,-1004.5571 637.4428,-1004.5571"/>
-<text text-anchor="start" x="654.263" y="-1017.5" font-family="Arial" font-size="10.00" fill="#000000">FOREIGN KEY (electricity_notify_setting_id) REFERENCES electricity_notify_settings (id)</text>
+<text text-anchor="start" x="654.263" y="-991.5" font-family="Arial" font-size="10.00" fill="#000000">FOREIGN KEY (electricity_notify_setting_id) REFERENCES electricity_notify_settings (id)</text>
 </g>
 </g>
 </svg>

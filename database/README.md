@@ -12,7 +12,7 @@
 | [electricity_fetch_settings](electricity_fetch_settings.md) | 8 | 電気料金の取得設定 | BASE TABLE |
 | [electricity_fetch_statuses](electricity_fetch_statuses.md) | 7 | 電気料金取得ステータス | BASE TABLE |
 | [electricity_monthly_usages](electricity_monthly_usages.md) | 8 | 月間電気使用状況 | BASE TABLE |
-| [electricity_notify_dest_line_users](electricity_notify_dest_line_users.md) | 4 | 電気料金通知先のLINEユーザー | BASE TABLE |
+| [electricity_notify_dest_line_users](electricity_notify_dest_line_users.md) | 6 | 電気料金通知先のLINEユーザー | BASE TABLE |
 | [electricity_notify_settings](electricity_notify_settings.md) | 8 | 電気料金の通知設定 | BASE TABLE |
 | [electricity_notify_statuses](electricity_notify_statuses.md) | 7 | 電気料金通知ステータス | BASE TABLE |
 | [fetch_status_types](fetch_status_types.md) | 4 | 取得ステータス種別 | BASE TABLE |
