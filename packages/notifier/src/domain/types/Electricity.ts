@@ -4,7 +4,7 @@ export interface NotifySetting {
   lineChannelId: string;
   notifyDate: number;
   template: string;
-  notifyDistIds: string[];
+  notifyDistUserIds: string[];
 }
 
 export interface MonthlyUsage {
@@ -27,7 +27,7 @@ export interface ElectricityNotifyStatus {
 }
 
 export interface NotifySettingRepository {
-  findElectricityNotifySettings(): Promise<NotifySetting[]>;
+  findElectricityNotifySettings(targetDate: Date): Promise<NotifySetting[]>;
 }
 
 export interface MonthlyUsageRepository {
@@ -48,6 +48,14 @@ export interface NotifyStatusRepository {
   ): Promise<void>;
   upsertElectricityNotifyStatusesFailure(
     notifySettingId: bigint,
+    now: Date
+  ): Promise<void>;
+}
+
+export interface NotifyDestLineUserRepository {
+  updateElectricityNotifyDestLineUsersLastNotifiedAt(
+    notifySettingId: bigint,
+    lineUserId: string,
     now: Date
   ): Promise<void>;
 }

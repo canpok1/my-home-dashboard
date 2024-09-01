@@ -18,7 +18,7 @@ export class MessagingGatewayClient implements MessageRepository {
     channelId: string,
     to: string,
     messages: messagingApi.Message[]
-  ): Promise<SentMessageObject[]> {
+  ): Promise<messagingApi.SentMessage[]> {
     const { data, error } = await this.client.POST(
       "/api/line/v2/bot/message/push",
       {
@@ -35,7 +35,7 @@ export class MessagingGatewayClient implements MessageRepository {
     );
 
     if (data?.sentMessages) {
-      return data.sentMessages;
+      return data.sentMessages.map((msg) => ({ ...msg }));
     }
 
     if (error) {
@@ -48,11 +48,21 @@ export class MessagingGatewayClient implements MessageRepository {
   async bulkSendMessage(
     channelId: string,
     tos: string[],
-    messages: messagingApi.Message[]
+    messages: messagingApi.Message[],
+    onEachMessageSent?: (
+      to: string,
+      sentMessages: messagingApi.SentMessage[]
+    ) => Promise<void>
   ): Promise<void> {
     const promises = [];
     for (const to of tos) {
-      promises.push(this.sendMessage(channelId, to, messages));
+      const func = async () => {
+        const sentMessages = await this.sendMessage(channelId, to, messages);
+        if (onEachMessageSent) {
+          await onEachMessageSent(to, sentMessages);
+        }
+      };
+      promises.push(func());
     }
     await Promise.all(promises);
   }

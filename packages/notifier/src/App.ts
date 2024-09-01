@@ -33,6 +33,7 @@ Object.defineProperty(BigInt.prototype, "toJSON", {
       mysqlClient,
       mysqlClient,
       mysqlClient,
+      mysqlClient,
       messagingClient
     );
 

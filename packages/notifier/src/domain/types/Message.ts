@@ -7,11 +7,15 @@ export interface MessageRepository {
     channelId: string,
     to: string,
     messages: Message[]
-  ): Promise<{ id: number; quoteToken?: string }[]>;
+  ): Promise<messagingApi.SentMessage[]>;
 
   bulkSendMessage(
     channelId: string,
     tos: string[],
-    messages: Message[]
+    messages: Message[],
+    onEachMessageSent?: (
+      to: string,
+      sentMessages: messagingApi.SentMessage[]
+    ) => Promise<void>
   ): Promise<void>;
 }
