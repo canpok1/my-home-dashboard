@@ -8,7 +8,7 @@ import {
   type NotifySettingRepository,
   type NotifyStatus,
   type NotifyStatusRepository,
-} from "../domain/Electricity";
+} from "../domain/types/Electricity";
 import { AppStatusRepository } from "../domain/types/AppStatus";
 
 export class MySqlClient

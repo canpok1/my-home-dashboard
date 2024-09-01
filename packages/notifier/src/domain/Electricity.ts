@@ -1,60 +1,14 @@
 import Logger from "bunyan";
 import { MessageRepository } from "./types/Message";
 import Handlebars from "handlebars";
-
-export interface NotifySetting {
-  id: bigint;
-  fetchSettingId: bigint;
-  lineChannelId: string;
-  notifyDate: number;
-  template: string;
-  notifyDistIds: string[];
-}
-
-export interface MonthlyUsage {
-  yen: number;
-  kwh: number;
-  settingName: string;
-}
-
-const notifyStatuses = ["success", "failure"] as const;
-export type NotifyStatus = (typeof notifyStatuses)[number];
-
-export function isNotifyStatus(value: string): value is NotifyStatus {
-  return notifyStatuses.some((status) => status === value);
-}
-
-export interface ElectricityNotifyStatus {
-  status: NotifyStatus;
-  lastSuccessfulAt?: Date;
-  lastFailureAt?: Date;
-}
-
-export interface NotifySettingRepository {
-  findElectricityNotifySettings(): Promise<NotifySetting[]>;
-}
-
-export interface MonthlyUsageRepository {
-  findElectricityMonthlyUsage(
-    fetchSettingId: bigint,
-    year: number,
-    month: number
-  ): Promise<MonthlyUsage | undefined>;
-}
-
-export interface NotifyStatusRepository {
-  findElectricityNotifyStatus(
-    notifySettingId: bigint
-  ): Promise<ElectricityNotifyStatus | undefined>;
-  upsertElectricityNotifyStatusesSuccess(
-    notifySettingId: bigint,
-    now: Date
-  ): Promise<void>;
-  upsertElectricityNotifyStatusesFailure(
-    notifySettingId: bigint,
-    now: Date
-  ): Promise<void>;
-}
+import type {
+  ElectricityNotifyStatus,
+  MonthlyUsage,
+  MonthlyUsageRepository,
+  NotifySetting,
+  NotifySettingRepository,
+  NotifyStatusRepository,
+} from "./types/Electricity";
 
 export class ElectricityNotifyService {
   readonly notifySettingRepo: NotifySettingRepository;

@@ -1,5 +1,5 @@
 import createClient from "openapi-fetch";
-import { components, paths } from "./MessagingGateway.gen";
+import { components, paths } from "./types/MessagingGateway.gen";
 import { messagingApi } from "@line/bot-sdk";
 import { MessageRepository } from "../domain/types/Message";
 

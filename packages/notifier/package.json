@@ -11,7 +11,7 @@
     "test": "vitest",
     "test:coverage": "echo \"Warn: no test specified\"",
     "download:messaging-gateway-yml": "curl https://raw.githubusercontent.com/canpok1/messaging-gateway/main/packages/server/openapi.yml > ./open_api/messaging-gateway.yml",
-    "generate:messaging-gateway-client": "npx openapi-typescript ./open_api/messaging-gateway.yml -o ./src/infra/MessagingGateway.gen.ts"
+    "generate:messaging-gateway-client": "npx openapi-typescript ./open_api/messaging-gateway.yml -o ./src/infra/types/MessagingGateway.gen.ts"
   },
   "author": "",
   "license": "ISC",
