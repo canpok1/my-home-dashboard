@@ -1,7 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import {
+  type DailyUsage,
+  type DailyUsageRepository,
   isNotifyStatus,
-  NotifyDestLineUserRepository,
+  type NotifyDestLineUserRepository,
   type ElectricityNotifyStatus,
   type MonthlyUsage,
   type MonthlyUsageRepository,
@@ -10,7 +12,8 @@ import {
   type NotifyStatus,
   type NotifyStatusRepository,
 } from "../domain/types/Electricity";
-import { AppStatusRepository } from "../domain/types/AppStatus";
+import type { AppStatusRepository } from "../domain/types/AppStatus";
+import { EncryptedValue } from "lib";
 
 export class MySqlCommonClient implements AppStatusRepository {
   readonly prisma: PrismaClient;
@@ -100,6 +103,7 @@ export class MySqlElectricityClient
   implements
     NotifySettingRepository,
     MonthlyUsageRepository,
+    DailyUsageRepository,
     NotifyStatusRepository,
     NotifyDestLineUserRepository
 {
@@ -121,6 +125,11 @@ export class MySqlElectricityClient
         id: true,
         electricity_fetch_setting_id: true,
         line_channel_id: true,
+        advisors: {
+          select: {
+            encrypted_apikey: true,
+          },
+        },
         notify_date: true,
         template: true,
         electricity_notify_dest_line_users: {
@@ -160,6 +169,11 @@ export class MySqlElectricityClient
       id: setting.id,
       fetchSettingId: setting.electricity_fetch_setting_id,
       lineChannelId: setting.line_channel_id,
+      encryptedAdvisorApiKey: setting.advisors?.encrypted_apikey
+        ? EncryptedValue.makeFromSerializedText(
+            setting.advisors.encrypted_apikey
+          )
+        : undefined,
       notifyDate: setting.notify_date,
       template: setting.template,
       notifyDistUserIds: setting.electricity_notify_dest_line_users.map(
@@ -199,6 +213,32 @@ export class MySqlElectricityClient
       kwh: usage.usage_kwh,
       settingName: usage.electricity_fetch_settings.setting_name,
     };
+  }
+
+  async findDailyUsages(
+    fetchSettingId: bigint,
+    year: number,
+    month: number
+  ): Promise<DailyUsage[]> {
+    const usages = await this.prisma.electricity_daily_usages.findMany({
+      select: {
+        usage_year: true,
+        usage_month: true,
+        usage_date: true,
+        usage_amount: true,
+      },
+      where: {
+        electricity_fetch_setting_id: fetchSettingId,
+        usage_year: year,
+        usage_month: month,
+      },
+    });
+    return usages.map((usage) => ({
+      year: usage.usage_year,
+      month: usage.usage_month,
+      date: usage.usage_date,
+      kwh: usage.usage_amount.toNumber(),
+    }));
   }
 
   async findNotifyStatus(
