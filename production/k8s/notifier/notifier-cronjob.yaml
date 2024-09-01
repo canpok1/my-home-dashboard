@@ -24,6 +24,11 @@ spec:
                     secretKeyRef:
                       name: my-home-dashboard-slack
                       key: webhook-url
+                - name: ENCRYPTION_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: my-home-dashboard-common
+                      key: encryption-password
                 - name: DB_URL_FOR_PRISMA
                   valueFrom:
                     secretKeyRef:
