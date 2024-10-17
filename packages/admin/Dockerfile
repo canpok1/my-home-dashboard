@@ -1,4 +1,4 @@
-FROM node:22 AS builder
+FROM node:23 AS builder
 WORKDIR /src
 
 COPY ./package*.json ./
@@ -14,7 +14,7 @@ RUN npm run -w lib build
 RUN npm run -w admin build
 
 
-FROM node:22-slim
+FROM node:23-slim
 WORKDIR /service
 
 COPY --from=builder /src/packages/admin/.next/standalone ./
