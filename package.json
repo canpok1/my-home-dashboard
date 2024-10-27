@@ -27,7 +27,8 @@
     "packages/lib",
     "packages/migrate",
     "packages/tools",
-    "packages/notifier"
+    "packages/notifier",
+    "packages/bot"
   ],
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
