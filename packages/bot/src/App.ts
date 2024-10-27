@@ -23,9 +23,14 @@ Object.defineProperty(BigInt.prototype, "toJSON", {
   await prisma.$queryRaw`SELECT 1`; // DB接続チェック
 
   const mysqlClient = new MySqlClient(prisma);
+  const messagingGatewayClient = new MessagingGatewayClient(env.appName);
 
   const batchService = new BatchSearvice(env.appName, mysqlClient);
-  const processor = new EventProcessor(mysqlClient);
+  const processor = new EventProcessor(
+    mysqlClient,
+    mysqlClient,
+    messagingGatewayClient
+  );
 
   await batchService.run(logger, async (logger: Logger) => {
     await processor.process(logger);
