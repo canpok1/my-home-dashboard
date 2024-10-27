@@ -49,12 +49,9 @@ export class EventProcessor {
     message: LineWebhookMessage
   ): Promise<void> {
     try {
-      logger.info(`handle message [${message.messageId}]`);
-
-      if (message.events.length === 0) {
-        logger.info("event is empty");
-        return;
-      }
+      logger.info(
+        `handle message [${message.messageId}], event count is ${message.events.length}`
+      );
 
       for (const event of message.events) {
         const childLogger = logger.child({
