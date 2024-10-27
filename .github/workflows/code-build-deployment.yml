@@ -58,6 +58,8 @@ jobs:
       MYSQL_PASSWORD: password
       MYSQL_HOST_ON_DOCKER_NETWORK: localhost
       MYSQL_PORT_ON_DOCKER_NETWORK: 3306
+      TBLS_VERSION: 1.79.0
+      MIGRATE_VERSION: 4.18.1
     services:
       db:
         image: mariadb:10.11
@@ -76,42 +78,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v5
-        with:
-          go-version: "1.20"
-          check-latest: true
-
-      - name: Get Go Version
-        id: get-go-version
-        run: echo "version=$(go env GOVERSION)" >> $GITHUB_OUTPUT
-
-      - name: Get Go Path
-        id: get-go-path
-        run: echo "path=$(go env GOPATH)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache/restore@v4
-        id: cache
-        with:
-          path: |
-            ${{ steps.get-go-path.outputs.path }}/bin/migrate
-            ${{ steps.get-go-path.outputs.path }}/bin/tbls
-          key: ${{ steps.get-go-version.outputs.version }}-migrate-tbls
-
       - name: install migrate command
-        id: install-migrate
         run: |
-          if ! which migrate; then
-            go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-          fi
-          echo "path=$(which migrate)" >> $GITHUB_OUTPUT
+          curl -o migrate.deb -L https://github.com/golang-migrate/migrate/releases/download/v${MIGRATE_VERSION}/migrate.linux-amd64.deb
+          sudo apt install ./migrate.deb
+          rm migrate.deb
 
       - name: install tbls command
-        id: install-tbls
         run: |
-          if ! which tbls; then
-            go install github.com/k1LoW/tbls@v1.71.1
-          fi
-          echo "path=$(which tbls)" >> $GITHUB_OUTPUT
+          curl -o tbls.deb -L https://github.com/k1LoW/tbls/releases/download/v${TBLS_VERSION}/tbls_${TBLS_VERSION}-1_amd64.deb
+          sudo apt install ./tbls.deb
+          rm tbls.deb
 
       - name: test migrate up
         working-directory: ./packages/migrate
@@ -134,14 +111,6 @@ jobs:
         with:
           name: db-docs
           path: public/database
-
-      - uses: actions/cache/save@v4
-        if: always()
-        with:
-          path: |
-            ${{ steps.install-migrate.outputs.path }}
-            ${{ steps.install-tbls.outputs.path }}
-          key: ${{ steps.cache.outputs.cache-primary-key }}
 
   build:
     runs-on: ubuntu-latest
