@@ -81,13 +81,13 @@ jobs:
       - name: install migrate command
         run: |
           curl -o migrate.deb -L https://github.com/golang-migrate/migrate/releases/download/v${MIGRATE_VERSION}/migrate.linux-amd64.deb
-          apt install ./migrate.deb
+          sudo apt install ./migrate.deb
           rm migrate.deb
 
       - name: install tbls command
         run: |
           curl -o tbls.deb -L https://github.com/k1LoW/tbls/releases/download/v${TBLS_VERSION}/tbls_${TBLS_VERSION}-1_amd64.deb
-          apt install ./tbls.deb
+          sudo apt install ./tbls.deb
           rm tbls.deb
 
       - name: test migrate up
