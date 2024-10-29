@@ -120,6 +120,8 @@ export class MySqlElectricityClient
       1
     );
 
+    const results: NotifySetting[] = [];
+
     const settings = await this.prisma.electricity_notify_settings.findMany({
       select: {
         id: true,
@@ -132,54 +134,52 @@ export class MySqlElectricityClient
         },
         notify_date: true,
         template: true,
-        electricity_notify_dest_line_users: {
+      },
+      where: {
+        notify_enable: true,
+      },
+    });
+    for (const setting of settings) {
+      const users =
+        await this.prisma.electricity_notify_dest_line_users.findMany({
           select: {
             line_user_id: true,
           },
-        },
-      },
-      where: {
-        OR: [
-          {
-            // 今月まだ通知してないユーザー
+          where: {
+            electricity_notify_setting_id: setting.id,
             notify_enable: true,
-            electricity_notify_dest_line_users: {
-              every: {
-                notify_enable: true,
+            OR: [
+              {
+                // 今月まだ通知してないユーザー
                 last_notified_at: {
                   lte: borderDate,
                 },
               },
-            },
-          },
-          {
-            // 一度も通知してないユーザー
-            notify_enable: true,
-            electricity_notify_dest_line_users: {
-              every: {
-                notify_enable: true,
+              {
+                // 一度も通知してないユーザー
                 last_notified_at: null,
               },
-            },
+            ],
           },
-        ],
-      },
-    });
-    return settings.map((setting) => ({
-      id: setting.id,
-      fetchSettingId: setting.electricity_fetch_setting_id,
-      lineChannelId: setting.line_channel_id,
-      encryptedAdvisorApiKey: setting.advisors?.encrypted_apikey
-        ? EncryptedValue.makeFromSerializedText(
-            setting.advisors.encrypted_apikey
-          )
-        : undefined,
-      notifyDate: setting.notify_date,
-      template: setting.template,
-      notifyDistUserIds: setting.electricity_notify_dest_line_users.map(
-        (user) => user.line_user_id
-      ),
-    }));
+        });
+      if (users.length > 0) {
+        results.push({
+          id: setting.id,
+          fetchSettingId: setting.electricity_fetch_setting_id,
+          lineChannelId: setting.line_channel_id,
+          encryptedAdvisorApiKey: setting.advisors?.encrypted_apikey
+            ? EncryptedValue.makeFromSerializedText(
+                setting.advisors.encrypted_apikey
+              )
+            : undefined,
+          notifyDate: setting.notify_date,
+          template: setting.template,
+          notifyDistUserIds: users.map((user) => user.line_user_id),
+        });
+      }
+    }
+
+    return results;
   }
 
   async findMonthlyUsage(
