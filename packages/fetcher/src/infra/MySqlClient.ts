@@ -89,7 +89,12 @@ export class MySqlClient
     now: Date
   ): Promise<void> {
     for (const usage of usages) {
-      await this.prisma.electricity_monthly_usages.upsert({
+      const old = await this.prisma.electricity_monthly_usages.findUnique({
+        select: {
+          usage_day_count: true,
+          usage_kwh: true,
+          usage_yen: true,
+        },
         where: {
           electricity_fetch_setting_id_usage_year_usage_month: {
             electricity_fetch_setting_id: usage.fetchSettingId,
@@ -97,21 +102,40 @@ export class MySqlClient
             usage_month: usage.month,
           },
         },
-        create: {
-          electricity_fetch_setting_id: usage.fetchSettingId,
-          usage_year: usage.year,
-          usage_month: usage.month,
-          usage_day_count: usage.dayCount,
-          usage_kwh: usage.kwh,
-          usage_yen: usage.yen,
-        },
-        update: {
-          usage_day_count: usage.dayCount,
-          usage_kwh: usage.kwh,
-          usage_yen: usage.yen,
-          updated_at: now,
-        },
       });
+      if (old) {
+        // 月の切り替わり時期になると取得値が少なくなる場合があるためチェック
+        if (usage.yen < old.usage_yen || usage.kwh < old.usage_kwh) {
+          continue;
+        }
+
+        await this.prisma.electricity_monthly_usages.update({
+          data: {
+            usage_day_count: usage.dayCount,
+            usage_kwh: usage.kwh,
+            usage_yen: usage.yen,
+            updated_at: now,
+          },
+          where: {
+            electricity_fetch_setting_id_usage_year_usage_month: {
+              electricity_fetch_setting_id: usage.fetchSettingId,
+              usage_year: usage.year,
+              usage_month: usage.month,
+            },
+          },
+        });
+      } else {
+        await this.prisma.electricity_monthly_usages.create({
+          data: {
+            electricity_fetch_setting_id: usage.fetchSettingId,
+            usage_year: usage.year,
+            usage_month: usage.month,
+            usage_day_count: usage.dayCount,
+            usage_kwh: usage.kwh,
+            usage_yen: usage.yen,
+          },
+        });
+      }
     }
   }
 
