@@ -24,24 +24,10 @@
   // Configure tool-specific properties.
   "customizations": {
     "vscode": {
-      "settings": {
-        "editor.codeActionsOnSave": {
-          "source.fixAll.eslint": true
-        },
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.tabSize": 2,
-        "[makefile]": {
-          "editor.insertSpaces": false
-        }
-      },
       "extensions": [
-        "Vue.volar",
-        "Vue.vscode-typescript-vue-plugin",
         "eamodio.gitlens",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "formulahendry.vscode-mysql",
         "bierner.markdown-mermaid"
       ]
     }
