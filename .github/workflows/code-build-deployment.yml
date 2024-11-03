@@ -16,7 +16,7 @@ jobs:
       MYSQL_PASSWORD: password
       MYSQL_HOST_ON_DOCKER_NETWORK: localhost
       MYSQL_PORT_ON_DOCKER_NETWORK: 3306
-      TBLS_VERSION: 1.79.0
+      MIGRATE_VERSION: 4.18.1
     services:
       db-test:
         image: mariadb:10.11
