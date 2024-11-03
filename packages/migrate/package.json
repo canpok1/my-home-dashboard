@@ -12,8 +12,8 @@
     "migrate-goto-v": "dotenv -e ../../.devcontainer/db.env make migrate-goto-v",
     "migrate-force-v": "dotenv -e ../../.devcontainer/db.env make migrate-force-v",
     "migrate-create": "make migrate-create",
-    "generate:doc": "dotenv -e ../../.devcontainer/db.env make doc",
-    "lint:db": "dotenv -e ../../.devcontainer/db.env make lint",
+    "db:doc:test": "dotenv -e ../../.devcontainer/db.test.env make doc",
+    "db:lint:test": "dotenv -e ../../.devcontainer/db.test.env make lint",
     "db:seed": "dotenv -e ../../.devcontainer/db.env ts-node ./seed/Start.ts",
     "db:seed:test": "dotenv -e ../../.devcontainer/db.test.env ts-node ./seed/Start.ts"
   },
