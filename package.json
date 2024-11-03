@@ -13,8 +13,10 @@
     "update-prisma-cli": "dotenv -e .devcontainer/db.env prisma db pull && prisma generate",
     "migrate-version": "npm run -w migrate migrate-version",
     "migrate-up-all": "npm run -w migrate migrate-up-all",
+    "migrate-up-all:test": "npm run -w migrate migrate-up-all:test",
     "migrate-up-one": "npm run -w migrate migrate-up-one",
     "migrate-down-one": "npm run -w migrate migrate-down-one",
+    "migrate-down-all:test": "npm run -w migrate migrate-down-all:test",
     "migrate-goto-v": "npm run -w migrate migrate-goto-v",
     "migrate-force-v": "npm run -w migrate migrate-force-v",
     "migrate-create": "npm run -w migrate migrate-create"
@@ -40,7 +42,8 @@
     "jest-mock-extended": "^3.0.7",
     "npm-run-all": "^4.1.5",
     "prisma": "^5.21.1",
-    "ts-jest": "^29.2.5"
+    "ts-jest": "^29.2.5",
+    "vitest-environment-vprisma": "^1.3.0"
   },
   "dependencies": {
     "@prisma/client": "^5.21.1"
