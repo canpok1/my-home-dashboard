@@ -6,6 +6,7 @@ import Logger from "bunyan";
 import { MySqlClient } from "./infra/MySqlClient";
 import { BatchSearvice } from "./domain/Batch";
 import { EventProcessor } from "./domain/EventProseccor";
+import { InfraFacade } from "./infra/InfraFacade";
 
 // BigIntをログ出力できるようにする
 Object.defineProperty(BigInt.prototype, "toJSON", {
@@ -24,13 +25,10 @@ Object.defineProperty(BigInt.prototype, "toJSON", {
 
   const mysqlClient = new MySqlClient(prisma);
   const messagingGatewayClient = new MessagingGatewayClient(env.appName);
+  const facade = new InfraFacade(mysqlClient, messagingGatewayClient);
 
   const batchService = new BatchSearvice(env.appName, mysqlClient);
-  const processor = new EventProcessor(
-    mysqlClient,
-    mysqlClient,
-    messagingGatewayClient
-  );
+  const processor = new EventProcessor(facade);
 
   await batchService.run(logger, async (logger: Logger) => {
     await processor.process(logger);

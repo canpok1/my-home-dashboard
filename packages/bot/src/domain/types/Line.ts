@@ -2,6 +2,7 @@ import { Event } from "@line/bot-sdk/dist/webhook/api";
 
 export interface LineChannel {
   id: string;
+  memo: string | null;
 }
 
 export interface LineWebhookMessage {

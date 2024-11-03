@@ -14,13 +14,13 @@ import {
 
 export class EventProcessor {
   constructor(
-    private lineChannelRepo: LineChannelRepository,
-    private lineUserRepo: LineUserRepository,
-    private lineWebhookMessageRepo: LineWebhookMessageRepository
+    private repo: LineChannelRepository &
+      LineUserRepository &
+      LineWebhookMessageRepository
   ) {}
 
   async process(logger: Logger): Promise<void> {
-    const lineChannels = await this.lineChannelRepo.fetchAllLineChannels();
+    const lineChannels = await this.repo.fetchAllLineChannels();
 
     for (const lineChannel of lineChannels) {
       const childLogger = logger.child({ line_channel_id: lineChannel.id });
@@ -32,11 +32,13 @@ export class EventProcessor {
     logger: Logger,
     lineChannel: LineChannel
   ): Promise<void> {
-    logger.info(`process by LINE Channel [${lineChannel.id}]`);
-
-    const messages = await this.lineWebhookMessageRepo.fetchWebhookMessages(
-      lineChannel.id
+    logger.info(
+      `process by LINE Channel ${lineChannel.memo}[${lineChannel.id}]`
     );
+
+    const messages = await this.repo.fetchWebhookMessages(lineChannel.id);
+    logger.info(`fetched message count is ${messages.length}`);
+
     for (const message of messages) {
       const childLogger = logger.child({ message_id: message.messageId });
       await this.handleMessage(childLogger, lineChannel, message);
@@ -61,10 +63,7 @@ export class EventProcessor {
         await this.handleEvent(childLogger, lineChannel, event);
       }
 
-      await this.lineWebhookMessageRepo.deleteWebhookMessage(
-        lineChannel.id,
-        message.messageId
-      );
+      await this.repo.deleteWebhookMessage(lineChannel.id, message.messageId);
     } catch (err) {
       logger.error({ err }, `failed handle message [${message.messageId}]`);
     }
@@ -111,8 +110,8 @@ export class EventProcessor {
     }
 
     const userId = event.source.userId;
-    await this.lineUserRepo.addLineUserIfNotExists(userId);
-    await this.lineUserRepo.upsertElectricityNotifySetting(
+    await this.repo.addLineUserIfNotExists(userId);
+    await this.repo.upsertElectricityNotifySetting(
       lineChannel.id,
       userId,
       true
@@ -139,7 +138,7 @@ export class EventProcessor {
     }
 
     const userId = event.source.userId;
-    await this.lineUserRepo.upsertElectricityNotifySetting(
+    await this.repo.upsertElectricityNotifySetting(
       lineChannel.id,
       userId,
       false
