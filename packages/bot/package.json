@@ -9,7 +9,7 @@
     "lint": "echo \"Warn: no lint specified\"",
     "typecheck": "tsc --noEmit",
     "test": "dotenv -e ../../.devcontainer/db.test.env vitest",
-    "test:coverage": "echo \"Warn: no test specified\"",
+    "test:coverage": "dotenv -e ../../.devcontainer/db.test.env -- vitest run --coverage",
     "download:messaging-gateway-yml": "curl https://raw.githubusercontent.com/canpok1/messaging-gateway/main/packages/server/openapi.yml > ./open_api/messaging-gateway.yml",
     "generate:messaging-gateway-client": "npx openapi-typescript ./open_api/messaging-gateway.yml -o ./src/infra/types/MessagingGateway.gen.ts"
   },
