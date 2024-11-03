@@ -10,3 +10,4 @@
   - [dashboard](coverage/dashboard/index.html)
   - [fetcher](coverage/fetcher/lcov-report/index.html)
   - [lib](coverage/lib/lcov-report/index.html)
+  - [bot](coverage/bot/index.html)
