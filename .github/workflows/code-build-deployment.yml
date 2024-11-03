@@ -127,6 +127,55 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
 
+  migrate_db:
+    runs-on: ubuntu-latest
+    needs: [build]
+    env:
+      MYSQL_DATABASE: my-home
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_HOST_ON_DOCKER_NETWORK: localhost
+      MYSQL_PORT_ON_DOCKER_NETWORK: 33306
+      MIGRATE_VERSION: 4.18.1
+    environment: production-web
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install migrate command
+        run: |
+          curl -o migrate.deb -L https://github.com/golang-migrate/migrate/releases/download/v${MIGRATE_VERSION}/migrate.linux-amd64.deb
+          sudo apt install ./migrate.deb
+          rm migrate.deb
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+
+      - uses: actions/cache/restore@v4
+        id: cache
+        with:
+          path: |
+            **/node_modules
+          key: ${{ hashFiles('**/package-lock.json') }}
+
+      - run: npm ci
+
+      - name: ssh port fowarding
+        uses: selfagency/ssh-port-forward-action@v1.0.5
+        with:
+          ssh-host: ${{ secrets.HOST }}
+          ssh-user: ${{ secrets.USERNAME }}
+          ssh-port: ${{ secrets.SSH_PORT }}
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          local-port: 33306
+          remote-host: localhost
+          remote-port: 33306
+
+      - run: npm run migrate-version
+
   deploy_web:
     runs-on: ubuntu-latest
     needs: [build]
