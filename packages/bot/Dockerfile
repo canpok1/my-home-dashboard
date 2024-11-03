@@ -32,4 +32,4 @@ RUN apt-get update && apt-get install -y \
  && npm ci --omit=dev \
  && npx prisma generate
 
-ENTRYPOINT ["node", "packages/bot/src/App.js"]
+ENTRYPOINT ["node", "--enable-source-maps", "packages/bot/src/App.js"]
