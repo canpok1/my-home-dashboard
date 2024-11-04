@@ -8,35 +8,7 @@ TBLS_COMMAND=tbls
 
 .PHONY: migrate
 migrate:
-	@${MIGRATE_COMMAND} ${options}
-
-.PHONY: migrate-help
-migrate-help:
-	@migrate -help
-
-.PHONY: migrate-version
-migrate-version:
-	@${MIGRATE_COMMAND} version 
-
-.PHONY: migrate-up
-migrate-up:
-	@${MIGRATE_COMMAND} up
-
-.PHONY: migrate-up-one
-migrate-up-one:
-	@${MIGRATE_COMMAND} up 1
-
-.PHONY: migrate-down-one
-migrate-down-one:
-	@${MIGRATE_COMMAND} down 1
-
-.PHONY: migrate-force-v
-migrate-force-v:
-	@${MIGRATE_COMMAND} force ${v}
-
-.PHONY: migrate-goto-v
-migrate-goto-v:
-	@${MIGRATE_COMMAND} goto ${v}
+	@${MIGRATE_COMMAND} ${options} ${v}
 
 .PHONY: migrate-create
 migrate-create:
