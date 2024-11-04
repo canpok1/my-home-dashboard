@@ -71,42 +71,52 @@ flowchart TB
 スキーマ操作は以下の手順を参考に dev コンテナ内で行うこと。
 
 1. npm コマンドを使用して DB 操作を行う
+
    ```
+   ################
+   # 開発用DB向け
+   ################
    # スキーマのバージョン確認
-   npm run migrate-version
-   # スキーマの最新化
-   npm run migrate-up-all
-   # スキーマの最新化（テスト用DB）
-   npm run migrate-up-all:test
-   # スキーマのバージョンアップ
-   npm run migrate-up-one
-   # スキーマのバージョンダウン
-   npm run migrate-down-one
-   # スキーマの指定バージョンへのバージョンアップ/ダウン
-   npm run migrate-goto-v v={バージョン}
-   # スキーマの現在バージョンの上書き
-   npm run migrate-force-v v={バージョン}
+   npm run db:migrate:version
+   # スキーマのバージョンアップ（すべて）
+   npm run db:migrate:up-all
    # seedデータ投入
    npm run db:seed
-   # seedデータ投入（テスト用DB）
-   npm run db:seed:test
+   # スキーマ最新化とseedデータ投入
+   npm run db:update
+
+   ################
+   # テスト用DB向け
+   ################
+   # スキーマのバージョン確認
+   npm run db:test:migrate:version
+   # スキーマのバージョンアップ（すべて）
+   npm run db:test:migrate:up-all
+   # スキーマのバージョンアップ（1つのみ）
+   npm run db:test:migrate:up-one
+   # スキーマのバージョンダウン（すべて）
+   npm run db:test:migrate:down-all
+   # スキーマのバージョンダウン（1つのみ）
+   npm run db:test:migrate:down-one
+   # スキーマの指定バージョンへのバージョンアップ/ダウン
+   npm run db:test:migrate:goto-v v={バージョン}
+   # スキーマの現在バージョンの上書き
+   npm run db:test:migrate:force-v v={バージョン}
+   # seedデータ投入
+   npm run db:test:seed
+   # スキーマ最新化とseedデータ投入
+   npm run db:test:update
    ```
 
 ### DDL の追加
 
 1. npm コマンドを使用して DDL のテンプレートを生成（ `{name}` は DDL の名称に置き換えること）
    ```
-   npm run migrate-create name={name}
+   npm run create-migrate name={name}
    ```
 2. [ddl フォルダ](../db/ddl/)に生成されたテンプレートに DDL を記載する
 
    - バージョンアップ用とバージョンダウン用の 2 種類のファイルが生成されるため、それぞれに記載すること
-
-3. make コマンドを使用してテーブル定義書を更新する
-   ```
-   cd packages/migrate
-   make doc
-   ```
 
 ## 開発環境の削除
 
