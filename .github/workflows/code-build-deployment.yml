@@ -136,7 +136,7 @@ jobs:
       MYSQL_USER: ${{ secrets.MYSQL_USER }}
       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
       MYSQL_HOST_ON_DOCKER_NETWORK: ${{ secrets.HOST }}
-      MYSQL_PORT_ON_DOCKER_NETWOR: ${{ secrets.MYSQL_PORT }}
+      MYSQL_PORT_ON_DOCKER_NETWORK: ${{ secrets.MYSQL_PORT }}
       MIGRATE_VERSION: 4.18.1
     steps:
       - uses: actions/checkout@v4
