@@ -14,8 +14,8 @@ jobs:
       MYSQL_DATABASE: my-home
       MYSQL_USER: service
       MYSQL_PASSWORD: password
-      MYSQL_HOST_ON_DOCKER_NETWORK: localhost
-      MYSQL_PORT_ON_DOCKER_NETWORK: 3306
+      MYSQL_HOST: localhost
+      MYSQL_PORT: 3306
       MIGRATE_VERSION: 4.18.1
       TBLS_VERSION: 1.79.0
     services:
@@ -23,9 +23,6 @@ jobs:
         image: mariadb:10.11
         env:
           MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-          MYSQL_DATABASE: my-home
-          MYSQL_USER: service
-          MYSQL_PASSWORD: password
         options: >-
           --health-cmd "mysqladmin ping"
           --health-interval 10s
@@ -136,8 +133,8 @@ jobs:
       MYSQL_DATABASE: my-home
       MYSQL_USER: ${{ secrets.MYSQL_USER }}
       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-      MYSQL_HOST_ON_DOCKER_NETWORK: ${{ secrets.HOST }}
-      MYSQL_PORT_ON_DOCKER_NETWORK: ${{ secrets.MYSQL_PORT }}
+      MYSQL_HOST: ${{ secrets.HOST }}
+      MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
       MIGRATE_VERSION: 4.18.1
     steps:
       - uses: actions/checkout@v4
