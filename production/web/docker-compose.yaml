@@ -1,11 +1,5 @@
 version: "3.9"
 services:
-  migrate:
-    image: ghcr.io/canpok1/my-home-dashboard/migrate:latest
-    env_file:
-      - ".env"
-    command: ["migrate-up"]
-
   dashboard:
     image: ghcr.io/canpok1/my-home-dashboard/dashboard:latest
     env_file:

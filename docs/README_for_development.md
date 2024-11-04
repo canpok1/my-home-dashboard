@@ -49,7 +49,7 @@ flowchart TB
    - [Developing inside a Container / Installation](https://code.visualstudio.com/docs/devcontainers/containers#_installation)
 2. リポジトリをローカル環境に Clone
 3. Clone したリポジトリを VSCode の DevContainers で開く
-4. 開発用 DB のスキーマを最新化する
+4. 開発用 DB のスキーマ最新化とseedデータ投入を行う
    - 手順は開発用 DB の DB 操作を参照
    - DB インスタンスは手順 3 にて自動生成されるため手動作成は不要
 5. 開発対象サービスに合わせてセットアップ
@@ -76,6 +76,8 @@ flowchart TB
    npm run migrate-version
    # スキーマの最新化
    npm run migrate-up-all
+   # スキーマの最新化（テスト用DB）
+   npm run migrate-up-all:test
    # スキーマのバージョンアップ
    npm run migrate-up-one
    # スキーマのバージョンダウン
@@ -84,6 +86,10 @@ flowchart TB
    npm run migrate-goto-v v={バージョン}
    # スキーマの現在バージョンの上書き
    npm run migrate-force-v v={バージョン}
+   # seedデータ投入
+   npm run db:seed
+   # seedデータ投入（テスト用DB）
+   npm run db:seed:test
    ```
 
 ### DDL の追加

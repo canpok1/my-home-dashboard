@@ -8,7 +8,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  code_test:
+  test:
     runs-on: ubuntu-latest
     env:
       MYSQL_DATABASE: my-home
@@ -17,81 +17,9 @@ jobs:
       MYSQL_HOST_ON_DOCKER_NETWORK: localhost
       MYSQL_PORT_ON_DOCKER_NETWORK: 3306
       MIGRATE_VERSION: 4.18.1
+      TBLS_VERSION: 1.79.0
     services:
       db-test:
-        image: mariadb:10.11
-        env:
-          MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-          MYSQL_DATABASE: my-home
-          MYSQL_USER: service
-          MYSQL_PASSWORD: password
-        options: >-
-          --health-cmd "mysqladmin ping"
-          --health-interval 10s
-          --health-timeout 10s
-          --health-retries 5
-        ports:
-          - 3306:3306
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: install migrate command
-        run: |
-          curl -o migrate.deb -L https://github.com/golang-migrate/migrate/releases/download/v${MIGRATE_VERSION}/migrate.linux-amd64.deb
-          sudo apt install ./migrate.deb
-          rm migrate.deb
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18.x
-          cache: "npm"
-          cache-dependency-path: "**/package-lock.json"
-
-      - uses: actions/cache/restore@v4
-        id: cache
-        with:
-          path: |
-            **/node_modules
-          key: ${{ hashFiles('**/package-lock.json') }}
-
-      - run: npm ci
-
-      - run: npm run migrate-up-all:test
-
-      - run: npm run -w lib build
-
-      - run: npm run test:coverage
-
-      - run: npm run typecheck
-
-      - run: npm run lint
-
-      - name: archive coverage reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-reports
-          path: public/coverage
-
-      - uses: actions/cache/save@v4
-        if: always()
-        with:
-          path: |
-            **/node_modules
-          key: ${{ steps.cache.outputs.cache-primary-key }}
-
-  db_test:
-    runs-on: ubuntu-latest
-    env:
-      MYSQL_DATABASE: my-home
-      MYSQL_USER: service
-      MYSQL_PASSWORD: password
-      MYSQL_HOST_ON_DOCKER_NETWORK: localhost
-      MYSQL_PORT_ON_DOCKER_NETWORK: 3306
-      TBLS_VERSION: 1.79.0
-      MIGRATE_VERSION: 4.18.1
-    services:
-      db:
         image: mariadb:10.11
         env:
           MYSQL_RANDOM_ROOT_PASSWORD: "yes"
@@ -120,21 +48,39 @@ jobs:
           sudo apt install ./tbls.deb
           rm tbls.deb
 
-      - name: test migrate up
-        working-directory: ./packages/migrate
-        run: make migrate-up
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
 
-      - name: lint for database
-        working-directory: ./packages/migrate
-        run: make lint
+      - uses: actions/cache/restore@v4
+        id: cache
+        with:
+          path: |
+            **/node_modules
+          key: ${{ hashFiles('**/package-lock.json') }}
 
-      - name: make db document
-        working-directory: ./packages/migrate
-        run: make doc
+      - run: npm ci
 
-      - name: test migrate down all
-        working-directory: ./packages/migrate
-        run: make migrate options="down -all"
+      - run: npm run migrate-up-all:test
+
+      - run: npm run db:lint:test
+
+      - run: npm run db:doc:test
+
+      - run: npm run db:seed:test
+
+      - run: npm run -w lib build
+
+      - run: npm run test:coverage
+
+      - run: npm run typecheck
+
+      - run: npm run lint
+
+      - run: npm run migrate-down-all:test
 
       - name: archive db docs
         uses: actions/upload-artifact@v4
@@ -142,15 +88,28 @@ jobs:
           name: db-docs
           path: public/database
 
+      - name: archive coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: public/coverage
+
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: |
+            **/node_modules
+          key: ${{ steps.cache.outputs.cache-primary-key }}
+
   build:
     runs-on: ubuntu-latest
-    needs: [code_test, db_test]
+    needs: [test]
     permissions:
       packages: write
       contents: read
     strategy:
       matrix:
-        app: [admin, bot, dashboard, fetcher, migrate, notifier]
+        app: [admin, bot, dashboard, fetcher, notifier]
     steps:
       - uses: actions/checkout@v4
       - name: Log in to GitHub Container Registry
@@ -167,6 +126,47 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
             ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
+
+  migrate_db:
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/main'
+    environment: production-web
+    env:
+      MYSQL_DATABASE: my-home
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_HOST_ON_DOCKER_NETWORK: ${{ secrets.HOST }}
+      MYSQL_PORT_ON_DOCKER_NETWORK: ${{ secrets.MYSQL_PORT }}
+      MIGRATE_VERSION: 4.18.1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install migrate command
+        run: |
+          curl -o migrate.deb -L https://github.com/golang-migrate/migrate/releases/download/v${MIGRATE_VERSION}/migrate.linux-amd64.deb
+          sudo apt install ./migrate.deb
+          rm migrate.deb
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+
+      - uses: actions/cache/restore@v4
+        id: cache
+        with:
+          path: |
+            **/node_modules
+          key: ${{ hashFiles('**/package-lock.json') }}
+
+      - run: npm ci
+
+      - run: npm run migrate-up-all
+
+      - run: npm run db:seed
 
   deploy_web:
     runs-on: ubuntu-latest

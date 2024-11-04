@@ -19,7 +19,11 @@
     "migrate-down-all:test": "npm run -w migrate migrate-down-all:test",
     "migrate-goto-v": "npm run -w migrate migrate-goto-v",
     "migrate-force-v": "npm run -w migrate migrate-force-v",
-    "migrate-create": "npm run -w migrate migrate-create"
+    "migrate-create": "npm run -w migrate migrate-create",
+    "db:doc:test": "npm run -w packages/migrate db:doc:test",
+    "db:lint:test": "npm run -w packages/migrate db:lint:test",
+    "db:seed": "npm run -w packages/migrate db:seed",
+    "db:seed:test": "npm run -w packages/migrate db:seed:test"
   },
   "private": true,
   "workspaces": [

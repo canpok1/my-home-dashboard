@@ -8,12 +8,14 @@
     "migrate-up-all:test": "dotenv -e ../../.devcontainer/db.test.env make migrate-up",
     "migrate-up-one": "dotenv -e ../../.devcontainer/db.env make migrate-up-one",
     "migrate-down-one": "dotenv -e ../../.devcontainer/db.env make migrate-down-one",
-    "migrate-down-all:test": "dotenv -e ../../.devcontainer/db.test.env make migrate options=down",
+    "migrate-down-all:test": "dotenv -e ../../.devcontainer/db.test.env make migrate options='down --all'",
     "migrate-goto-v": "dotenv -e ../../.devcontainer/db.env make migrate-goto-v",
     "migrate-force-v": "dotenv -e ../../.devcontainer/db.env make migrate-force-v",
     "migrate-create": "make migrate-create",
-    "generate:doc": "dotenv -e ../../.devcontainer/db.env make doc",
-    "lint:db": "dotenv -e ../../.devcontainer/db.env make lint"
+    "db:doc:test": "dotenv -e ../../.devcontainer/db.test.env make doc",
+    "db:lint:test": "dotenv -e ../../.devcontainer/db.test.env make lint",
+    "db:seed": "dotenv -e ../../.devcontainer/db.env ts-node ./seed/Start.ts",
+    "db:seed:test": "dotenv -e ../../.devcontainer/db.test.env ts-node ./seed/Start.ts"
   },
   "author": "",
   "license": "ISC"
