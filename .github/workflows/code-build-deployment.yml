@@ -109,7 +109,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        app: [admin, bot, dashboard, fetcher, migrate, notifier]
+        app: [admin, bot, dashboard, fetcher, notifier]
     steps:
       - uses: actions/checkout@v4
       - name: Log in to GitHub Container Registry
@@ -130,6 +130,7 @@ jobs:
   migrate_db:
     runs-on: ubuntu-latest
     needs: [build]
+    if: github.ref == 'refs/heads/main'
     environment: production-web
     env:
       MYSQL_DATABASE: my-home
