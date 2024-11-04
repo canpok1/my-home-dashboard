@@ -23,6 +23,9 @@ jobs:
         image: mariadb:10.11
         env:
           MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+          MYSQL_DATABASE: my-home
+          MYSQL_USER: service
+          MYSQL_PASSWORD: password
         options: >-
           --health-cmd "mysqladmin ping"
           --health-interval 10s
