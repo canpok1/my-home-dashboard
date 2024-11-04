@@ -135,8 +135,8 @@ jobs:
       MYSQL_DATABASE: my-home
       MYSQL_USER: ${{ secrets.MYSQL_USER }}
       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-      MYSQL_HOST_ON_DOCKER_NETWORK: localhost
-      MYSQL_PORT_ON_DOCKER_NETWORK: 33306
+      MYSQL_HOST_ON_DOCKER_NETWORK: ${{ secrets.HOST }}
+      MYSQL_PORT_ON_DOCKER_NETWOR: ${{ secrets.MYSQL_PORT }}
       MIGRATE_VERSION: 4.18.1
     steps:
       - uses: actions/checkout@v4
@@ -162,17 +162,6 @@ jobs:
           key: ${{ hashFiles('**/package-lock.json') }}
 
       - run: npm ci
-
-      - name: ssh port fowarding
-        uses: selfagency/ssh-port-forward-action@v1.0.6
-        with:
-          ssh-host: ${{ secrets.HOST }}
-          ssh-user: ${{ secrets.USERNAME }}
-          ssh-port: ${{ secrets.SSH_PORT }}
-          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          local-port: 33306
-          remote-host: localhost
-          remote-port: 33306
 
       - run: npm run migrate-version
 
