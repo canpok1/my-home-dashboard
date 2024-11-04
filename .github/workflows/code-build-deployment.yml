@@ -163,7 +163,9 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run migrate-version
+      - run: npm run migrate-up-all
+
+      - run: npm run db:seed
 
   deploy_web:
     runs-on: ubuntu-latest
