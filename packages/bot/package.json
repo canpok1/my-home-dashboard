@@ -17,7 +17,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "openapi-typescript": "^7.4.3"
+    "openapi-typescript": "^7.4.4"
   },
   "dependencies": {
     "@line/bot-sdk": "^9.5.0",
