@@ -22,6 +22,6 @@
   "dependencies": {
     "@line/bot-sdk": "^9.5.0",
     "axios": "^1.7.8",
-    "openapi-fetch": "^0.13.0"
+    "openapi-fetch": "^0.13.2"
   }
 }
