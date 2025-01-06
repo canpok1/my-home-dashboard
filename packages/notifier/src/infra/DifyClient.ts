@@ -36,12 +36,12 @@ export class DifyClient implements AdviceRepository {
     };
 
     const response = await axios.post(
-      "https://api.dify.ai/v1/completion-messages",
+      "https://api.dify.ai/v1/workflows/run",
       reqBody,
       {
         headers: reqHeaders,
       }
     );
-    return response.data.answer;
+    return response.data.data.outputs.text;
   }
 }
