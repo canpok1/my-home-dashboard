@@ -199,7 +199,10 @@
 <a name='L134'></a><a href='#L134'>134</a>
 <a name='L135'></a><a href='#L135'>135</a>
 <a name='L136'></a><a href='#L136'>136</a>
-<a name='L137'></a><a href='#L137'>137</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -223,30 +226,11 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -258,12 +242,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -358,52 +364,55 @@ import Logger from "bunyan";
 <span class="cstat-no" title="statement not covered" >    logger.info("fetch start");</span>
     let usages: MonthlyUsageModel[] = <span class="cstat-no" title="statement not covered" >[];</span>
 <span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      await withBrowser(this.env, <span class="fstat-no" title="function not covered" >async </span>(browser: Browser): Promise&lt;void&gt; =&gt; {</span>
-        const page = <span class="cstat-no" title="statement not covered" >await browser.newPage(logger);</span>
+<span class="cstat-no" title="statement not covered" >      await withBrowser(</span>
+        this.env.timeoutMs,
+<span class="fstat-no" title="function not covered" >        async </span>(browser: Browser): Promise&lt;void&gt; =&gt; {
+          const page = <span class="cstat-no" title="statement not covered" >await browser.newPage(logger);</span>
 &nbsp;
-        // ログインページに移動
-<span class="cstat-no" title="statement not covered" >        logger.info("goto login page");</span>
-<span class="cstat-no" title="statement not covered" >        await page.goto(this.env.loginUrl);</span>
-<span class="cstat-no" title="statement not covered" >        await page.locator("#divContent &gt; div.divFrame01").waitFor();</span>
-<span class="cstat-no" title="statement not covered" >        await page.screenshot({</span>
-          path: this.makeScreenshotPath("gas-01-login-page.png"),
-          fullPage: true,
-        });
+          // ログインページに移動
+<span class="cstat-no" title="statement not covered" >          logger.info("goto login page");</span>
+<span class="cstat-no" title="statement not covered" >          await page.goto(this.env.loginUrl);</span>
+<span class="cstat-no" title="statement not covered" >          await page.locator("#divContent &gt; div.divFrame01").waitFor();</span>
+<span class="cstat-no" title="statement not covered" >          await page.screenshot({</span>
+            path: this.makeScreenshotPath("gas-01-login-page.png"),
+            fullPage: true,
+          });
 &nbsp;
-        // ログイン
-<span class="cstat-no" title="statement not covered" >        logger.info("input id and password");</span>
-<span class="cstat-no" title="statement not covered" >        await page</span>
-          .locator("#ContentPlaceHolder1_txtLoginID")
-          .fill(setting.userName);
-<span class="cstat-no" title="statement not covered" >        await page</span>
-          .locator("#ContentPlaceHolder1_txtPassWord")
-          .fill(setting.password.value());
-<span class="cstat-no" title="statement not covered" >        await page.screenshot({</span>
-          path: this.makeScreenshotPath("gas-02-login-page-with-id-pw.png"),
-          fullPage: true,
-        });
-<span class="cstat-no" title="statement not covered" >        logger.info("click login button");</span>
-<span class="cstat-no" title="statement not covered" >        await page.locator("#ContentPlaceHolder1_btnLogin").click();</span>
-<span class="cstat-no" title="statement not covered" >        logger.info("wait for loading top page");</span>
-<span class="cstat-no" title="statement not covered" >        await page.locator("#tblLoginInfo").waitFor();</span>
-<span class="cstat-no" title="statement not covered" >        await page.screenshot({</span>
-          path: this.makeScreenshotPath("gas-03-top-page.png"),
-          fullPage: true,
-        });
+          // ログイン
+<span class="cstat-no" title="statement not covered" >          logger.info("input id and password");</span>
+<span class="cstat-no" title="statement not covered" >          await page</span>
+            .locator("#ContentPlaceHolder1_txtLoginID")
+            .fill(setting.userName);
+<span class="cstat-no" title="statement not covered" >          await page</span>
+            .locator("#ContentPlaceHolder1_txtPassWord")
+            .fill(setting.password.value());
+<span class="cstat-no" title="statement not covered" >          await page.screenshot({</span>
+            path: this.makeScreenshotPath("gas-02-login-page-with-id-pw.png"),
+            fullPage: true,
+          });
+<span class="cstat-no" title="statement not covered" >          logger.info("click login button");</span>
+<span class="cstat-no" title="statement not covered" >          await page.locator("#ContentPlaceHolder1_btnLogin").click();</span>
+<span class="cstat-no" title="statement not covered" >          logger.info("wait for loading top page");</span>
+<span class="cstat-no" title="statement not covered" >          await page.locator("#tblLoginInfo").waitFor();</span>
+<span class="cstat-no" title="statement not covered" >          await page.screenshot({</span>
+            path: this.makeScreenshotPath("gas-03-top-page.png"),
+            fullPage: true,
+          });
 &nbsp;
-        // ガス料金を取得して保存
-        const now = <span class="cstat-no" title="statement not covered" >new Date();</span>
-<span class="cstat-no" title="statement not covered" >        for (let beforeMonth = <span class="cstat-no" title="statement not covered" >0;</span> beforeMonth &lt; 5; beforeMonth++) {</span>
-<span class="cstat-no" title="statement not covered" >          <span class="missing-if-branch" title="if path not taken" >I</span>if (beforeMonth != 0) {</span>
-<span class="cstat-no" title="statement not covered" >            logger.info("click before month button");</span>
-<span class="cstat-no" title="statement not covered" >            await page.locator("#ContentPlaceHolder1_LinkButton1").click();</span>
+          // ガス料金を取得して保存
+          const now = <span class="cstat-no" title="statement not covered" >new Date();</span>
+<span class="cstat-no" title="statement not covered" >          for (let beforeMonth = <span class="cstat-no" title="statement not covered" >0;</span> beforeMonth &lt; 5; beforeMonth++) {</span>
+<span class="cstat-no" title="statement not covered" >            <span class="missing-if-branch" title="if path not taken" >I</span>if (beforeMonth != 0) {</span>
+<span class="cstat-no" title="statement not covered" >              logger.info("click before month button");</span>
+<span class="cstat-no" title="statement not covered" >              await page.locator("#ContentPlaceHolder1_LinkButton1").click();</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            usages.push(</span>
+              await this.fetchByBeforeMonth(logger, setting, page, beforeMonth)
+            );
           }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >          usages.push(</span>
-            await this.fetchByBeforeMonth(logger, setting, page, beforeMonth)
-          );
         }
-      });
+      );
     } finally {
 <span class="cstat-no" title="statement not covered" >      logger.info("fetch end");</span>
     }
@@ -478,7 +487,7 @@ import Logger from "bunyan";
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-01-06T13:37:07.528Z
+                at 2025-01-12T14:01:02.317Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
