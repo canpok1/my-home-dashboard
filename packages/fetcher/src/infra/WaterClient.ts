@@ -21,48 +21,55 @@ export class WaterClient {
     logger.info("fetch start");
     let usages: MonthlyUsageModel[] = [];
     try {
-      await withBrowser(this.env, async (browser: Browser): Promise<void> => {
-        const page = await browser.newPage(logger);
-        try {
-          // ログインページに移動
-          logger.info("goto login page");
-          await page.goto(this.env.loginUrl);
-          await page.locator("#fs-contents").waitFor();
-          await page.screenshot({
-            path: this.makeScreenshotPath("water-01-login-page.png"),
-            fullPage: true,
-          });
+      await withBrowser(
+        this.env.timeoutMs,
+        async (browser: Browser): Promise<void> => {
+          const page = await browser.newPage(logger);
+          try {
+            // ログインページに移動
+            logger.info("goto login page");
+            await page.goto(this.env.loginUrl);
+            await page.locator("#fs-contents").waitFor();
+            await page.screenshot({
+              path: this.makeScreenshotPath("water-01-login-page.png"),
+              fullPage: true,
+            });
 
-          // ログイン
-          logger.info("input id and password");
-          await page.locator("#loginId").fill(setting.userName);
-          await page.locator("#password").fill(setting.password.value());
-          await page.screenshot({
-            path: this.makeScreenshotPath("water-02-login-page-with-id-pw.png"),
-            fullPage: true,
-          });
-          logger.info("click login button");
-          await page
-            .locator("#thisform > div.area > div.areaR > button")
-            .click();
-          logger.info("wait for loading top page");
-          await page.locator("#fs-contents").waitFor();
-          await page.screenshot({
-            path: this.makeScreenshotPath("water-03-top-page.png"),
-            fullPage: true,
-          });
+            // ログイン
+            logger.info("input id and password");
+            await page.locator("#loginId").fill(setting.userName);
+            await page.locator("#password").fill(setting.password.value());
+            await page.screenshot({
+              path: this.makeScreenshotPath(
+                "water-02-login-page-with-id-pw.png"
+              ),
+              fullPage: true,
+            });
+            logger.info("click login button");
+            await page
+              .locator("#thisform > div.area > div.areaR > button")
+              .click();
+            logger.info("wait for loading top page");
+            await page.locator("#fs-contents").waitFor();
+            await page.screenshot({
+              path: this.makeScreenshotPath("water-03-top-page.png"),
+              fullPage: true,
+            });
 
-          // 料金を取得
-          const now = new Date();
-          usages = usages.concat(await this.fetch(logger, setting, page, now));
-        } catch (err) {
-          await page.screenshot({
-            path: this.makeScreenshotPath("water-99-error.png"),
-            fullPage: true,
-          });
-          throw err;
+            // 料金を取得
+            const now = new Date();
+            usages = usages.concat(
+              await this.fetch(logger, setting, page, now)
+            );
+          } catch (err) {
+            await page.screenshot({
+              path: this.makeScreenshotPath("water-99-error.png"),
+              fullPage: true,
+            });
+            throw err;
+          }
         }
-      });
+      );
     } finally {
       logger.info("fetch end");
     }

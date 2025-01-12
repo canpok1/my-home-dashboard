@@ -1,10 +1,9 @@
 import { Page } from "@playwright/test";
 import playwright from "playwright-core";
-import { Env } from "../Env";
 import Logger from "bunyan";
 
 export async function withBrowser(
-  env: Env,
+  timeoutMs: number,
   f: (browser: Browser) => Promise<void>
 ) {
   const browser = await playwright.chromium.launch({
@@ -13,20 +12,17 @@ export async function withBrowser(
   });
 
   try {
-    await f(new Browser(env, browser));
+    await f(new Browser(timeoutMs, browser));
   } finally {
     await browser.close();
   }
 }
 
 export class Browser {
-  readonly env: Env;
-  readonly browser: playwright.Browser;
-
-  constructor(env: Env, browser: playwright.Browser) {
-    this.env = env;
-    this.browser = browser;
-  }
+  constructor(
+    readonly timeoutMs: number,
+    readonly browser: playwright.Browser
+  ) {}
 
   async newPage(logger: Logger): Promise<Page> {
     const page = await this.browser.newPage();
@@ -54,7 +50,7 @@ export class Browser {
     page.on("console", (msg) =>
       logger.debug(`[browser]console: ${msg.text()}`)
     );
-    await page.setDefaultTimeout(this.env.timeoutMs);
+    await page.setDefaultTimeout(this.timeoutMs);
 
     return page;
   }

@@ -1,13 +1,13 @@
 import * as electricity from "../domain/Electricity";
 import * as gas from "../domain/Gas";
 import * as water from "../domain/Water";
-import { ElectricityClient } from "../infra/ElectricityClient";
 import { MySqlClient } from "../infra/MySqlClient";
 import { CommonEnv, Env } from "../Env";
 import { PrismaClient } from "@prisma/client";
 import { GasClient } from "../infra/GasClient";
 import { WaterClient } from "../infra/WaterClient";
 import Logger from "bunyan";
+import { ElectricityFactory } from "../infra/ElectricityClientFactory";
 
 export interface Params {
   enableElectricity: boolean;
@@ -92,8 +92,8 @@ export class FetchApplication {
   private async runElectricity(parentLogger: Logger): Promise<boolean> {
     const service = new electricity.UsageService(
       this.electricityEnv,
-      new ElectricityClient(this.commonEnv, this.electricityEnv),
       this.mysqlClient,
+      new ElectricityFactory(this.commonEnv, this.electricityEnv),
       this.mysqlClient,
       this.mysqlClient
     );

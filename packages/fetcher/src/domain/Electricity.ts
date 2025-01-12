@@ -26,6 +26,10 @@ export interface DailyUsageModel {
   amount: number;
 }
 
+export interface FetcherFactory {
+  create(siteId: bigint): UsageFetcher;
+}
+
 export interface UsageFetcher {
   fetchMonthly(
     logger: Logger,
@@ -71,21 +75,21 @@ export interface RunResult {
 
 export class UsageService {
   readonly env: Env;
-  readonly fetcher: UsageFetcher;
   readonly fetchSettingRepo: FetchSettingRepository;
+  readonly fetcherFactory: FetcherFactory;
   readonly usageRepo: UsageRepository;
   readonly fetchStatusRepo: FetchStatusRepository;
 
   constructor(
     env: Env,
-    fetcher: UsageFetcher,
     fetchSettingRepo: FetchSettingRepository,
+    fetcherFactory: FetcherFactory,
     usageRepo: UsageRepository,
     fetchStatusRepo: FetchStatusRepository
   ) {
     this.env = env;
-    this.fetcher = fetcher;
     this.fetchSettingRepo = fetchSettingRepo;
+    this.fetcherFactory = fetcherFactory;
     this.usageRepo = usageRepo;
     this.fetchStatusRepo = fetchStatusRepo;
   }
@@ -139,10 +143,11 @@ export class UsageService {
     setting: FetchSettingModel
   ): Promise<void> {
     try {
-      const monthlyUsages = await this.fetcher.fetchMonthly(logger, setting);
+      const fetcher = this.fetcherFactory.create(setting.siteId);
+      const monthlyUsages = await fetcher.fetchMonthly(logger, setting);
       await this.usageRepo.saveElectricityMonthlyUsages(monthlyUsages, now);
 
-      const dailyUsages = await this.fetcher.fetchDaily(logger, setting);
+      const dailyUsages = await fetcher.fetchDaily(logger, setting);
       await this.usageRepo.saveElectricityDailyUsages(dailyUsages, now);
 
       await this.fetchStatusRepo.upsertElectricityFetchStatusSuccess(
