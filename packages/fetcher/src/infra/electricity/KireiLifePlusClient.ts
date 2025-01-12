@@ -10,7 +10,7 @@ import { Browser, withBrowser } from "../Browser";
 import { BrowserPage } from "../BrowserPage";
 import { nthMatch } from "../ScrapeUtils";
 
-export class ElectricityClient implements UsageFetcher {
+export class KireiLifePlusClient implements UsageFetcher {
   constructor(
     readonly commonEnv: CommonEnv,
     readonly loginUrl: string,
@@ -34,44 +34,51 @@ export class ElectricityClient implements UsageFetcher {
           const page = new BrowserPage(
             await browser.newPage(logger),
             this.screenshotDir,
-            "electricity/monthly",
+            "electricity/kireilife/monthly",
             "electricity-"
           );
 
-          // ログインしてトップページに移動
-          await this.login(logger, setting, page);
+          try {
+            // ログインしてトップページに移動
+            await this.login(logger, setting, page);
 
-          // 今月の電気料金のページに移動
-          logger.info("click detail link");
-          await page.instance
-            .locator(
-              "#headerRyoukin > table.header_ryoukin_tbl.desktop_only > tbody > tr > td:nth-child(4) > a"
-            )
-            .click();
+            // 今月の電気料金のページに移動
+            logger.info("click detail link");
+            await page.instance
+              .locator(
+                "#headerRyoukin > table.header_ryoukin_tbl.desktop_only > tbody > tr > td:nth-child(2) > a"
+              )
+              .click();
 
-          // 電気料金を取得
-          usages.push(
-            await this.fetchLatestUsage(
-              logger,
-              setting,
-              page,
-              "latest-usage.png"
-            )
-          );
+            // 最新のものは取得できなくなったのでコメントアウト
+            // await page.instance.locator("#menu_gaiyou").click();
+            // 電気料金を取得
+            // usages.push(
+            //   await this.fetchLatestUsage(
+            //     logger,
+            //     setting,
+            //     page,
+            //     "latest-usage.png"
+            //   )
+            // );
 
-          // 毎月の電気料金の一覧ページに移動
-          logger.info("click menu_month button");
-          await page.instance.locator("#menu_month").click();
+            // 毎月の電気料金の一覧ページに移動
+            logger.info("click menu_month button");
+            await page.instance.locator("#menu_month").click();
 
-          // 電気料金を取得
-          usages = usages.concat(
-            await this.fetchUsageHistory(
-              logger,
-              setting,
-              page,
-              "usage-history.png"
-            )
-          );
+            // 電気料金を取得
+            usages = usages.concat(
+              await this.fetchUsageHistory(
+                logger,
+                setting,
+                page,
+                "usage-history.png"
+              )
+            );
+          } catch (err) {
+            await page.screenshotForError();
+            throw err;
+          }
         }
       );
     } finally {
@@ -95,7 +102,7 @@ export class ElectricityClient implements UsageFetcher {
           const page = new BrowserPage(
             await browser.newPage(logger),
             this.screenshotDir,
-            "electricity/daily",
+            "electricity/kireilife/daily",
             "electricity-"
           );
 
@@ -107,7 +114,7 @@ export class ElectricityClient implements UsageFetcher {
             logger.info("click detail link");
             await page.instance
               .locator(
-                "#headerRyoukin > table.header_ryoukin_tbl.desktop_only > tbody > tr > td:nth-child(4) > a"
+                "#headerRyoukin > table.header_ryoukin_tbl.desktop_only > tbody > tr > td:nth-child(2) > a"
               )
               .click();
 

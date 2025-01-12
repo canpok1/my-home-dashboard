@@ -48,6 +48,6 @@ export class BrowserPage {
 
     const fileName = `error-${year}${month}${day}-${hours}${minutes}${seconds}.png`;
 
-    await this.screenshot(fileName);
+    await this.screenshot(fileName, subdir);
   }
 }

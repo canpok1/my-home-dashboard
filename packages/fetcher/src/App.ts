@@ -4,6 +4,14 @@ import { FetchApplication, Params } from "./application/FetchApplication";
 import { createLogger } from "./Logger";
 import { findValueStrings } from "lib";
 
+// BigIntをログ出力できるようにする
+Object.defineProperty(BigInt.prototype, "toJSON", {
+  get() {
+    "use strict";
+    return () => String(this);
+  },
+});
+
 function makeAppParams(args: string[]): Params {
   const appParams = {
     enableElectricity: false,
