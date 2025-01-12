@@ -1,6 +1,7 @@
 import { mock } from "jest-mock-extended";
 import {
   DailyUsageModel,
+  FetcherFactory,
   FetchSettingRepository,
   FetchStatusRepository,
   MonthlyUsageModel,
@@ -36,7 +37,10 @@ function makeDailyUsage(): DailyUsageModel {
 describe("UsageServiceクラス", () => {
   describe("run()", () => {
     it("fetcherで取得した情報をrepositoryに渡していること", async () => {
+      const factory = mock<FetcherFactory>();
       const fetcher = mock<UsageFetcher>();
+      factory.create.mockReturnValue(fetcher);
+
       const fetchSettingRepo = mock<FetchSettingRepository>();
       const usageRepo = mock<UsageRepository>();
       const fetchStatusRepo = mock<FetchStatusRepository>();
@@ -68,8 +72,8 @@ describe("UsageServiceクラス", () => {
       // テスト
       const service = new UsageService(
         mock<Env>(),
-        fetcher,
         fetchSettingRepo,
+        factory,
         usageRepo,
         fetchStatusRepo
       );

@@ -21,52 +21,55 @@ export class GasClient {
     logger.info("fetch start");
     let usages: MonthlyUsageModel[] = [];
     try {
-      await withBrowser(this.env, async (browser: Browser): Promise<void> => {
-        const page = await browser.newPage(logger);
+      await withBrowser(
+        this.env.timeoutMs,
+        async (browser: Browser): Promise<void> => {
+          const page = await browser.newPage(logger);
 
-        // ログインページに移動
-        logger.info("goto login page");
-        await page.goto(this.env.loginUrl);
-        await page.locator("#divContent > div.divFrame01").waitFor();
-        await page.screenshot({
-          path: this.makeScreenshotPath("gas-01-login-page.png"),
-          fullPage: true,
-        });
+          // ログインページに移動
+          logger.info("goto login page");
+          await page.goto(this.env.loginUrl);
+          await page.locator("#divContent > div.divFrame01").waitFor();
+          await page.screenshot({
+            path: this.makeScreenshotPath("gas-01-login-page.png"),
+            fullPage: true,
+          });
 
-        // ログイン
-        logger.info("input id and password");
-        await page
-          .locator("#ContentPlaceHolder1_txtLoginID")
-          .fill(setting.userName);
-        await page
-          .locator("#ContentPlaceHolder1_txtPassWord")
-          .fill(setting.password.value());
-        await page.screenshot({
-          path: this.makeScreenshotPath("gas-02-login-page-with-id-pw.png"),
-          fullPage: true,
-        });
-        logger.info("click login button");
-        await page.locator("#ContentPlaceHolder1_btnLogin").click();
-        logger.info("wait for loading top page");
-        await page.locator("#tblLoginInfo").waitFor();
-        await page.screenshot({
-          path: this.makeScreenshotPath("gas-03-top-page.png"),
-          fullPage: true,
-        });
+          // ログイン
+          logger.info("input id and password");
+          await page
+            .locator("#ContentPlaceHolder1_txtLoginID")
+            .fill(setting.userName);
+          await page
+            .locator("#ContentPlaceHolder1_txtPassWord")
+            .fill(setting.password.value());
+          await page.screenshot({
+            path: this.makeScreenshotPath("gas-02-login-page-with-id-pw.png"),
+            fullPage: true,
+          });
+          logger.info("click login button");
+          await page.locator("#ContentPlaceHolder1_btnLogin").click();
+          logger.info("wait for loading top page");
+          await page.locator("#tblLoginInfo").waitFor();
+          await page.screenshot({
+            path: this.makeScreenshotPath("gas-03-top-page.png"),
+            fullPage: true,
+          });
 
-        // ガス料金を取得して保存
-        const now = new Date();
-        for (let beforeMonth = 0; beforeMonth < 5; beforeMonth++) {
-          if (beforeMonth != 0) {
-            logger.info("click before month button");
-            await page.locator("#ContentPlaceHolder1_LinkButton1").click();
+          // ガス料金を取得して保存
+          const now = new Date();
+          for (let beforeMonth = 0; beforeMonth < 5; beforeMonth++) {
+            if (beforeMonth != 0) {
+              logger.info("click before month button");
+              await page.locator("#ContentPlaceHolder1_LinkButton1").click();
+            }
+
+            usages.push(
+              await this.fetchByBeforeMonth(logger, setting, page, beforeMonth)
+            );
           }
-
-          usages.push(
-            await this.fetchByBeforeMonth(logger, setting, page, beforeMonth)
-          );
         }
-      });
+      );
     } finally {
       logger.info("fetch end");
     }

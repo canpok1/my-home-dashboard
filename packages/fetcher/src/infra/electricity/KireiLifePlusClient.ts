@@ -4,20 +4,19 @@ import {
   FetchSettingModel,
   MonthlyUsageModel,
   UsageFetcher,
-} from "../domain/Electricity";
-import { CommonEnv, Env } from "../Env";
-import { Browser, withBrowser } from "./Browser";
-import { BrowserPage } from "./BrowserPage";
-import { nthMatch } from "./ScrapeUtils";
+} from "../../domain/Electricity";
+import { CommonEnv, Env } from "../../Env";
+import { Browser, withBrowser } from "../Browser";
+import { BrowserPage } from "../BrowserPage";
+import { nthMatch } from "../ScrapeUtils";
 
 export class ElectricityClient implements UsageFetcher {
-  readonly commonEnv: CommonEnv;
-  readonly env: Env;
-
-  constructor(commonEnv: CommonEnv, env: Env) {
-    this.commonEnv = commonEnv;
-    this.env = env;
-  }
+  constructor(
+    readonly commonEnv: CommonEnv,
+    readonly loginUrl: string,
+    readonly screenshotDir: string,
+    readonly timeoutMs: number
+  ) {}
 
   async fetchMonthly(
     parentLogger: Logger,
@@ -29,44 +28,52 @@ export class ElectricityClient implements UsageFetcher {
     let usages: MonthlyUsageModel[] = [];
     let screenshotNo: number = 0;
     try {
-      await withBrowser(this.env, async (browser: Browser): Promise<void> => {
-        const page = new BrowserPage(
-          this.env,
-          await browser.newPage(logger),
-          "electricity/monthly",
-          "electricity-"
-        );
+      await withBrowser(
+        this.timeoutMs,
+        async (browser: Browser): Promise<void> => {
+          const page = new BrowserPage(
+            await browser.newPage(logger),
+            this.screenshotDir,
+            "electricity/monthly",
+            "electricity-"
+          );
 
-        // ログインしてトップページに移動
-        await this.login(logger, setting, page);
+          // ログインしてトップページに移動
+          await this.login(logger, setting, page);
 
-        // 今月の電気料金のページに移動
-        logger.info("click detail link");
-        await page.instance
-          .locator(
-            "#headerRyoukin > table.header_ryoukin_tbl.desktop_only > tbody > tr > td:nth-child(4) > a"
-          )
-          .click();
+          // 今月の電気料金のページに移動
+          logger.info("click detail link");
+          await page.instance
+            .locator(
+              "#headerRyoukin > table.header_ryoukin_tbl.desktop_only > tbody > tr > td:nth-child(4) > a"
+            )
+            .click();
 
-        // 電気料金を取得
-        usages.push(
-          await this.fetchLatestUsage(logger, setting, page, "latest-usage.png")
-        );
+          // 電気料金を取得
+          usages.push(
+            await this.fetchLatestUsage(
+              logger,
+              setting,
+              page,
+              "latest-usage.png"
+            )
+          );
 
-        // 毎月の電気料金の一覧ページに移動
-        logger.info("click menu_month button");
-        await page.instance.locator("#menu_month").click();
+          // 毎月の電気料金の一覧ページに移動
+          logger.info("click menu_month button");
+          await page.instance.locator("#menu_month").click();
 
-        // 電気料金を取得
-        usages = usages.concat(
-          await this.fetchUsageHistory(
-            logger,
-            setting,
-            page,
-            "usage-history.png"
-          )
-        );
-      });
+          // 電気料金を取得
+          usages = usages.concat(
+            await this.fetchUsageHistory(
+              logger,
+              setting,
+              page,
+              "usage-history.png"
+            )
+          );
+        }
+      );
     } finally {
       logger.info("fetch monthly end");
     }
@@ -82,42 +89,45 @@ export class ElectricityClient implements UsageFetcher {
     logger.info("fetch daily start");
     let usages: DailyUsageModel[] = [];
     try {
-      await withBrowser(this.env, async (browser: Browser): Promise<void> => {
-        const page = new BrowserPage(
-          this.env,
-          await browser.newPage(logger),
-          "electricity/daily",
-          "electricity-"
-        );
-
-        try {
-          // ログインしてトップページに移動
-          await this.login(logger, setting, page);
-
-          // 今月の電気料金のページに移動
-          logger.info("click detail link");
-          await page.instance
-            .locator(
-              "#headerRyoukin > table.header_ryoukin_tbl.desktop_only > tbody > tr > td:nth-child(4) > a"
-            )
-            .click();
-
-          // 1日ごとの電気料金の一覧ページに移動
-          logger.info("click menu_day button");
-          await page.instance.locator("#menu_day").click();
-
-          // 電気料金を取得
-          usages = await this.fetchDailyUsages(
-            logger,
-            setting,
-            page,
-            "daily-usages.png"
+      await withBrowser(
+        this.timeoutMs,
+        async (browser: Browser): Promise<void> => {
+          const page = new BrowserPage(
+            await browser.newPage(logger),
+            this.screenshotDir,
+            "electricity/daily",
+            "electricity-"
           );
-        } catch (err) {
-          await page.screenshotForError();
-          throw err;
+
+          try {
+            // ログインしてトップページに移動
+            await this.login(logger, setting, page);
+
+            // 今月の電気料金のページに移動
+            logger.info("click detail link");
+            await page.instance
+              .locator(
+                "#headerRyoukin > table.header_ryoukin_tbl.desktop_only > tbody > tr > td:nth-child(4) > a"
+              )
+              .click();
+
+            // 1日ごとの電気料金の一覧ページに移動
+            logger.info("click menu_day button");
+            await page.instance.locator("#menu_day").click();
+
+            // 電気料金を取得
+            usages = await this.fetchDailyUsages(
+              logger,
+              setting,
+              page,
+              "daily-usages.png"
+            );
+          } catch (err) {
+            await page.screenshotForError();
+            throw err;
+          }
         }
-      });
+      );
     } finally {
       logger.info("fetch daily end");
     }
@@ -134,7 +144,7 @@ export class ElectricityClient implements UsageFetcher {
 
     // ログインページに移動
     logger.info("goto login page");
-    await page.instance.goto(this.env.loginUrl);
+    await page.instance.goto(this.loginUrl);
     await page.screenshot("login-page.png");
 
     // ログイン

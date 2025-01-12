@@ -1,23 +1,22 @@
 import playwright from "playwright-core";
-import { Env } from "../Env";
 import path from "path";
 
 export class BrowserPage {
-  readonly env: Env;
   readonly instance: playwright.Page;
+  readonly screenshotDir: string;
   readonly screenshotSubDir: string;
   readonly screenshotPrefix: string;
 
   private screenshotNo = 0;
 
   constructor(
-    env: Env,
     page: playwright.Page,
+    screenshotDir: string,
     screenshotSubDir: string,
     screenshotPrefix: string
   ) {
-    this.env = env;
     this.instance = page;
+    this.screenshotDir = screenshotDir;
     this.screenshotSubDir = screenshotSubDir;
     this.screenshotPrefix = screenshotPrefix;
   }
@@ -26,7 +25,7 @@ export class BrowserPage {
     const padded = String(this.screenshotNo + 1).padStart(2, "0"); // 0埋め
     const fileName = `${this.screenshotPrefix}${padded}-${name}`;
     const filePath = path.join(
-      this.env.screenshotDir,
+      this.screenshotDir,
       this.screenshotSubDir,
       subdir,
       fileName
