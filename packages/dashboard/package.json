@@ -20,7 +20,7 @@
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@nuxt/devtools": "^1.7.0",
-    "@sidebase/nuxt-auth": "^0.10.0",
+    "@sidebase/nuxt-auth": "^0.10.1",
     "@types/node": "^20",
     "@vitest/coverage-v8": "^1.6.1",
     "jose": "^5.10.0",
