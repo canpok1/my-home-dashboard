@@ -20,7 +20,7 @@
     "openapi-typescript": "^7.6.1"
   },
   "dependencies": {
-    "@line/bot-sdk": "^9.7.1",
+    "@line/bot-sdk": "^9.7.3",
     "axios": "^1.8.4",
     "openapi-fetch": "^0.13.5"
   }
