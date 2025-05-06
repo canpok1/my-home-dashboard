@@ -1,4 +1,4 @@
-FROM node:23
+FROM node:24
 
 ENV TZ=Asia/Tokyo
 ENV TBLS_VERSION=1.79.0
