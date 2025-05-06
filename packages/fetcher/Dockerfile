@@ -1,4 +1,4 @@
-FROM node:23 AS builder
+FROM node:24 AS builder
 WORKDIR /src
 
 COPY ./package*.json ./
@@ -14,7 +14,7 @@ RUN npm run -w lib build
 RUN npm run -w fetcher build
  
 
-FROM node:23-slim
+FROM node:24-slim
 WORKDIR /service
 ENV TZ=Asia/Tokyo
 
