@@ -83,13 +83,13 @@ jobs:
       - run: npm run db:test:migrate:down-all
 
       - name: archive db docs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: db-docs
           path: public/database
 
       - name: archive coverage reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-reports
           path: public/coverage
