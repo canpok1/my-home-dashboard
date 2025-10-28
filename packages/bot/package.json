@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@line/bot-sdk": "^9.9.0",
-    "axios": "^1.13.0",
+    "axios": "^1.13.1",
     "openapi-fetch": "^0.15.0"
   }
 }
