@@ -1,4 +1,4 @@
-FROM node:24 AS builder
+FROM node:25 AS builder
 WORKDIR /src
 
 COPY ./package*.json ./
@@ -14,7 +14,7 @@ RUN npm run -w packages/lib build
 RUN npm run -w packages/bot build
  
 
-FROM node:24-slim
+FROM node:25-slim
 WORKDIR /service
 ENV TZ=Asia/Tokyo
 
