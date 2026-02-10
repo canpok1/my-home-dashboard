@@ -23,7 +23,7 @@
     "@line/bot-sdk": "^9.9.0",
     "axios": "^1.13.5",
     "handlebars": "^4.7.8",
-    "openapi-fetch": "^0.15.0",
+    "openapi-fetch": "^0.16.0",
     "remove-markdown": "^0.6.3"
   }
 }
